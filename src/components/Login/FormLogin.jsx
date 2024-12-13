@@ -1,4 +1,8 @@
+import { useForm } from "react-hook-form";
+
 function FormLogin() {
+    const {register , handleSubmit , reset} = useForm();
+
     return(
         
         <form className="loginFormCont">
@@ -6,7 +10,7 @@ function FormLogin() {
             <div className="loginFormCont2">
                 <div className="inputCont">
                     <label className="loginLabel" htmlFor="userName">Username:</label>
-                    <input type="text" id="userName" />
+                    <input {...register('userName')} type="text" id="userName" />
                 </div>
             </div>
         </form>
