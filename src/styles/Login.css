@@ -1,0 +1,9 @@
+.loginCont {
+    display: flex;
+
+    height: 85vh;
+    width: 100vw;
+    
+    justify-content: center;
+    align-items: center;
+}
