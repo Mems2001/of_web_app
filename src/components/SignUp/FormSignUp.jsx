@@ -9,7 +9,7 @@ function FormSignUp() {
     const navigate = useNavigate();
 
     const submit = data => {
-        const URL = 'http://localhost:8000/api/v1/users';
+        const URL = 'http://localhost:8000/api/v1/auth/register';
 
         const defaultUser = {
             user_name: '',
