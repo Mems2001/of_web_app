@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { setLogin } from "../../store/slices/user.slice";
 import { useNavigate } from "react-router-dom";
 import { setAdmin, unsetAdmin } from "../../store/slices/admin.slice";
+import { setProfile } from "../../store/slices/profile.slice";
 
 function FormLogin() {
     const {register , handleSubmit , reset} = useForm();
@@ -15,10 +16,23 @@ function FormLogin() {
         email: '',
         password: ''
     }
+    const getUser = () => {
+        const URL = 'http://localhost:8000/api/v1/profiles';
+
+        axios.get(URL)
+            .then(res => {
+                console.log(res.data.data);
+                dispatch(setProfile(res.data.data))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
 
     const submit = data => {
         // console.log(data);
         const URL = 'http://localhost:8000/api/v1/auth/login';
+        const URL2 = 'http://localhost:8000/api/v1/auth/adminV';
 
         axios.post(URL , data)
             .then(res => {
@@ -26,28 +40,26 @@ function FormLogin() {
                 localStorage.setItem('token' , res.data.token);
                 axios.defaults.headers.common['Authorization'] = `jwt ${res.data.token}`;
                 dispatch(setLogin());
+                getUser();
                 reset(defaultUser);
+                axios.get(URL2)
+                    .then(res => {
+                        console.log(res);
+                        if (res.data.auth) {
+                            dispatch(setAdmin())
+                        }
+                        navigate('/')
+                    })
+                    .catch(err => {
+                        dispatch(unsetAdmin());
+                        navigate('/')
+                        console.log(err)
+                    })
             })
             .catch(err => {
                 console.log(err)
             })
 
-
-        const URL2 = 'http://localhost:8000/api/v1/auth/adminV'
-
-        axios.get(URL2)
-            .then(res => {
-                console.log(res);
-                if (res.data.auth) {
-                    dispatch(setAdmin())
-                }
-                navigate('/')
-            })
-            .catch(err => {
-                dispatch(unsetAdmin());
-                navigate('/')
-                console.log(err)
-            })
     }
 
     return(

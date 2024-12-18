@@ -1,0 +1,151 @@
+.ordersCont {
+    display: flex;
+    flex-direction: column;
+
+    justify-self: center;
+
+    gap: 1rem;
+
+    padding-top: 1rem;
+}
+
+ .orderLabel {
+    font-size: 12px;
+}
+
+.orderDataText {
+    font-size: 12px;
+}
+
+.orderCard {
+    display: flex;
+    flex-direction: row;
+
+    width: 80vw;
+
+    gap: 1.5rem;
+
+    border: 1px black solid;
+    border-radius: 0.5rem;
+
+    padding: 1rem;
+}
+
+.orderNCard {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 0.5rem;
+}
+
+.orderInfo {
+    display: flex;
+
+    justify-content: space-between;
+}
+
+.orderCardAuxCont {
+    display: flex;
+    flex-direction: column;
+
+    width: 300px;
+
+    justify-content: left;
+}
+
+.orderCardAuxCont2 {
+    display: flex;
+    flex-direction: column;
+
+    width: 175px;
+}
+
+
+.orderCardAuxCont3 {
+    display: flex;
+    flex-direction: column;
+
+    width: 225px;
+}
+
+.orderBtnsCont {
+    display: flex;
+    flex-direction: column;
+    width: 75px;
+}
+
+.orderBtn {
+    font-size: 12px;
+}
+
+/* Pedido Page */
+.orderDataCont {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 1rem;
+
+    padding-top: 1rem;
+}
+
+.orderNav {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+
+    padding-top: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.orderPageTitles {
+    display: flex;
+    flex-direction: row;
+
+    gap: 0.5rem;
+
+    justify-content: space-between;
+    align-items: center;
+}
+
+.orderPageBtnsCont {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+    gap: 1rem;
+}
+
+.btn-active {
+    display: none;
+}
+
+.btn-inactive {
+    display: flex;
+}
+
+.rowForOrder {
+    display: flex;
+    flex-direction: row;
+
+    width: 75vw;
+    justify-content: space-between;
+}
+
+.orderInputCont {
+    display: flex;
+    flex-direction: row;
+    
+    justify-content: space-between;
+}
+
+.orderInputContV {
+    display: flex;
+    flex-direction: column;
+}

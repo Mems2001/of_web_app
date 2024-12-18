@@ -47,6 +47,14 @@
     padding: 0;
 }
 
+.active {
+    display: flex;
+}
+
+.inactive {
+    display: none;
+}
+
 li {
     list-style: none;
 }
