@@ -21,7 +21,7 @@ function FormLogin() {
 
         axios.get(URL)
             .then(res => {
-                console.log(res.data.data);
+                // console.log(res.data.data);
                 dispatch(setProfile(res.data.data))
             })
             .catch(err => {
