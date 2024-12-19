@@ -25,7 +25,7 @@ function NavComp ({profile}) {
             </div>
             <nav className="navBar">
                 <ul className="navList">
-                    <li className={isAdmin ? 'navlistElement active' : 'navlistElement inactive'}>
+                    <li className={isAdmin ? 'navListElement active' : 'navListElement inactive'}>
                         <NavLink to='/admin'>
                             Admin Console
                         </NavLink>

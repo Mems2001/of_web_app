@@ -81,9 +81,6 @@ function PedidoCard ({order}) {
                 <button className="orderBtn" onClick={navToOrderDet}>
                     Detalles
                 </button>
-                <button className="orderBtn">
-                    Eliminar
-                </button>
             </div>
         </article>
     )

@@ -36,7 +36,7 @@ function FormLogin() {
 
         axios.post(URL , data)
             .then(res => {
-                console.log(res.data);
+                // console.log(res.data);
                 localStorage.setItem('token' , res.data.token);
                 axios.defaults.headers.common['Authorization'] = `jwt ${res.data.token}`;
                 dispatch(setLogin());
@@ -44,7 +44,7 @@ function FormLogin() {
                 reset(defaultUser);
                 axios.get(URL2)
                     .then(res => {
-                        console.log(res);
+                        // console.log(res);
                         if (res.data.auth) {
                             dispatch(setAdmin())
                         }

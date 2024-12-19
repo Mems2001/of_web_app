@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
 import PedidoCard from "../MisPedidos/PedidoCard";
+import AdminConsole from "./AdminConsole";
 
 function MisPedidos () {
     const [pedidos , setPedidos] = useState();
@@ -25,10 +26,14 @@ function MisPedidos () {
     )
 
     return (
-        <div className="ordersCont">
-            {pedidos?.map(
-                order => <PedidoCard order={order} key={order.id}/>
-            )}
+
+        <div className="myOrdersCont">
+            <AdminConsole />
+            <div className="ordersCont">
+                {pedidos?.map(
+                    order => <PedidoCard order={order} key={order.id}/>
+                )}
+            </div>
         </div>
     )
 }

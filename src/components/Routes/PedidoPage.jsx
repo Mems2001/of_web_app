@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom"
+import { useForm } from "react-hook-form";
+import { data, useNavigate, useParams } from "react-router-dom"
 
 function PedidoPage () {
+    const {reset , handleSubmit , register} = useForm();
     const navigate = useNavigate();
 
     const navBack = () => {
@@ -14,12 +16,37 @@ function PedidoPage () {
     const [order , setOrder] = useState();
     const [edition , setEdition] = useState(false);
 
-    const handleEdition = () => {
-        if (edition) {
-            setEdition(false)
-        } else {
-            setEdition(true)
-        }
+    const submit = data => {
+        const URL = 'http://localhost:8000/api/v1/orders/' + order_id;
+
+        axios.put(URL , data)
+            .then(res => {
+                // console.log(res);
+                editionOff()
+            })
+            .catch(err => {
+                throw err
+            })
+    }
+
+    const editionOn = () => {
+        setEdition(true)
+    }
+
+    const editionOff = () => {
+        setEdition(false)
+    }
+
+    const deleteOrder = () => {
+        const URL = 'http://localhost:8000/api/v1/orders/' + order_id;
+        axios.delete(URL)
+            .then(res => {
+                // console.log(res);
+                navBack()
+            })
+            .catch(err => {
+                throw err
+            })
     }
 
     useEffect(
@@ -27,17 +54,17 @@ function PedidoPage () {
             const URL = 'http://localhost:8000/api/v1/orders/' + order_id
             axios.get(URL)
                 .then(res => {
-                    console.log(res);
-                    setOrder(res.data.data)
+                    // console.log(res);
+                    setOrder(res.data.data);
                 })
                 .catch(err => {
                     throw err
                 })
-        } , []
+        } , [edition]
     )
 
     return (
-        <div>
+        <div className="orderPageCont">
             <nav className="orderNav">
                 <button onClick={navBack}>
                     Back
@@ -52,37 +79,37 @@ function PedidoPage () {
                 </div>
             </nav>
             <div className="orderPageBtnsCont">
-                <button onClick={handleEdition}>
+                <button onClick={edition? handleSubmit(submit) : editionOn}>
                     {edition? 'Guardar' : 'Editar'}
                 </button>
-                <button className={edition? 'btn-inactive' : 'btn-active'} onClick={handleEdition}>
+                <button className={edition? 'btn-inactive' : 'btn-active'} onClick={editionOff}>
                     Cancelar
                 </button>
-                <button className={edition? 'btn-active' : 'btn-inactive'}>
+                <button className={edition? 'btn-active' : 'btn-inactive'} onClick={deleteOrder}>
                     Eliminar
                 </button>
             </div>
-            <form className="orderDataCont">
+            <form className="orderDataCont" >
                 <div className="rowForOrder">
                     <div className="orderInputCont">
                         <label htmlFor="temu_id">Temu Id:</label>
-                        <input disabled={!edition} id="temu_id" defaultValue={order?.temuId} />
+                        <input disabled={!edition} {...register('temu_id')} id="temu_id" defaultValue={order?.temuId} />
                     </div>
                 </div>
                 <div className="rowForOrder">
                     <div className="orderInputCont">
                         <label htmlFor="delivery_company">Delivery Company:</label>
-                        <input disabled={!edition} id="delivery_company" defaultValue={order?.deliveryCompany}/>
+                        <input disabled={!edition} {...register('delivery_company')} id="delivery_company" defaultValue={order?.deliveryCompany}/>
                     </div>
                     <div className="orderInputCont">
                         <label htmlFor="delivery_id">Delivery Id:</label>
-                        <input disabled={!edition} id="delivery_id" defaultValue={order?.deliveryId}/>
+                        <input disabled={!edition} {...register('delivery_id')} id="delivery_id" defaultValue={order?.deliveryId}/>
                     </div>
                 </div>
                 <div className="rowForOrder">
                     <div className="orderInputCont">
                         <label htmlFor="products_count">Products count:</label>
-                        <input disabled={!edition} id="products_count" defaultValue={order?.productsCount}/>
+                        <input disabled={!edition} {...register('products_count')} type="number" id="products_count" defaultValue={order?.productsCount}/>
                     </div>
                     <div>
                         Productos
@@ -91,7 +118,7 @@ function PedidoPage () {
                 <div className="rowForOrder">
                     <div className="orderInputCont">
                         <label htmlFor="free_products_count">Free products count:</label>
-                        <input disabled={!edition} id="free_products_count" defaultValue={order?.freeProductsCount}/>
+                        <input disabled={!edition} {...register('free_products_count')} type="number" id="free_products_count" defaultValue={order?.freeProductsCount}/>
                     </div>
                     <div>
                         Productos gratis
@@ -100,7 +127,7 @@ function PedidoPage () {
                 <div className="rowForOrder">
                     <div className="orderInputCont">
                         <label htmlFor="discount_products_count">Discounted products count:</label>
-                        <input disabled={!edition} id="discount_products_count" defaultValue={order?.discountProductsCount}/>
+                        <input disabled={!edition} {...register('discount_products_count')} type="number" id="discount_products_count" defaultValue={order?.discountProductsCount}/>
                     </div>
                     <div>
                         Productos con descuento
@@ -109,31 +136,31 @@ function PedidoPage () {
                 <div className="rowForOrder">
                     <div className="orderInputContV">
                        <label htmlFor="order_date">Order Date:</label> 
-                       <input disabled={!edition} id="order_date" type="date" defaultValue={order?.orderDate}/>
+                       <input disabled={!edition} {...register('order_date')} id="order_date" type="date" defaultValue={order?.orderDate}/>
                     </div>
                     <div className="orderInputContV">
                         <label htmlFor="expected_date_min">Min expected date:</label>
-                        <input disabled={!edition} id="expected_date_min" type='date' defaultValue={order?.expectedDateMin}/>
+                        <input disabled={!edition} {...register('expected_date_min')} id="expected_date_min" type='date' defaultValue={order?.expectedDateMin}/>
                     </div>
                     <div className="orderInputContV">
                         <label htmlFor="expected_date_max">Max expected date:</label>
-                        <input disabled={!edition} id="expected_date_max" type="date" defaultValue={order?.expectedDateMax}/>
+                        <input disabled={!edition} {...register('expected_date_max')} id="expected_date_max" type="date" defaultValue={order?.expectedDateMax}/>
                     </div>
                 </div>
                 <div className="rowForOrder">
                     <div className="orderInputCont">
                         <label htmlFor="received">Received:</label>
-                        <input disabled={!edition} id="received" type="checkbox" defaultChecked={order?.received}/>
+                        <input disabled={!edition} {...register('received')} id="received" type="checkbox" defaultChecked={order?.received}/>
                     </div>
                     <div className="orderInputCont">
                         <label htmlFor="reception_date">Reception date:</label>
-                        <input disabled={!edition} id='reception_date' type="date" defaultValue={order?.receptionDate}/>
+                        <input disabled={!edition} {...register('reception_date')} id='reception_date' type="date" defaultValue={order?.receptionDate}/>
                     </div>
                 </div>
                 <div className="rowForOrder">
                     <div className="orderInputCont">
                         <label htmlFor="price">Price:</label>
-                        <input disabled={!edition} id='price' defaultValue={order?.price}/>
+                        <input disabled={!edition} {...register('price')} id='price' defaultValue={order?.price}/>
                     </div>
                 </div>
             </form>

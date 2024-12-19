@@ -12,9 +12,8 @@ function AdminConsole () {
     }
 
     return (
-        <div className="adminCont">
-            Admin Console
-            <div>
+        <nav className="adminCont">
+            
                 <button onClick={navMisPedidos}>
                     Mis pedidos
                 </button>
@@ -24,8 +23,8 @@ function AdminConsole () {
                 <button>
                     Registrar Producto
                 </button>
-            </div>
-        </div>
+            
+        </nav>
     )
 }
 
