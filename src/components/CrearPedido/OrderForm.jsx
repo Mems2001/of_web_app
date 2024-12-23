@@ -2,7 +2,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom";
 
-function PedidoForm () {
+function OrderForm () {
     const {register , handleSubmit , reset} = useForm();
 
     const navigate = useNavigate();
@@ -24,11 +24,12 @@ function PedidoForm () {
     }
 
     const submit = data => {
-        const URL = 'http://localhost:8000/api/v1/orders'
+
+        const URL = 'http://localhost:8000/api/v1/orders';
 
         axios.post(URL , data)
             .then(res => {
-                console.log(res);
+                // console.log(res);
                 reset(defaultOrder);
                 navigate('/admin/mis_pedidos')
             })
@@ -37,71 +38,88 @@ function PedidoForm () {
             })
     }
 
+    const parseData = data => {
+        const keys = Object.keys(data);
+        // console.log(keys);
+        let newData = {};
+
+        for (let key of keys) {
+            if (data[key] != '') {
+                newData[key] = data[key]
+            } else {
+                newData[key] = undefined
+            }
+        };
+        // console.log("New data is:" , newData);
+
+        submit(newData)
+    }
+
     return (
-        <form className="pedidoFormCont" onSubmit={handleSubmit(submit)}>
-            <div className="pedidoFormCont2">
+        <form className="orderFormCont" onSubmit={handleSubmit(parseData)}>
+            <div className="orderFormCont2">
                 <div className='rowForOrder'>
-                    <div className="pedidoInputCont">
+                    <div className="orderInputCont">
                         <label htmlFor="temu_id">Temu Id:</label>
                         <input {...register('temu_id')} id="temu_id" type="text"/>
                     </div>
                 </div>
                 <div className='rowForOrder'>
-                    <div className="pedidoInputCont">
+                    <div className="orderInputCont">
                         <label htmlFor="delivery_company">Delivery Company:</label>
                         <input {...register('delivery_company')} id="delivery_company" type="text"/>
                     </div>
-                    <div className="pedidoInputCont">
+                    <div className="orderInputCont">
                         <label htmlFor="dlivey_id">Delivery Id:</label>
                         <input {...register('delivery_id')} id="delivery_id" type="text"/>
                     </div>
                 </div>
                 <div className='rowForOrder'>
-                    <div className="pedidoInputCont">
+                    <div className="orderInputCont">
                         <label htmlFor="products_count">Products count:</label>
-                        <input {...register('products_count')} id="products_count" type="number"/>
+                        <input {...register('products_count' , {required:true})} id="products_count" type="number"/>
                     </div>
                 </div>
                 <div className='rowForOrder'>
-                    <div className='pedidoInputCont'>
+                    <div className='orderInputCont'>
                         <label htmlFor='free_products_count'>Free products count:</label>
                         <input {...register('free_products_count')} id='free_products_count' type='number'/>
                     </div>
                 </div>
                 <div className='rowForOrder'>
-                    <div className='pedidoInputCont'>
+                    <div className='orderInputCont'>
                         <label htmlFor='discount_products_count'>Discounted products count:</label>
                         <input id='discount_products_count' type='number' {...register('discount_products_count')}/>
                     </div>
                 </div>
                 <div className='rowForOrder'>
-                    <div className="pedidoInputContV">
+                    <div className="orderInputContV">
                         <label htmlFor="order_date">Order Date:</label>
-                        <input {...register('order_date')} id="order_date" type="date"/>
+                        <input {...register('order_date' , {required: true})} id="order_date" type="date"/>
                     </div>
-                    <div className='pedidoInputContV'>
+                    <div className='orderInputContV'>
                         <label htmlFor='expected_date_min'>Min expected date:</label>
                         <input id='expected_date_min' type='date' {...register('expected_date_min')}/>
                     </div>
-                    <div className='pedidoInputContV'>
+                    <div className='orderInputContV'>
                         <label htmlFor='expected_date_max'>Max expected date:</label>
                         <input id='expected_date_max' type='date' {...register('expected_date_max')}/>
                     </div>
                 </div>
                 <div className='rowForOrder'>
-                    <div className='pedidoInputCont'>
+                    <div className='orderInputCont'>
                         <label htmlFor='received'>Received:</label>
                         <input id='received' type='checkbox' {...register('received')}/>
                     </div>
-                    <div className='pedidoInputCont'>
+                    <div className='orderInputCont'>
                         <label htmlFor='reception_date'>Received date:</label>
                         <input id='reception_date' type='date' {...register('reception_date')}/>
                     </div>
                 </div>
                 <div className='rowForOrder'>
-                    <div className="pedidoInputCont">
+                    <div className="orderInputCont">
                         <label htmlFor="price">Price:</label>
-                        <input {...register('price')} id="price" type="text"/>
+                        <input {...register('price' , {required: true})} id="price" type="text"/>
                     </div>
                 </div>
             </div>
@@ -112,4 +130,4 @@ function PedidoForm () {
     )
 }
 
-export default PedidoForm
+export default OrderForm

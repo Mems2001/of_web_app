@@ -1,8 +1,7 @@
-import axios from "axios";
-import { useEffect, useState } from "react"
+import { useEffect} from "react"
 import { useNavigate } from "react-router-dom";
 
-function PedidoCard ({order}) {
+function OrderCard ({order}) {
 
     const navigate = useNavigate();
 
@@ -86,4 +85,4 @@ function PedidoCard ({order}) {
     )
 }
 
-export default PedidoCard
+export default OrderCard

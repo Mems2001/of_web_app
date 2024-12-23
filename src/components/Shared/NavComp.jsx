@@ -1,15 +1,16 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {setLogin , setLogout} from '../../store/slices/user.slice'
 import { setAdmin, unsetAdmin } from "../../store/slices/admin.slice";
 import { setProfile } from "../../store/slices/profile.slice";
 import axios from "axios";
 
-function NavComp ({profile}) {
+function NavComp () {
     const isLogged = useSelector(state => state.userSlice);
     const isAdmin = useSelector(state => state.adminSlice)
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const logOut = () => {
         dispatch(setLogout());
@@ -18,7 +19,7 @@ function NavComp ({profile}) {
         localStorage.removeItem('token')
     };
 
-    const getUser = () => {
+    const getProfile = () => {
         const URL = 'http://localhost:8000/api/v1/profiles';
 
         axios.get(URL)
@@ -27,7 +28,10 @@ function NavComp ({profile}) {
                 dispatch(setProfile(res.data.data))
             })
             .catch(err => {
-                console.log(err)
+                console.log({
+                    location: 'NavComp.jsx',
+                    err
+                })
             })
     }
 
@@ -38,6 +42,11 @@ function NavComp ({profile}) {
             .then(res => {
                 if (res.data.auth) {
                     dispatch(setAdmin())
+                } else {
+                    console.log({
+                        location: 'NavComp.jsx',
+                        message: 'This user is not an admin'
+                    })
                 }
             })
             .catch(err => {
@@ -49,12 +58,14 @@ function NavComp ({profile}) {
 
     useEffect(
         () => {
-            if (localStorage.getItem('token')) {
-                dispatch(setLogin());
-                console.log('loggedIn');
-                axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
-                getUser();
-                getAdmin();
+            if (!isLogged) {
+                if (localStorage.getItem('token')) {
+                    dispatch(setLogin());
+                    console.log('logged in');
+                    axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
+                    getProfile();
+                    getAdmin();
+                }
             }
         } , []
     )

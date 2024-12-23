@@ -1,18 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
-import PedidoCard from "../MisPedidos/PedidoCard";
+import OrdersCard from "../MyOrders/OrderCard";
 import AdminConsole from "./AdminConsole";
 
-function MisPedidos () {
-    const [pedidos , setPedidos] = useState();
+function MyOrders () {
+    const [orders , setOrders] = useState();
 
-    const getPedidos = () => {
+    const getOrders = () => {
         const URL = 'http://localhost:8000/api/v1/orders/my_orders'
 
         axios.get(URL)
             .then(res => {
                 // console.log(res.data.data);
-                setPedidos(res.data.data)
+                setOrders(res.data.data)
             })
             .catch(err => {
                 console.log(err)
@@ -21,7 +21,7 @@ function MisPedidos () {
 
     useEffect(
         () => {
-            getPedidos()
+            getOrders()
         } , []
     )
 
@@ -30,12 +30,12 @@ function MisPedidos () {
         <div className="myOrdersCont">
             <AdminConsole />
             <div className="ordersCont">
-                {pedidos?.map(
-                    order => <PedidoCard order={order} key={order.id}/>
+                {orders?.map(
+                    order => <OrdersCard order={order} key={order.id}/>
                 )}
             </div>
         </div>
     )
 }
 
-export default MisPedidos
+export default MyOrders

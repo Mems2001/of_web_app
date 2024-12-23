@@ -3,24 +3,28 @@ import { useNavigate } from "react-router-dom"
 function AdminConsole () {
     const navigate = useNavigate();
 
-    const crearPedido = () => {
-        navigate('/admin/pedidos')
+    const createOrder = () => {
+        navigate('/admin/orders')
     }
 
-    const navMisPedidos = () => {
-        navigate('/admin/mis_pedidos')
+    const navMyOrders = () => {
+        navigate('/admin/my_orders')
+    }
+
+    const registrarProducto = () => {
+        navigate('/admin/product_registration')
     }
 
     return (
         <nav className="adminCont">
             
-                <button onClick={navMisPedidos}>
+                <button onClick={navMyOrders}>
                     Mis pedidos
                 </button>
-                <button onClick={crearPedido}>
+                <button onClick={createOrder}>
                     Añadir Pedido
                 </button>
-                <button>
+                <button onClick={registrarProducto}>
                     Registrar Producto
                 </button>
             
