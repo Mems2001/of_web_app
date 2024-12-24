@@ -21,7 +21,7 @@ import ProtectedRoutesAdmin from './components/Routes/ProtectedRoutesAdmin'
 import AdminConsole from './components/Routes/AdminConsole'
 import CreateOrder from './components/Routes/CreateOrder'
 import MyOrders from './components/Routes/MyOrders'
-import PedidoPage from './components/Routes/PedidoPage'
+import OrderPage from './components/Routes/OrderPage'
 import ProductRegistration from './components/Routes/ProductRegistration'
 
 function App() {
@@ -42,7 +42,7 @@ function App() {
           <Route path='/admin' element={<AdminConsole />}/>
           <Route path='/admin/orders' element={<CreateOrder />}/>
           <Route path='/admin/my_orders' element={<MyOrders />}/>
-          <Route path='/admin/my_orders/:order_id' element={<PedidoPage />}/>
+          <Route path='/admin/my_orders/:order_id' element={<OrderPage />}/>
           <Route path='/admin/product_registration' element={<ProductRegistration />}/> 
         </Route>
       </Routes>

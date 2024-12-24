@@ -35,7 +35,7 @@ function UserForm () {
         let newData = {};
         for ( let key of keys) {
             // console.log("Data is:" , key , data[key]);
-            if (data[key] != '') {
+            if (data[key].length != 0) {
                 newData[key] = data[key]
             } else {
                 // console.log(key , 'vacío')

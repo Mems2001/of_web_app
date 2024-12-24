@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { data, useNavigate, useParams } from "react-router-dom"
 
-function PedidoPage () {
+function OrderPage () {
     const {reset , handleSubmit , register} = useForm();
     const navigate = useNavigate();
 
     const navBack = () => {
-        navigate('/admin/mis_pedidos')
+        navigate('/admin/my_orders')
     };
 
     const {order_id} = useParams();
@@ -27,6 +27,22 @@ function PedidoPage () {
             .catch(err => {
                 throw err
             })
+    }
+
+    const parseData = data => {
+        const keys = Object.keys(data);
+        // console.log(keys);
+        let newData = {};
+
+        for (let key of keys) {
+            if (data[key] != '') {
+                newData[key] = data[key]
+            } else {
+                newData[key] = undefined
+            }
+        };
+        // console.log('New data is:' , newData);
+        submit(newData)
     }
 
     const editionOn = () => {
@@ -79,7 +95,7 @@ function PedidoPage () {
                 </div>
             </nav>
             <div className="orderPageBtnsCont">
-                <button onClick={edition? handleSubmit(submit) : editionOn}>
+                <button onClick={edition? handleSubmit(parseData) : editionOn}>
                     {edition? 'Guardar' : 'Editar'}
                 </button>
                 <button className={edition? 'btn-inactive' : 'btn-active'} onClick={editionOff}>
@@ -168,4 +184,4 @@ function PedidoPage () {
     )
 }
 
-export default PedidoPage
+export default OrderPage

@@ -6,7 +6,7 @@ function OrderCard ({order}) {
     const navigate = useNavigate();
 
     const navToOrderDet = () => {
-        const dir = '/admin/mis_pedidos/' + order.id
+        const dir = '/admin/my_orders/' + order.id
         navigate(dir)
     }
 

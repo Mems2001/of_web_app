@@ -31,7 +31,7 @@ function OrderForm () {
             .then(res => {
                 // console.log(res);
                 reset(defaultOrder);
-                navigate('/admin/mis_pedidos')
+                navigate('/admin/my_orders')
             })
             .catch(err => {
                 throw err
@@ -44,8 +44,12 @@ function OrderForm () {
         let newData = {};
 
         for (let key of keys) {
-            if (data[key] != '') {
-                newData[key] = data[key]
+            if (data[key].length != 0) {
+                if (data[key] == 'false') {
+                    newData[key] = true
+                } else {
+                    newData[key] = data[key]
+                }
             } else {
                 newData[key] = undefined
             }
@@ -77,54 +81,54 @@ function OrderForm () {
                 <div className='rowForOrder'>
                     <div className="orderInputCont">
                         <label htmlFor="products_count">Products count:</label>
-                        <input {...register('products_count' , {required:true})} id="products_count" type="number"/>
+                        <input {...register('products_count' , {required:true , valueAsNumber:true})} id="products_count" type="number"/>
                     </div>
                 </div>
                 <div className='rowForOrder'>
                     <div className='orderInputCont'>
                         <label htmlFor='free_products_count'>Free products count:</label>
-                        <input {...register('free_products_count')} id='free_products_count' type='number'/>
+                        <input {...register('free_products_count' , {valueAsNumber:true})} id='free_products_count' type='number'/>
                     </div>
                 </div>
                 <div className='rowForOrder'>
                     <div className='orderInputCont'>
                         <label htmlFor='discount_products_count'>Discounted products count:</label>
-                        <input id='discount_products_count' type='number' {...register('discount_products_count')}/>
+                        <input id='discount_products_count' type='number' {...register('discount_products_count' , {valueAsNumber:true})}/>
                     </div>
                 </div>
                 <div className='rowForOrder'>
                     <div className="orderInputContV">
                         <label htmlFor="order_date">Order Date:</label>
-                        <input {...register('order_date' , {required: true})} id="order_date" type="date"/>
+                        <input {...register('order_date' , {required: true , valueAsDate:true})} id="order_date" type="date"/>
                     </div>
                     <div className='orderInputContV'>
                         <label htmlFor='expected_date_min'>Min expected date:</label>
-                        <input id='expected_date_min' type='date' {...register('expected_date_min')}/>
+                        <input id='expected_date_min' type='date' {...register('expected_date_min' , {valueAsDate:true})}/>
                     </div>
                     <div className='orderInputContV'>
                         <label htmlFor='expected_date_max'>Max expected date:</label>
-                        <input id='expected_date_max' type='date' {...register('expected_date_max')}/>
+                        <input id='expected_date_max' type='date' {...register('expected_date_max' , {valueAsDate:true})}/>
                     </div>
                 </div>
                 <div className='rowForOrder'>
                     <div className='orderInputCont'>
                         <label htmlFor='received'>Received:</label>
-                        <input id='received' type='checkbox' {...register('received')}/>
+                        <input id='received' type='checkbox' defaultChecked={false} {...register('received')}/>
                     </div>
                     <div className='orderInputCont'>
                         <label htmlFor='reception_date'>Received date:</label>
-                        <input id='reception_date' type='date' {...register('reception_date')}/>
+                        <input id='reception_date' type='date' {...register('reception_date' , {valueAsDate:true})}/>
                     </div>
                 </div>
                 <div className='rowForOrder'>
                     <div className="orderInputCont">
                         <label htmlFor="price">Price:</label>
-                        <input {...register('price' , {required: true})} id="price" type="text"/>
+                        <input {...register('price' , {required: true , valueAsNumber:true})} id="price"/>
                     </div>
                 </div>
             </div>
             <button>
-                Crear
+                Añadir
             </button>
         </form>
     )
