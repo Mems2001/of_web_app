@@ -5,8 +5,24 @@ import { useForm } from "react-hook-form";
 function ProductRegistrationForm () {
     const [myOrders , setMyOrders] = useState([]);
     const [mainCategories , setMainCategories] = useState([]);
+    const [colors , setColors] = useState([]);
+    const [materials , setMaterials] = useState([]);
+    const [receptionDate , setReceptionDate] = useState();
+
     const numbers = [1 , 2 , 3 , 4 , 5];
     const {register , handleSubmit , reset} = useForm();
+
+    const selectedReceptionDate = (e) => {
+        for (let order of myOrders) {
+            if (e.target.value === order.id) {
+                if (order.receptionDate) {
+                    setReceptionDate(order.receptionDate)
+                } else {
+                    setReceptionDate(null)
+                }
+            }
+        }
+    }
 
     const submit = data => {
         const URL = 'http://localhost:8000/api/v1/products'
@@ -27,7 +43,7 @@ function ProductRegistrationForm () {
         // console.log(keys);
 
         for (let key of keys) {
-            if (data[key].length != 0 && data[key] != 'Elige un pedido' && data[key] != 'Elige una categoría' && data[key] != NaN) {
+            if (data[key].length != 0 && data[key] != 'Elige un pedido' && data[key] != 'Elige una categoría' && data[key] != 'Elige un color' && data[key] != NaN) {
                 if (data[key] === "false") {
                     // console.log(key , 'is string false');
                     newData[key] = true
@@ -47,6 +63,8 @@ function ProductRegistrationForm () {
         () => {
             const URL = 'http://localhost:8000/api/v1/orders/my_orders';
             const URL2 = 'http://localhost:8000/api/v1/main_categories';
+            const URL3 = 'http://localhost:8000/api/v1/product_colors';
+            const URL4 = 'http://localhost:8000/api/v1/product_materials';
 
             axios.get(URL)
                 .then(res => {
@@ -67,6 +85,22 @@ function ProductRegistrationForm () {
                 .catch(err => {
                     throw err
                 })
+
+            axios.get(URL3)
+                .then(res => {
+                    setColors(res.data.data)
+                })
+                .catch(err => {
+                    throw err
+                })
+
+            axios.get(URL4)
+                .then(res => {
+                    setMaterials(res.data.data)
+                })
+                .catch(err => {
+                    throw err
+                })
             
         } , []
     )
@@ -77,8 +111,8 @@ function ProductRegistrationForm () {
             <div className="rowForProduct">
                 <div className="productInputCont">
                     <label htmlFor="order_id">Order N°: </label>
-                    <select {...register('order_id')} id="order_id">
-                        <option value={undefined}>Elige un pedido</option>  
+                    <select {...register('order_id')} onChange={selectedReceptionDate} id="order_id">
+                        <option value={null}>Elige un pedido</option>  
                         {myOrders?.map(
                             order => <option key={order.id} value={order.id}>{order.orderCount}</option>)
                         }
@@ -112,11 +146,15 @@ function ProductRegistrationForm () {
                 </div>
             </div>
             <div className="rowForProduct">
-                <div className="productInputCont">
+                <div className="productInputContV">
+                    <label htmlFor="reception_date">Reception date:</label>
+                    <input {...register('reception_date' , {valueAsDate:true})} value={receptionDate? receptionDate : ''} id="reception_date" type="date"/>
+                </div>
+                <div className="productInputContV">
                     <label htmlFor="received_state">Received state:</label>
                     <input {...register('received_state')} id="received_state" type="text"/>
                 </div>
-                <div className="productInputCont">
+                <div className="productInputContV">
                     <label htmlFor="observations">Observations:</label>
                     <input {...register('observations')} id='observations' type="text"/>
                 </div>
@@ -135,6 +173,20 @@ function ProductRegistrationForm () {
                     <input {...register('sold_by')} id="sold_by" type="text"/>
                 </div>
             </div>
+            <div className="rowForProduct">
+                <div className="productInputContV">
+                    <label htmlFor="bought_free">Bought free:</label>
+                    <input id="bought_free" type="checkbox" defaultChecked={false} {...register('bought_free')}/>
+                </div>
+                <div className="productInputContV">
+                    <label htmlFor="bought_discount">Bought with discount:</label>
+                    <input id="bought_discount" type="checkbox" defaultChecked={false} {...register('bought_discount')}/>
+                </div>
+                <div className="productInputContV">
+                    <label htmlFor="bought_price">Bought price:</label>
+                    <input id="bought_price" {...register('bought_price' , {valueAsNumber:true})}/> 
+                </div>
+            </div>
             
             <h3>Product data:</h3>
             <div className="rowForProduct">
@@ -148,61 +200,71 @@ function ProductRegistrationForm () {
                 </div>
                 <div className="productInputCont">
                     <label htmlFor="color_id">Color:</label>
-                    <select {...register('color_id')} id="color_id"></select>
+                    <select {...register('color_id')} id="color_id">
+                        <option value={null}>Elige un color</option>
+                        {colors?.map(
+                            color => <option key={color.id} value={color.id}>{color.name}</option>
+                        )}
+                    </select>
                 </div>
             </div>
             <div className="rowForProduct">
-                <div className="productInputCont">
+                <div className="productInputContV">
                     <label htmlFor="height">Height:</label>
                     <input {...register('height' , {valueAsNumber:true})} id="height"/> 
                 </div>
-                <div className="productInputCont">
+                <div className="productInputContV">
                     <label htmlFor="length">Length:</label>
                     <input {...register('length' , {valueAsNumber:true})} id="length"/>
                 </div>
-                <div className="productInputCont">
+                <div className="productInputContV">
                     <label className="width">Width:</label>
                     <input {...register('width' , {valueAsNumber:true})} id="width" />
                 </div>
             </div>
             <div className="rowForProduct">
-                <div className="productInputcCont">
+                <div className="productInputContV">
                     <label htmlFor="description">Description:</label>
                     <input {...register('description')} id="description" type="text"/>
                 </div>
-                <div className="productInputCont">
+                <div className="productInputContV">
                     <label htmlFor="other_details">Other details:</label>
                     <input {...register('other_details')} id="other_details"/>
                 </div>
-                <div className="productInputCont">
+                <div className="productInputContV">
                     <label htmlFor="materials_ids">Materials:</label>
-                    <select {...register('materials_ids')} id="materials_ids" multiple={true}></select>
+                    <select {...register('materials_ids')} id="materials_ids" multiple={true}>
+                        <option value={null}>Elige los materiales</option>
+                        {materials?.map(
+                            material => <option key={material.id} value={material.id}>{material.name}</option>
+                        )}
+                    </select>
                 </div>
             </div>
             <div className="rowForProduct">
-                <div className="productInputCont">
+                <div className="productInputContV">
                     <label htmlFor="authenticated">Authenticated:</label>
                     <input {...register('authenticated')} id="authenticated" defaultValue={false} type="checkbox"/>
                 </div>
-                <div className="productInputCont">
+                <div className="productInputContV">
                     <label htmlFor="deco_only">Decorative only:</label>
                     <input {...register('deco_only')} id="deco_only" defaultValue={false} type="checkbox"/>
                 </div>
-                <div className="productInputCont">
+                <div className="productInputContV">
                     <label htmlFor="is_seasonal">Seasonal:</label>
                     <input {...register('is_seasonal')} id="is_seasonal" defaultValue={false} type="checkbox" />
                 </div>
             </div>
             <div className="rowForProduct">
-                <div>
-                    <label htmlFor="original">Orginal:</label>
-                    <input {...register('original')} id='original' defaultValue={false} type="checkbox"/>
+                <div className="productInputContV">
+                    <label htmlFor="is_original">Original:</label>
+                    <input {...register('is_original')} id='is_original' defaultValue={false} type="checkbox"/>
                 </div>
-                <div className="productInputCont">
+                <div className="productInputContV">
                     <label htmlFor="is_trending">Trending:</label>
                     <input {...register('is_trending')} id="is_trending" defaultValue={false} type="checkbox"/>
                 </div>
-                <div className="productInputCont">
+                <div className="productInputContV">
                     <label htmlFor="is_gift">Gift:</label>
                     <input {...register('is_gift')} id="is_gift" defaultValue={false} type="checkbox"/>
                 </div>
@@ -229,7 +291,7 @@ function ProductRegistrationForm () {
                 </div>
                 <div className="productInputCont">
                     <label htmlFor="discount">Discount:</label>
-                    <input {...register('discount' , {valueAsNumber:true})} id="discount"/>
+                    <input {...register('discount' , {valueAsNumber:true , value:0})} id="discount"/>
                 </div>
                 <div className="productInputCont">
                     <label htmlFor="allow_reservation">Allow reservation:</label>
