@@ -1,0 +1,17 @@
+.mainCarrouselCont {
+    display:flex;
+    flex-direction: row;
+
+    gap: 1rem;
+
+    justify-content: space-evenly;
+}
+
+.productArticle {
+    border: 1px solid black;
+    border-radius: 0.5rem;
+
+    width: 250px;
+
+    padding: 1rem;
+}

@@ -1,13 +1,12 @@
-import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { setProfile } from "../../store/slices/profile.slice";
+import MainCarrousel from "../Home/MainCarrousel";
 
-function Home({profile}) {
+function Home() {
 
     return(
-        <div className="homeCont">
-            Home
-        </div>
+        <section className="homeCont">
+            homeCont
+            <MainCarrousel />
+        </section>
     )
 }
 

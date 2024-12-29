@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 function ProductRegistrationForm () {
     const [myOrders , setMyOrders] = useState([]);
@@ -8,6 +9,7 @@ function ProductRegistrationForm () {
     const [colors , setColors] = useState([]);
     const [materials , setMaterials] = useState([]);
     const [receptionDate , setReceptionDate] = useState();
+    const navigate = useNavigate();
 
     const numbers = [1 , 2 , 3 , 4 , 5];
     const {register , handleSubmit , reset} = useForm();
@@ -30,6 +32,7 @@ function ProductRegistrationForm () {
         axios.post(URL , data)
             .then(res => {
                 // console.log(res)
+                navigate('/admin/my_orders')
             })
             .catch(err => {
                 throw err
@@ -63,12 +66,12 @@ function ProductRegistrationForm () {
         () => {
             const URL = 'http://localhost:8000/api/v1/orders/my_orders';
             const URL2 = 'http://localhost:8000/api/v1/main_categories';
-            const URL3 = 'http://localhost:8000/api/v1/product_colors';
-            const URL4 = 'http://localhost:8000/api/v1/product_materials';
+            const URL3 = 'http://localhost:8000/api/v1/product_details/colors';
+            const URL4 = 'http://localhost:8000/api/v1/product_details/materials';
 
             axios.get(URL)
                 .then(res => {
-                     // console.log(res.data.data);
+                    // console.log(res.data.data);
                     setMyOrders(res.data.data);
                     // console.log(myOrders);
                 })

@@ -8,6 +8,7 @@ import './styles/Admin.css'
 import './styles/CreateOrder.css'
 import './styles/MyOrders.css'
 import './styles/ProductRegistration.css'
+import './styles/Home.css'
 
 import NavComp from './components/Shared/NavComp'
 import Login from './components/Routes/Login'
