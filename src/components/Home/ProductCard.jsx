@@ -5,6 +5,7 @@ function ProductCard ({product}) {
     return (
         <article className="productArticle">
             {product?.name}
+            {product?.price}
         </article>
     )
 }
