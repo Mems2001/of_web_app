@@ -30,15 +30,15 @@ function FormLogin() {
     }
 
     const submit = async(data) => {
-        console.log(event)
         let URL = '';
         let URL2 = '';
-        const mobileUserAgent = navigator.userAgent
+        const mobileUserAgent = navigator.userAgent;
+        console.log(mobileUserAgent)
 
-        if (mobileUserAgent.includes('Android')) {
+        if (mobileUserAgent.includes('Android') || mobileUserAgent.includes('iPhone')) {
             console.log("Estás usando un dispositivo mobile");
-            URL = '192.168.1.6:8000/api/v1/auth/login';
-            URL2 = '192.168.1.6:8000/api/v1/auth/adminV'
+            URL = 'http://192.168.1.6:8000/api/v1/auth/login';
+            URL2 = 'http://192.168.1.6:8000/api/v1/auth/adminV'
         } else {
             console.log('no es dispositivo mobile');
             URL = 'http://localhost:8000/api/v1/auth/login';

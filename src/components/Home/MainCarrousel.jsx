@@ -8,7 +8,7 @@ function MainCarrousel () {
     useEffect(
         () => {
             let URL = undefined
-            if (navigator.userAgent.includes('Android')) {
+            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
                 URL = 'http://192.168.1.6:8000/api/v1/products'
             } else {
                 URL = 'http://localhost:8000/api/v1/products';
