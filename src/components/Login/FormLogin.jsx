@@ -82,7 +82,7 @@ function FormLogin() {
 
     return(
         <form className="loginFormCont space-y-6 w-4/5 mt-10" onSubmit={handleSubmit(submit)}>
-            <div className="loginFormCont2">
+            <div className="loginFormCont2 space-y-6">
                 <div className="inputCont">
                     <label className="loginLabel block text-sm/6 font-medium text-gray-900" htmlFor="user_name">username:</label>
                     <div className="mt-2">
