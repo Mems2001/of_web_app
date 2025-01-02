@@ -7,7 +7,12 @@ function MainCarrousel () {
 
     useEffect(
         () => {
-            const URL = 'http://localhost:8000/api/v1/products';
+            let URL = undefined
+            if (navigator.userAgent.includes('Android')) {
+                URL = 'http://192.168.1.6:8000/api/v1/products'
+            } else {
+                URL = 'http://localhost:8000/api/v1/products';
+            }
 
             axios.get(URL)
                 .then(res => {

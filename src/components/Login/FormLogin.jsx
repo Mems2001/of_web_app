@@ -29,15 +29,27 @@ function FormLogin() {
             })
     }
 
-    const submit = (data , e) => {
-        e.preventDefault();
-        // console.log(data);
-        const URL = 'http://localhost:8000/api/v1/auth/login';
-        const URL2 = 'http://localhost:8000/api/v1/auth/adminV';
+    const submit = async(data) => {
+        console.log(event)
+        let URL = '';
+        let URL2 = '';
+        const mobileUserAgent = navigator.userAgent
 
-        axios.post(URL , data)
+        if (mobileUserAgent.includes('Android')) {
+            console.log("Estás usando un dispositivo mobile");
+            URL = '192.168.1.6:8000/api/v1/auth/login';
+            URL2 = '192.168.1.6:8000/api/v1/auth/adminV'
+        } else {
+            console.log('no es dispositivo mobile');
+            URL = 'http://localhost:8000/api/v1/auth/login';
+            URL2 = 'http://localhost:8000/api/v1/auth/adminV';
+        }
+
+        console.log(URL , URL2)
+
+        await axios.post(URL , data)
             .then(res => {
-                // console.log(res.data);
+                console.log(res.data);
                 localStorage.setItem('token' , res.data.token);
                 axios.defaults.headers.common['Authorization'] = `jwt ${res.data.token}`;
                 dispatch(setLogin());
@@ -65,7 +77,7 @@ function FormLogin() {
 
     return(
         
-        <form className="loginFormCont">
+        <form className="loginFormCont" onSubmit={handleSubmit(submit)}>
             <h2 className="loginTitle">Login</h2>
             <div className="loginFormCont2">
                 <div className="inputCont">
@@ -81,9 +93,10 @@ function FormLogin() {
                     <input {...register('password')} type="password" id="password"/>
                 </div>
             </div>
-            <button className="btn" onTouchStart={handleSubmit(submit)}>
+            <button className="btn" type="submit">
                 Login
             </button>
+            <p>{navigator.userAgent.includes('Android')? 'Si' : 'No'}</p>
         </form>
         
     )   
