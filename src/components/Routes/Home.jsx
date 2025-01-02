@@ -4,7 +4,6 @@ function Home() {
 
     return(
         <section className="homeCont">
-            homeCont
             <MainCarrousel />
         </section>
     )
