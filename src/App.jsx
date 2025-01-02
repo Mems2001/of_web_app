@@ -1,5 +1,6 @@
 import { Routes , Route } from 'react-router-dom'
 
+import '@fortawesome/fontawesome-free/css/all.css';
 import './App.css'
 import './styles/NavComp.css'
 import './styles/Login.css'

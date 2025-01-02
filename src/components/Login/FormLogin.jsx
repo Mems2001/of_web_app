@@ -29,7 +29,7 @@ function FormLogin() {
             })
     }
 
-    const submit = data => {
+    const submit = (data) => {
         // console.log(data);
         const URL = 'http://localhost:8000/api/v1/auth/login';
         const URL2 = 'http://localhost:8000/api/v1/auth/adminV';
@@ -80,7 +80,7 @@ function FormLogin() {
                     <input {...register('password')} type="password" id="password"/>
                 </div>
             </div>
-            <button className="loginBtn">
+            <button className="btn">
                 Login
             </button>
         </form>
