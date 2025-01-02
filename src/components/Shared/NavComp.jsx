@@ -71,13 +71,13 @@ function NavComp () {
     )
 
     return(
-        <div className="navCont">
+        <nav className="navCont">
             <div className="titleCont">
                 <NavLink to='/'>
                     <h1 className="navTitle">Only Fancy Web</h1>
                 </NavLink>
             </div>
-            <nav className="navBar">
+            <div className="navBar">
                 <ul className="navList">
                     <li className={isAdmin ? 'navListElement active' : 'navListElement inactive'}>
                         <NavLink to='/admin'>
@@ -107,8 +107,8 @@ function NavComp () {
                         }
                     </li>
                 </ul>
-            </nav>
-        </div>
+            </div>
+        </nav>
     )
 };
 
