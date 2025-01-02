@@ -6,7 +6,7 @@ import { setAdmin, unsetAdmin } from "../../store/slices/admin.slice";
 import { setProfile } from "../../store/slices/profile.slice";
 import axios from "axios";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import { faIdCard, faRightFromBracket, faRightToBracket, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faIdCard, faRightFromBracket, faRightToBracket, faUserPlus, faUserTie } from "@fortawesome/free-solid-svg-icons";
 
 function NavComp () {
     // console.log(window.location.hash)
@@ -148,7 +148,9 @@ function NavComp () {
             </div>
             <div className="navbar-end w-auto">
                 {isAdmin?
-                    <NavLink to='/admin' className='btn btn-ghost'>Admin console</NavLink>
+                    <NavLink to='/admin' className='btn btn-ghost'>
+                        <FontAwesomeIcon icon={faUserTie} />
+                    </NavLink>
                         :
                     <></>
                 }

@@ -7,7 +7,12 @@ function MyOrders () {
     const [orders , setOrders] = useState();
 
     const getOrders = () => {
-        const URL = 'http://localhost:8000/api/v1/orders/my_orders'
+        let URL = undefined
+        if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+            URL = 'http://192.168.1.6:8000/api/v1/orders/my_orders'
+        } else {
+            URL = 'http://localhost:8000/api/v1/orders/my_orders';
+        }
 
         axios.get(URL)
             .then(res => {
