@@ -29,7 +29,8 @@ function FormLogin() {
             })
     }
 
-    const submit = (data) => {
+    const submit = (data , e) => {
+        e.preventDefault();
         // console.log(data);
         const URL = 'http://localhost:8000/api/v1/auth/login';
         const URL2 = 'http://localhost:8000/api/v1/auth/adminV';
@@ -64,7 +65,7 @@ function FormLogin() {
 
     return(
         
-        <form className="loginFormCont" onSubmit={handleSubmit(submit)}>
+        <form className="loginFormCont">
             <h2 className="loginTitle">Login</h2>
             <div className="loginFormCont2">
                 <div className="inputCont">
@@ -80,7 +81,7 @@ function FormLogin() {
                     <input {...register('password')} type="password" id="password"/>
                 </div>
             </div>
-            <button className="btn">
+            <button className="btn" onTouchStart={handleSubmit(submit)}>
                 Login
             </button>
         </form>

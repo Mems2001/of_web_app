@@ -9,6 +9,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faIdCard, faRightFromBracket, faRightToBracket, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 
 function NavComp () {
+    // console.log(window.location.hash)
+
     const isLogged = useSelector(state => state.userSlice);
     const isAdmin = useSelector(state => state.adminSlice)
     const dispatch = useDispatch();
@@ -145,20 +147,20 @@ function NavComp () {
                 </a>
             </div>
             <div className="navbar-end w-auto">
-                <button className="btn btn-ghost btn-circle">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                </button>
+                {isAdmin?
+                    <NavLink to='/admin' className='btn btn-ghost'>Admin console</NavLink>
+                        :
+                    <></>
+                }
+                {isLogged?
+                <NavLink className='btn btn-ghost btn-circle' to='/user'>
+                    <FontAwesomeIcon icon={faIdCard} />
+                </NavLink>
+                    :
+                    <NavLink className='btn btn-ghost btn-circle' to='/register'>
+                    <FontAwesomeIcon icon={faUserPlus} />
+                </NavLink>
+                }
                 {isLogged?
                 <button className='btn btn-ghost btn-circle' onClick={logOut}>
                     <FontAwesomeIcon icon={faRightFromBracket} />
@@ -166,15 +168,6 @@ function NavComp () {
                     :
                 <NavLink className='btn btn-ghost btn-circle' to='/login'>
                     <FontAwesomeIcon icon={faRightToBracket} />
-                </NavLink>
-                }
-                {isLogged?
-                <NavLink className='btn btn-ghost btn-circle' to='/user'>
-                    <FontAwesomeIcon icon={faIdCard} />
-                </NavLink>
-                    :
-                <NavLink className='btn btn-ghost btn-circle' to='/register'>
-                    <FontAwesomeIcon icon={faUserPlus} />
                 </NavLink>
                 }
             </div>
