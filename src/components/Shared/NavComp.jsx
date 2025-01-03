@@ -25,7 +25,7 @@ function NavComp () {
     };
 
     const getProfile = () => {
-        const URL = 'http://localhost:8000/api/v1/profiles';
+        const URL = 'https://localhost:443/api/v1/profiles';
 
         axios.get(URL)
             .then(res => {
@@ -41,7 +41,7 @@ function NavComp () {
     }
 
     const getAdmin = () => {
-        const URL = 'http://localhost:8000/api/v1/auth/adminV'
+        const URL = 'https://localhost:443/api/v1/auth/adminV'
 
         axios.get(URL)
             .then(res => {

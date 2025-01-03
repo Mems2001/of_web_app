@@ -13,7 +13,7 @@ function UserForm () {
     const handleEdition = (data) => {
         if (edition) {
             // const newProfile = data;
-            const URL = 'http://localhost:8000/api/v1/profiles/' + profile.id
+            const URL = 'https://localhost:443/api/v1/profiles/' + profile.id
             // console.log(newProfile , URL);
             axios.put(URL , data)
                 .then(res => {
