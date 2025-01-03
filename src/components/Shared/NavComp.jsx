@@ -9,7 +9,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faBars, faIdCard, faRightFromBracket, faRightToBracket, faUserPlus, faUserTie } from "@fortawesome/free-solid-svg-icons";
 
 function NavComp () {
-    // console.log(window.location.hash)
+    const location = window.location.href.split('#')[1]
+    console.log(location)
 
     const isLogged = useSelector(state => state.userSlice);
     const isAdmin = useSelector(state => state.adminSlice)
@@ -70,6 +71,12 @@ function NavComp () {
                     getProfile();
                     getAdmin();
                 }
+            } else {
+                dispatch(setLogin());
+                console.log('logged in');
+                axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
+                getProfile();
+                getAdmin();
             }
         } , []
     )
@@ -104,8 +111,8 @@ function NavComp () {
                     <input id="my-drawer" type="checkbox" className="drawer-toggle" />
                     <div className="drawer-content">
                         {/* Page content here */}
-                        <label htmlFor="my-drawer" className="btn btn-primary drawer-button">
-                            <FontAwesomeIcon icon={faBars} />
+                        <label htmlFor="my-drawer" className="btn btn-ghost drawer-button">
+                            <FontAwesomeIcon icon={faBars} size="lg"/>
                         </label>
                     </div>
                     <div className="drawer-side z-50">
@@ -127,28 +134,28 @@ function NavComp () {
             </div>
             <div className="navbar-end w-auto">
                 {isAdmin?
-                    <NavLink to='/admin' className='btn btn-ghost'>
-                        <FontAwesomeIcon icon={faUserTie} />
+                    <NavLink to='/admin' className={location?.includes('admin')? 'btn btn-ghost bg-gray-200' : 'btn btn-ghost'}>
+                        <FontAwesomeIcon icon={faUserTie} size="lg"/>
                     </NavLink>
                         :
                     <></>
                 }
                 {isLogged?
-                <NavLink className='btn btn-ghost btn-circle' to='/user'>
-                    <FontAwesomeIcon icon={faIdCard} />
+                <NavLink className={location?.includes('user') ? 'btn btn-ghost bg-gray-200' : 'btn btn-ghost'} to='/user'>
+                    <FontAwesomeIcon icon={faIdCard} size="lg"/>
                 </NavLink>
                     :
-                    <NavLink className='btn btn-ghost btn-circle' to='/register'>
-                    <FontAwesomeIcon icon={faUserPlus} />
+                    <NavLink className={location?.includes('register') ? 'btn btn-ghost bg-gray-200' : 'btn btn-ghost'} to='/register'>
+                    <FontAwesomeIcon icon={faUserPlus} size="lg"/>
                 </NavLink>
                 }
                 {isLogged?
-                <button className='btn btn-ghost btn-circle' onClick={logOut}>
-                    <FontAwesomeIcon icon={faRightFromBracket} />
+                <button className='btn btn-ghost' onClick={logOut}>
+                    <FontAwesomeIcon icon={faRightFromBracket} size="lg"/>
                 </button>
                     :
-                <NavLink className='btn btn-ghost btn-circle' to='/login'>
-                    <FontAwesomeIcon icon={faRightToBracket} />
+                <NavLink className={location?.includes('login') ? 'btn btn-ghost bg-gray-200' : 'btn btn-ghost'} to='/login'>
+                    <FontAwesomeIcon icon={faRightToBracket} size="lg"/>
                 </NavLink>
                 }
             </div>
