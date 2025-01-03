@@ -15,9 +15,9 @@ function UserForm () {
             // const newProfile = data;
             let URL = undefined
             if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://192.168.1.6:443/api/v1/profiles' + profile.id;
+                URL = 'https://192.168.1.6:443/api/v1/profiles/' + profile.id;
             } else {
-                URL = 'https://localhost:443/api/v1/profiles' + profile.id;
+                URL = 'https://localhost:443/api/v1/profiles/' + profile.id;
             }
             // console.log(newProfile , URL);
             axios.put(URL , data)

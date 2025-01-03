@@ -27,7 +27,12 @@ function ProductRegistrationForm () {
     }
 
     const submit = data => {
-        const URL = 'http://localhost:8000/api/v1/products'
+        let URL = undefined
+            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+                URL = 'https://192.168.1.6:443/api/v1/admin/products';
+            } else {
+                URL = 'https://localhost:443/api/v1/admin/products';
+            }
 
         axios.post(URL , data)
             .then(res => {
@@ -64,10 +69,21 @@ function ProductRegistrationForm () {
 
     useEffect (
         () => {
-            const URL = 'http://localhost:8000/api/v1/orders/my_orders';
-            const URL2 = 'http://localhost:8000/api/v1/main_categories';
-            const URL3 = 'http://localhost:8000/api/v1/product_details/colors';
-            const URL4 = 'http://localhost:8000/api/v1/product_details/materials';
+            let URL = undefined;
+            let URL2 = undefined;
+            let URL3 = undefined;
+            let URL4 = undefined;
+            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+                URL = 'https://192.168.1.6:443/api/v1/orders/my_orders';
+                URL2 = 'https://192.168.1:443/api/v1/main_categories';
+                URL3 = 'https://192.168.1:443/api/v1/product_details/colors';
+                URL4 = 'https://192.168.1:443/api/v1/product_details/materials';
+            } else {
+                URL = 'https://localhost:443/api/v1/orders/my_orders';
+                URL2 = 'https://localhost:443/api/v1/main_categories';
+                URL3 = 'https://localhost:443/api/v1/product_details/colors';
+                URL4 = 'https://localhost:443/api/v1/product_details/materials';
+            }
 
             axios.get(URL)
                 .then(res => {

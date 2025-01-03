@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 
 function AdminConsole () {
     const navigate = useNavigate();
@@ -16,19 +16,19 @@ function AdminConsole () {
     }
 
     return (
-        <nav className="adminCont">
+        <div role="tablist" className="tabs tabs-boxed">
             
-                <button onClick={navMyOrders}>
+                <NavLink role="tab" className='tab' to={'/admin/my_orders'}>
                     Mis pedidos
-                </button>
-                <button onClick={createOrder}>
+                </NavLink>
+                <NavLink role="tab" className='tab' to={'/admin/orders'}>
                     Añadir Pedido
-                </button>
-                <button onClick={registrarProducto}>
+                </NavLink>
+                <NavLink role="tab" className='tab' to={'/admin/product_registration'}>
                     Registrar Producto
-                </button>
+                </NavLink>
             
-        </nav>
+        </div>
     )
 }
 
