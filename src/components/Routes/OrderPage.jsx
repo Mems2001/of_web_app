@@ -17,7 +17,12 @@ function OrderPage () {
     const [edition , setEdition] = useState(false);
 
     const submit = data => {
-        const URL = 'http://localhost:8000/api/v1/orders/' + order_id;
+        let URL = undefined
+            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+                URL = 'https://192.168.1.6:443/api/v1/orders/' + order_id;
+            } else {
+                URL = 'https://localhost:443/api/v1/orders/' + order_id;
+            }
 
         axios.put(URL , data)
             .then(res => {
@@ -54,7 +59,12 @@ function OrderPage () {
     }
 
     const deleteOrder = () => {
-        const URL = 'http://localhost:8000/api/v1/orders/' + order_id;
+        let URL = undefined
+            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+                URL = 'https://192.168.1.6:443/api/v1/orders/' + order_id;
+            } else {
+                URL = 'https://localhost:443/api/v1/orders/' + order_id;
+            }
         axios.delete(URL)
             .then(res => {
                 // console.log(res);
@@ -67,7 +77,13 @@ function OrderPage () {
 
     useEffect(
         () => {
-            const URL = 'http://localhost:8000/api/v1/orders/' + order_id
+            let URL = undefined
+            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+                URL = 'https://192.168.1.6:443/api/v1/orders/' + order_id;
+            } else {
+                URL = 'https://localhost:443/api/v1/orders/' + order_id;
+            }
+            
             axios.get(URL)
                 .then(res => {
                     // console.log(res);

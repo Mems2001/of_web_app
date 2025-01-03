@@ -12,7 +12,7 @@ function MainCarrousel () {
         () => {
             let URL = undefined
             if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://192.168.1.6:443/api/v1/products'
+                URL = 'https://192.168.1.6:443/api/v1/products';
             } else {
                 URL = 'https://localhost:443/api/v1/products';
             }
@@ -35,15 +35,15 @@ function MainCarrousel () {
 
                     <div className="grid grid-cols-4 gap-x-1 gap-y-1 sm:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                     {products?.map((product) => (
-                        <article key={product.id} className="swap swap-flip place-content-stretch w-28 place-self-center">
+                        <label key={product.id} className="swap swap-flip place-content-stretch w-28 place-self-center">
                             {/* this hidden checkbox controls the state */}
                             <input type="checkbox" className="w-28"/>
                         
                             <div className="swap-on w-28 place-content-center bg-gray-200">
-                                <div key={product.id} className="group flex flex-col gap-2 content-center place-items-center">
+                                <div key={product.id} className="group flex flex-col gap-4 content-center place-items-center">
                                     <h3 className="text-sm text-gray-700 text-center">{product.name}</h3>
                                     {/* <p className="mt-1 text-lg font-medium text-gray-900">{product.price}</p> */}
-                                    <NavLink to={`/products/:${product.id}`}>
+                                    <NavLink to={`/products/${product.id}`}>
                                         <FontAwesomeIcon icon={faCircleQuestion} size="lg" />
                                     </NavLink>
                                 </div>
@@ -57,7 +57,7 @@ function MainCarrousel () {
                                     />
                                 </div>
                             </div>
-                        </article>
+                        </label>
                     ))}
                     </div>
                 </div>
