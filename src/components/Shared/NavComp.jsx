@@ -25,7 +25,12 @@ function NavComp () {
     };
 
     const getProfile = () => {
-        const URL = 'https://localhost:443/api/v1/profiles';
+        let URL = undefined
+            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+                URL = 'https://192.168.1.6:443/api/v1/profiles'
+            } else {
+                URL = 'https://localhost:443/api/v1/profiles';
+            }
 
         axios.get(URL)
             .then(res => {
@@ -41,7 +46,12 @@ function NavComp () {
     }
 
     const getAdmin = () => {
-        const URL = 'https://localhost:443/api/v1/auth/adminV'
+        let URL = undefined
+            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+                URL = 'https://192.168.1.6:443/api/v1/auth/adminV'
+            } else {
+                URL = 'https://localhost:443/api/v1/auth/adminV';
+            }
 
         axios.get(URL)
             .then(res => {

@@ -9,7 +9,12 @@ function FormSignUp() {
     const navigate = useNavigate();
 
     const submit = data => {
-        const URL = 'https://localhost:443/api/v1/auth/register';
+        let URL = undefined
+            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+                URL = 'https://192.168.1.6:443/api/v1/auth/register';
+            } else {
+                URL = 'https://localhost:443/api/v1/auth/register';
+            }
 
         const defaultUser = {
             user_name: '',

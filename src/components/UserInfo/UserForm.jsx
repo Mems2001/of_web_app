@@ -13,7 +13,12 @@ function UserForm () {
     const handleEdition = (data) => {
         if (edition) {
             // const newProfile = data;
-            const URL = 'https://localhost:443/api/v1/profiles/' + profile.id
+            let URL = undefined
+            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+                URL = 'https://192.168.1.6:443/api/v1/profiles' + profile.id;
+            } else {
+                URL = 'https://localhost:443/api/v1/profiles' + profile.id;
+            }
             // console.log(newProfile , URL);
             axios.put(URL , data)
                 .then(res => {

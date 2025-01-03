@@ -25,7 +25,12 @@ function OrderForm () {
 
     const submit = data => {
 
-        const URL = 'http://localhost:8000/api/v1/orders';
+        let URL = undefined
+            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+                URL = 'https://192.168.1.6:443/api/v1/orders';
+            } else {
+                URL = 'https://localhost:443/api/v1/orders';
+            }
 
         axios.post(URL , data)
             .then(res => {

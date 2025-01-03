@@ -1,4 +1,4 @@
-import OrderForm from "../CrearPedido/OrderForm"
+import OrderForm from "../CreateOrder/OrderForm"
 import AdminConsole from "./AdminConsole"
 
 function createOrder () {
