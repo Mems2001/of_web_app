@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { NavLink } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 
 function MainCarrousel () {
     const [products , setProducts] = useState();
@@ -43,21 +45,23 @@ function MainCarrousel () {
                             {/* this hidden checkbox controls the state */}
                             <input type="checkbox" className="w-28"/>
                         
-                            <div className="swap-on w-28">
-                                <a key={product.id} href={product.href} className="group">
-                                    <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
-                                    <p className="mt-1 text-lg font-medium text-gray-900">{product.price}</p>
-                                    <NavLink>Ver más</NavLink>
-                                </a>
+                            <div className="swap-on w-28 place-content-center bg-gray-200">
+                                <div key={product.id} className="group flex flex-col gap-2 content-center place-items-center">
+                                    <h3 className="text-sm text-gray-700 text-center">{product.name}</h3>
+                                    {/* <p className="mt-1 text-lg font-medium text-gray-900">{product.price}</p> */}
+                                    <NavLink to={`/products/:${product.id}`}>
+                                        <FontAwesomeIcon icon={faCircleQuestion} size="lg" />
+                                    </NavLink>
+                                </div>
                             </div>
                             <div className="swap-off w-28">
-                                <a key={product.id} href={product.href} className="group">
+                                <div key={product.id} className="group">
                                     <img
                                         alt={product.imageAlt}
-                                        src={product.imageSrc}
-                                        className="aspect-square w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
+                                        src={'https://tailwindui.com/plus/img/ecommerce-images/product-page-02-tertiary-product-shot-01.jpg'}
+                                        className="aspect-square w-full bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
                                     />
-                                </a>
+                                </div>
                             </div>
                         </label>
                     ))}

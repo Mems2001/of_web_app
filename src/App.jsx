@@ -10,6 +10,7 @@ import './styles/CreateOrder.css'
 import './styles/MyOrders.css'
 import './styles/ProductRegistration.css'
 import './styles/Home.css'
+import './styles/ProductPage.css'
 
 import NavComp from './components/Shared/NavComp'
 import Login from './components/Routes/Login'
@@ -25,6 +26,7 @@ import CreateOrder from './components/Routes/CreateOrder'
 import MyOrders from './components/Routes/MyOrders'
 import OrderPage from './components/Routes/OrderPage'
 import ProductRegistration from './components/Routes/ProductRegistration'
+import ProductPage from './components/Routes/ProductPage';
 
 function App() {
 
@@ -37,6 +39,8 @@ function App() {
         <Route path='/' element={<Home profile={profile}/>} />
         <Route path='/login' element={<Login />}/>
         <Route path='/register' element={<SignUp />} />
+        <Route path='/products/:product_id' element={<ProductPage />}/>
+
         <Route element={<ProtectedRoutes />}>
           <Route path='/user' element={<UserInfo />}/>
         </Route>

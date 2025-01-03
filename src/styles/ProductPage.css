@@ -1,0 +1,10 @@
+.productHero1 {
+    height: 89vh;
+    /* 94vh */
+
+    border: solid black 1px;
+}
+
+.productPageCont {
+    height: 94vh;
+}
