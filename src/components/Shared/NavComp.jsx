@@ -72,11 +72,13 @@ function NavComp () {
                     getAdmin();
                 }
             } else {
-                dispatch(setLogin());
-                console.log('logged in');
-                axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
-                getProfile();
-                getAdmin();
+                if (localStorage.getItem('token')) {
+                    dispatch(setLogin());
+                    console.log('logged in');
+                    axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
+                    getProfile();
+                    getAdmin();
+                }
             }
         } , []
     )
