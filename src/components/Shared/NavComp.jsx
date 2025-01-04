@@ -11,7 +11,7 @@ import variables from "../../../utils/variables.js";
 
 function NavComp () {
     const location = window.location.href.split('#')[1]
-    console.log(location)
+    // console.log(location)
 
     const isLogged = useSelector(state => state.userSlice);
     const isAdmin = useSelector(state => state.adminSlice)

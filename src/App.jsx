@@ -46,7 +46,7 @@ function App() {
         </Route>
         <Route element={<ProtectedRoutesAdmin />}>
           <Route path='/admin' element={<AdminConsole />}/>
-          <Route path='/admin/orders' element={<CreateOrder />}/>
+          <Route path='/admin/create_order' element={<CreateOrder />}/>
           <Route path='/admin/my_orders' element={<MyOrders />}/>
           <Route path='/admin/my_orders/:order_id' element={<OrderPage />}/>
           <Route path='/admin/product_registration' element={<ProductRegistration />}/> 
