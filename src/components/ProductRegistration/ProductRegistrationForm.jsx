@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import variables from "../../../utils/variables";
 
 function ProductRegistrationForm () {
     const [myOrders , setMyOrders] = useState([]);
@@ -10,6 +11,7 @@ function ProductRegistrationForm () {
     const [materials , setMaterials] = useState([]);
     const [receptionDate , setReceptionDate] = useState();
     const navigate = useNavigate();
+    const ip = variables.ip;
 
     const numbers = [1 , 2 , 3 , 4 , 5];
     const {register , handleSubmit , reset} = useForm();
@@ -29,7 +31,7 @@ function ProductRegistrationForm () {
     const submit = data => {
         let URL = undefined
             if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://192.168.1.6:443/api/v1/admin/products';
+                URL = 'https://' + ip + '/api/v1/admin/products';
             } else {
                 URL = 'https://localhost:443/api/v1/admin/products';
             }
@@ -74,10 +76,10 @@ function ProductRegistrationForm () {
             let URL3 = undefined;
             let URL4 = undefined;
             if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://192.168.1.6:443/api/v1/orders/my_orders';
-                URL2 = 'https://192.168.1:443/api/v1/main_categories';
-                URL3 = 'https://192.168.1:443/api/v1/product_details/colors';
-                URL4 = 'https://192.168.1:443/api/v1/product_details/materials';
+                URL = 'https://' + ip + '/api/v1/orders/my_orders';
+                URL2 = 'https://' + ip + '/api/v1/main_categories';
+                URL3 = 'https://' + ip + '/api/v1/product_details/colors';
+                URL4 = 'https://' + ip + '/api/v1/product_details/materials';
             } else {
                 URL = 'https://localhost:443/api/v1/orders/my_orders';
                 URL2 = 'https://localhost:443/api/v1/main_categories';

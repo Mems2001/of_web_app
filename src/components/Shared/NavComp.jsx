@@ -7,6 +7,7 @@ import { setProfile } from "../../store/slices/profile.slice";
 import axios from "axios";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faBars, faIdCard, faRightFromBracket, faRightToBracket, faUserPlus, faUserTie } from "@fortawesome/free-solid-svg-icons";
+import variables from "../../../utils/variables.js";
 
 function NavComp () {
     const location = window.location.href.split('#')[1]
@@ -16,6 +17,7 @@ function NavComp () {
     const isAdmin = useSelector(state => state.adminSlice)
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const ip = variables.ip;
 
     const logOut = () => {
         dispatch(setLogout());
@@ -27,7 +29,7 @@ function NavComp () {
     const getProfile = () => {
         let URL = undefined
             if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://192.168.1.6:443/api/v1/profiles';
+                URL = 'https://' + ip + '/api/v1/profiles';
             } else {
                 URL = 'https://localhost:443/api/v1/profiles';
             }
@@ -48,7 +50,7 @@ function NavComp () {
     const getAdmin = () => {
         let URL = undefined
             if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://192.168.1.6:443/api/v1/auth/adminV'
+                URL = 'https://' + ip + '/api/v1/auth/adminV'
             } else {
                 URL = 'https://localhost:443/api/v1/auth/adminV';
             }

@@ -2,14 +2,16 @@ import axios from "axios";
 import { useEffect, useState } from "react"
 import OrdersCard from "../MyOrders/OrderCard";
 import AdminConsole from "./AdminConsole";
+import variables from "../../../utils/variables";
 
 function MyOrders () {
     const [orders , setOrders] = useState();
+    const ip = variables.ip;
 
     const getOrders = () => {
         let URL = undefined
         if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-            URL = 'https://192.168.1.6:443/api/v1/orders/my_orders'
+            URL = 'https://' + ip + '/api/v1/orders/my_orders'
         } else {
             URL = 'https://localhost:443/api/v1/orders/my_orders';
         }

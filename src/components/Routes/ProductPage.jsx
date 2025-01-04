@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
+import variables from "../../../utils/variables";
 
 function ProductPage () {
+    const ip = variables.ip;
     const {product_id} = useParams();
     const [product , setProduct] = useState();
     const [starV1 , setStarV1] = useState(0);
@@ -15,7 +17,7 @@ function ProductPage () {
         () => {
             let URL = undefined
             if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://192.168.1.6:443/api/v1/products/' + product_id;
+                URL = 'https://' + ip + '/api/v1/products/' + product_id;
             } else {
                 URL = 'https://localhost:443/api/v1/products/' + product_id;
             }

@@ -2,16 +2,18 @@ import axios from "axios";
 import { useForm } from "react-hook-form"
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import variables from "../../../utils/variables";
 
 function FormSignUp() {
     const {handleSubmit , register , reset} = useForm();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const ip = variables.ip;
 
     const submit = data => {
         let URL = undefined
             if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://192.168.1.6:443/api/v1/auth/register';
+                URL = 'https://' + ip + '/api/v1/auth/register';
             } else {
                 URL = 'https://localhost:443/api/v1/auth/register';
             }

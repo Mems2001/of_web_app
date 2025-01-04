@@ -5,11 +5,13 @@ import { setLogin } from "../../store/slices/user.slice";
 import { useNavigate } from "react-router-dom";
 import { setAdmin, unsetAdmin } from "../../store/slices/admin.slice";
 import { setProfile } from "../../store/slices/profile.slice";
+import variables from "../../../utils/variables.js";
 
 function FormLogin() {
     const {register , handleSubmit , reset} = useForm();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const ip = variables.ip;
 
     const defaultUser = {
         user_name: '',
@@ -19,7 +21,7 @@ function FormLogin() {
     const getUser = () => {
         let URL = undefined
         if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-            URL = 'https://192.168.1.6:443/api/v1/profiles'
+            URL = 'https://' + ip + '/api/v1/profiles';
         } else {
             URL = 'https://localhost:443/api/v1/profiles';
         }
@@ -42,8 +44,8 @@ function FormLogin() {
 
         if (mobileUserAgent.includes('Android') || mobileUserAgent.includes('iPhone')) {
             console.log("Estás usando un dispositivo mobile");
-            URL = 'https://192.168.1.6:443/api/v1/auth/login';
-            URL2 = 'https://192.168.1.6:443/api/v1/auth/adminV'
+            URL = 'https://' + ip + '/api/v1/auth/login';
+            URL2 = 'https://' + ip + '/api/v1/auth/adminV';
         } else {
             console.log('no es dispositivo mobile');
             URL = 'https://localhost:443/api/v1/auth/login';

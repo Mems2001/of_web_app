@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setProfile } from "../../store/slices/profile.slice";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import variables from "../../../utils/variables";
 
 function UserForm () {
+    const ip = variables.ip;
     const profile = useSelector(state => state.profileSlice)
     const [edition , setEdition] = useState(false);
     const dispatch = useDispatch();
@@ -15,7 +17,7 @@ function UserForm () {
             // const newProfile = data;
             let URL = undefined
             if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://192.168.1.6:443/api/v1/profiles/' + profile.id;
+                URL = 'https://' + ip + '/api/v1/profiles/' + profile.id;
             } else {
                 URL = 'https://localhost:443/api/v1/profiles/' + profile.id;
             }
