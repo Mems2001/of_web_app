@@ -6,6 +6,7 @@ import variables from "../../../utils/variables";
 function ProductPage () {
     const ip = variables.ip;
     const {product_id} = useParams();
+    const [loading , setLoading] = useState(true);
     const [product , setProduct] = useState();
     const [starV1 , setStarV1] = useState(0);
     const [starV2 , setStarV2] = useState(0);
@@ -26,42 +27,43 @@ function ProductPage () {
             .then(res => {
                 console.log(res)
                 setProduct(res.data.data);
-                if (product.rating >= 1) {
+                if (product?.rating >= 1) {
                     setStarV1(100)
                 } else {
-                    let val = product.rating * 100;
+                    let val = product?.rating * 100;
                     setStarV1(val)
                 }
-                if (product.rating >= 2) {
+                if (product?.rating >= 2) {
                     setStarV2(100)
                 } else {
-                    let val = (product.rating - 1) * 100;
+                    let val = (product?.rating - 1) * 100;
                     setStarV3(val)
                 }
-                if (product.rating >= 3) {
+                if (product?.rating >= 3) {
                     setStarV3(100)
                 } else {
-                    let val = (product.rating - 2) * 100;
+                    let val = (product?.rating - 2) * 100;
                     setStarV3(val) 
                 }
-                if (product.rating >= 4) {
+                if (product?.rating >= 4) {
                     setStarV4(100)
                 } else {
-                    let val = (product.rating - 3) * 100;
+                    let val = (product?.rating - 3) * 100;
                     setStarV4(val)
                 }
-                if (product.rating == 5) {
+                if (product?.rating == 5) {
                     setStarV5(100)
                 } else {
-                    let val = (product.rating - 4) *100;
+                    let val = (product?.rating - 4) *100;
                     setStarV5(val)
                 }
+                setLoading(false)
             })
             .catch(err => {
                 throw err
             })
 
-        } , [product]
+        } , [loading]
     )
 
     return (
