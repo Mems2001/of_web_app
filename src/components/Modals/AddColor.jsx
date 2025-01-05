@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import variables from "../../../utils/variables";
 
 function AddColor ({setLoading}) {
     const {register , reset , handleSubmit} = useForm();
+    const ip = variables.ip;
 
     const submit = (data) => {
         let URL = undefined;
