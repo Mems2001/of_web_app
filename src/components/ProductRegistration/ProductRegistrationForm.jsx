@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import variables from "../../../utils/variables";
+import AddColor from "../Modals/AddColor";
 
 function ProductRegistrationForm () {
     const [myOrders , setMyOrders] = useState([]);
@@ -13,8 +14,13 @@ function ProductRegistrationForm () {
     const [received , setReceived] = useState(false);
     const [otherDetails , setOtherDetails] = useState(false);
     const [otherDetCont , setOtherDetCont] = useState(0);
+    const [loading , setLoading] = useState(false);
     const navigate = useNavigate();
     const ip = variables.ip;
+
+    const toggleLoading = (value) => {
+        setLoading(value)
+    }
 
     const numbers = [1 , 2 , 3 , 4 , 5];
     const {register , handleSubmit , reset} = useForm();
@@ -59,6 +65,8 @@ function ProductRegistrationForm () {
         console.log("data is:" , data);
         // console.log(keys);
 
+        let otherDetailsData = []
+
         for (let key of keys) {
             if (data[key] != '' && data[key] != 'Elige un pedido' && data[key] != 'Elige una categoría' && data[key] != 'Elige un color' && data[key] != 'Elige un número' && data[key] != NaN && data[key] != undefined && !(key.includes('detName')) && !(key.includes('detDet'))) {
                 if (data[key] === "false") {
@@ -72,7 +80,48 @@ function ProductRegistrationForm () {
             }
         };
 
-        // console.log("New data is:" , newData);
+        // Correct the inputs that have to be null when the product is not received
+        if (!received) {
+            for (let key of keys) {
+                if (key === 'reception_date' || key === 'received_state' || key === 'observations' || key === 'quality' || key === 'fragility' || key === 'extra_packaging') {
+                    newData[key] = undefined
+                }
+            }
+        }
+
+        // Set the corresponding reception date
+        if (receptionDate) {
+           for (let key of keys) {
+            if (key === 'reception_date') {
+                newData[key] = receptionDate
+            }
+            if (key === 'received') {
+                newData[key] = true
+            }
+           }
+        }
+
+        // console.log(otherDetCont)
+        for (let i=1 ; i <= otherDetCont ; i++) {
+            let subData = []
+            for (let key of keys) {
+                if (key === `detName${i}`) {
+                    // console.log(key)
+                    subData.push(data[key])
+                }
+                if (key === `detDet${i}`) {
+                    subData.push(data[key])
+                }
+            }
+            // console.log(subData)
+            otherDetailsData.push(subData)
+        }
+
+        if (otherDetailsData.length > 0) {
+            newData['other_details'] = otherDetailsData
+        }
+
+        console.log("New data is:" , newData);
         return submit(newData)
     }
 
@@ -152,7 +201,7 @@ function ProductRegistrationForm () {
                     throw err
                 })
             
-        } , []
+        } , [loading]
     )
 
     return (
@@ -176,7 +225,7 @@ function ProductRegistrationForm () {
             <div className="rowForProduct2">
                 <div className="productInputContV">
                     <label htmlFor="reception_date" className="text-sm/6 font-medium text-gray-900">Reception date:</label>
-                    <input {...register('reception_date' , {valueAsDate:true})} value={receptionDate? receptionDate : ''} disabled={!received} id="reception_date" type="date"/>
+                    <input {...register('reception_date' , {valueAsDate:true})} disabled={!received} id="reception_date" type="date"/>
                 </div>
                 <div className="productInputContV">
                     <label htmlFor="received_state" className="text-sm/6 font-medium text-gray-900">Received state:</label>
@@ -261,6 +310,7 @@ function ProductRegistrationForm () {
                             color => <option key={color.id} value={color.id}>{color.name}</option>
                         )}
                     </select>
+                    <AddColor setLoading={toggleLoading}/>
                 </div>
             </div>
             <div className="rowForProduct3">
@@ -294,9 +344,9 @@ function ProductRegistrationForm () {
                             :
                             <input id={`detDet${index+1}`} {...register(`detDet${index+1}` , {required:true})} placeholder="Detalle" className="input input-bordered w-full max-w-xs text-sm"/>
                             {index+1 == otherDetCont ? 
-                                <button onClick={otherDetContplus}>+</button>
+                                <button className="btn btn-circle btn-sm" onClick={otherDetContplus}>+</button>
                             :
-                                <button onClick={otherDetContMinus}>-</button>
+                                <button className="btn btn-circle btn-sm" onClick={otherDetContMinus}>-</button>
                                 }
                         </div>
                         )}
