@@ -21,12 +21,12 @@ function FormLogin() {
         password: ''
     }
     const getUser = () => {
-        let URL = undefined
-        if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-            URL = 'https://' + ip + '/api/v1/profiles';
-        } else {
-            URL = 'https://localhost:443/api/v1/profiles';
-        }
+        let URL = variables.url_prefix + '/api/v1/profiles'
+        // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+        //     URL = 'https://' + ip + '/api/v1/profiles';
+        // } else {
+        //     URL = 'https://localhost:443/api/v1/profiles';
+        // }
 
         axios.get(URL)
             .then(res => {
@@ -41,20 +41,20 @@ function FormLogin() {
     const submit = async(data) => {
         setLoading(true);
 
-        let URL = undefined;
-        let URL2 = undefined;
-        const mobileUserAgent = navigator.userAgent;
+        let URL = variables.url_prefix + '/api/v1/auth/login';
+        let URL2 = variables.url_prefix + '/api/v1/auth/adminV';
+        // const mobileUserAgent = navigator.userAgent;
         // console.log(mobileUserAgent)
 
-        if (mobileUserAgent.includes('Android') || mobileUserAgent.includes('iPhone')) {
-            console.log("Estás usando un dispositivo mobile");
-            URL = 'https://' + ip + '/api/v1/auth/login';
-            URL2 = 'https://' + ip + '/api/v1/auth/adminV';
-        } else {
-            console.log('no es dispositivo mobile');
-            URL = 'https://localhost:443/api/v1/auth/login';
-            URL2 = 'https://localhost:443/api/v1/auth/adminV';
-        }
+        // if (mobileUserAgent.includes('Android') || mobileUserAgent.includes('iPhone')) {
+        //     console.log("Estás usando un dispositivo mobile");
+        //     URL = 'https://' + ip + '/api/v1/auth/login';
+        //     URL2 = 'https://' + ip + '/api/v1/auth/adminV';
+        // } else {
+        //     console.log('no es dispositivo mobile');
+        //     URL = 'https://localhost:443/api/v1/auth/login';
+        //     URL2 = 'https://localhost:443/api/v1/auth/adminV';
+        // }
 
         // console.log(URL , URL2)
 
