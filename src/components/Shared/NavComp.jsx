@@ -76,7 +76,7 @@ function NavComp () {
     useEffect(
         () => {
             if (!isLogged) {
-                if (localStorage.getItem('token')) {
+                if (localStorage?.getItem('token')) {
                     dispatch(setLogin());
                     console.log('logged in');
                     axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
@@ -84,7 +84,7 @@ function NavComp () {
                     getAdmin();
                 }
             } else {
-                if (localStorage.getItem('token')) {
+                if (localStorage?.getItem('token')) {
                     dispatch(setLogin());
                     console.log('logged in');
                     axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
