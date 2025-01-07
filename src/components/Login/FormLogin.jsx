@@ -13,7 +13,7 @@ function FormLogin() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loading , setLoading] = useState(false);
-    const ip = variables.ip;
+    // const ip = variables.ip;
 
     const defaultUser = {
         user_name: '',

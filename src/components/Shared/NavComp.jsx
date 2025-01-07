@@ -17,7 +17,7 @@ function NavComp () {
     const isAdmin = useSelector(state => state.adminSlice)
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const ip = variables.ip;
+    // const ip = variables.ip;
 
     const logOut = () => {
         dispatch(setLogout());
@@ -27,12 +27,12 @@ function NavComp () {
     };
 
     const getProfile = () => {
-        let URL = undefined
-            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://' + ip + '/api/v1/profiles';
-            } else {
-                URL = 'https://localhost:443/api/v1/profiles';
-            }
+        let URL = variables.url_prefix + '/api/v1/profiles';
+            // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+            //     URL = 'https://' + ip + '/api/v1/profiles';
+            // } else {
+            //     URL = 'https://localhost:443/api/v1/profiles';
+            // }
 
         axios.get(URL)
             .then(res => {
@@ -48,12 +48,12 @@ function NavComp () {
     }
 
     const getAdmin = () => {
-        let URL = undefined
-            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://' + ip + '/api/v1/auth/adminV'
-            } else {
-                URL = 'https://localhost:443/api/v1/auth/adminV';
-            }
+        let URL = variables.url_prefix + '/api/v1/auth/adminV';
+            // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+            //     URL = 'https://' + ip + '/api/v1/auth/adminV'
+            // } else {
+            //     URL = 'https://localhost:443/api/v1/auth/adminV';
+            // }
 
         axios.get(URL)
             .then(res => {
