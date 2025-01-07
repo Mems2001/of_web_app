@@ -5,16 +5,16 @@ import variables from '../../../utils/variables.js'
 
 function MainCarrousel () {
     const [products , setProducts] = useState();
-    const ip = variables.ip
+    // const ip = variables.ip
 
     useEffect(
         () => {
-            let URL = undefined
-            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://' + ip + '/api/v1/products';
-            } else {
-                URL = 'https://localhost:443/api/v1/products';
-            }
+            let URL = variables.url_prefix + '/api/v1/products'
+            // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+            //     URL = 'https://' + ip + '/api/v1/products';
+            // } else {
+            //     URL = 'https://localhost:443/api/v1/products';
+            // }
 
             axios.get(URL)
                 .then(res => {
