@@ -6,11 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { setAdmin, unsetAdmin } from "../../store/slices/admin.slice";
 import { setProfile } from "../../store/slices/profile.slice";
 import variables from "../../../utils/variables.js";
+import { useState } from "react";
 
 function FormLogin() {
     const {register , handleSubmit , reset} = useForm();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [loading , setLoading] = useState(false);
     const ip = variables.ip;
 
     const defaultUser = {
@@ -37,6 +39,8 @@ function FormLogin() {
     }
 
     const submit = async(data) => {
+        setLoading(true);
+
         let URL = undefined;
         let URL2 = undefined;
         const mobileUserAgent = navigator.userAgent;
@@ -52,11 +56,11 @@ function FormLogin() {
             URL2 = 'https://localhost:443/api/v1/auth/adminV';
         }
 
-        console.log(URL , URL2)
+        // console.log(URL , URL2)
 
         await axios.post(URL , data)
             .then(res => {
-                console.log(res.data);
+                // console.log(res.data);
                 localStorage.setItem('token' , res.data.token);
                 axios.defaults.headers.common['Authorization'] = `jwt ${res.data.token}`;
                 dispatch(setLogin());
@@ -75,11 +79,19 @@ function FormLogin() {
                         navigate('/')
                         console.log(err)
                     })
+                setLoading(false)
             })
             .catch(err => {
-                console.log(err)
+                const message = err.response.data.message
+                // console.log(message)
+                if (message === "email or username are not correct") {
+                    alert('El correo o nombre de usuario no son correctos')
+                } else if (message === 'Wrong password') {
+                    alert('Contraseña incorrecta')
+                }
+                setLoading(false)
+                throw(err);
             })
-
     }
 
     return(
@@ -110,7 +122,11 @@ function FormLogin() {
                 </div>
             </div>
             <div>
-                <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Ingresar</button>
+                <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                {loading? 
+                    <span className="loading loading-infinity loading-md"></span>
+                : 'Ingresar'}
+                </button>
             </div>
 
             <p className="mt-10 text-center text-sm/6 text-gray-500">

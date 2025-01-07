@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import variables from "../../../utils/variables";
+import { useState } from "react";
 
 function AddColor ({setLoading}) {
     const {register , reset , handleSubmit} = useForm();
+    const [modal , setModal] = useState(false);
     const ip = variables.ip;
 
     const submit = (data) => {
@@ -24,6 +26,7 @@ function AddColor ({setLoading}) {
                 // console.log(res);
                 reset(defaultData);
                 setLoading(false);
+                setModal(false)
             })
             .catch(err => {
                 throw({
@@ -35,31 +38,39 @@ function AddColor ({setLoading}) {
 
     return (
         <>
-        <button className="btn btn-circle btn-sm" onClick={()=>{document.getElementById('my_modal_1').showModal();setLoading(true)}}>+</button>
-            <dialog id="my_modal_1" className="modal">
+            {/* The button to open modal */}
+            <button className="btn btn-circle btn-sm" onClick={()=>{
+                setModal(true);
+                setLoading(true)}}>+</button>
+
+            {/* Put this part before </body> tag */}
+            <input type="checkbox" className="modal-toggle" checked={modal}/>
+            <div className="modal" role="dialog">
                 <div className="modal-box">
-                    <h3 className="font-bold text-lg">Add New Color:</h3>       
-                    <div className="modal-action">
-                        <form method="dialog">
-                            <div className="rowForProduct2">
-                                <div className="productInputContV">
-                                    <label htmlFor="color_name" className="text-sm/6 font-medium text-gray-900">Name:</label>
-                                    <input {...register('name')} id="color_name" type="text" className="input input-bordered w-full max-w-xs text-sm"/>
-                                </div>
-                                <div>
-                                    <label htmlFor="color_code" className="text-sm/6 font-medium text-gray-900">Code:</label>
-                                    <input {...register('code')} id="color_code" type="color" className="input input-bordered w-full max-w-xs text-sm"/>
-                                </div>
-                            </div>
-                            {/* if there is a button in form, it will close the modal */}
-                            <div className="rowForProduct2">
-                                <button type="submit" className="btn" onClick={handleSubmit(submit)}>Añadir</button>
-                                <button>Close</button>
-                            </div>
-                        </form>
+                    <div className="flex flex-row justify-between w-full">
+                        <h3 className="font-bold text-lg">Add New Color:</h3>
+                        <button className="btn btn-circle btn-sm" onClick={() =>{
+                            setModal(false);
+                            setLoading(false)
+                        }}>x</button>
                     </div>
+                    <form method="dialog">
+                        <div className="rowForProduct2">
+                            <div className="productInputContV">
+                                <label htmlFor="color_name" className="text-sm/6 font-medium text-gray-900">Name:</label>
+                                <input {...register('name')} id="color_name" type="text" className="input input-bordered w-full max-w-xs text-sm"/>
+                            </div>
+                            <div>
+                                <label htmlFor="color_code" className="text-sm/6 font-medium text-gray-900">Code:</label>
+                                <input {...register('code')} id="color_code" type="color" className="input input-bordered w-full max-w-xs text-sm"/>
+                            </div>
+                        </div>
+                        <div className="modal-action">
+                            <button type="submit" className="btn" onClick={handleSubmit(submit)}>Añadir</button>
+                        </div>
+                    </form>
                 </div>
-            </dialog>
+            </div>
         </>
     )
 }

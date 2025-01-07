@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import variables from "../../../utils/variables";
 import AddColor from "../Modals/AddColor";
+import AddMaterial from "../Modals/AddMaterial";
 
 function ProductRegistrationForm () {
     const [myOrders , setMyOrders] = useState([]);
@@ -362,6 +363,7 @@ function ProductRegistrationForm () {
                             material => <option key={material.id} value={material.id}>{material.name}</option>
                         )}
                     </select>
+                    <AddMaterial setLoading={toggleLoading}/>
                 </div>
             </div>
             <div className="rowForProduct3">
