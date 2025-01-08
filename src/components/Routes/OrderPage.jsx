@@ -131,18 +131,18 @@ function OrderPage () {
                 <form className="orderDataCont" >
                     <div className="rowForOrder">
                         <div className="orderInputCont">
-                            <label className="block text-sm/6 font-medium text-gray-900" htmlFor="temu_id">Temu Id:</label>
-                            <input className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled={!edition} {...register('temu_id')} id="temu_id" name="temu_id" defaultValue={order?.temuId} />
+                            <label className="block text-sm/6 font-medium text-gray-900 w-1/2" htmlFor="temu_id">Temu Id:</label>
+                            <input className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled={!edition} {...register('temu_id')} id="temu_id" name="temu_id" defaultValue={order?.temuId} />
                         </div>
                     </div>
                     <div className="rowForOrder">
                         <div className="orderInputContV">
                             <label className="block text-sm/6 font-medium text-gray-900" htmlFor="delivery_company">Delivery Company:</label>
-                            <input className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" name="delivery_company" disabled={!edition} {...register('delivery_company')} id="delivery_company" defaultValue={order?.deliveryCompany}/>
+                            <input className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" name="delivery_company" disabled={!edition} {...register('delivery_company')} id="delivery_company" defaultValue={order?.deliveryCompany}/>
                         </div>
                         <div className="orderInputContV">
                             <label className="block text-sm/6 font-medium text-gray-900" htmlFor="delivery_id">Delivery Id:</label>
-                            <input className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled={!edition} {...register('delivery_id')} id="delivery_id" name="delivery_id" defaultValue={order?.deliveryId}/>
+                            <input className="block w-full text-sm rounded-md bg-white px-3 py-1.5 text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled={!edition} {...register('delivery_id')} id="delivery_id" name="delivery_id" defaultValue={order?.deliveryId}/>
                         </div>
                     </div>
                     <div className="rowForOrder">

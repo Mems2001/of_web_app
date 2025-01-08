@@ -226,7 +226,7 @@ function ProductRegistrationForm () {
             <div className="rowForProduct2">
                 <div className="productInputContV">
                     <label htmlFor="reception_date" className="text-sm/6 font-medium text-gray-900">Reception date:</label>
-                    <input {...register('reception_date' , {valueAsDate:true})} disabled={!received} id="reception_date" type="date"/>
+                    <input className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" {...register('reception_date' , {valueAsDate:true})} disabled={!received} id="reception_date" type="date"/>
                 </div>
                 <div className="productInputContV">
                     <label htmlFor="received_state" className="text-sm/6 font-medium text-gray-900">Received state:</label>
@@ -234,9 +234,9 @@ function ProductRegistrationForm () {
                 </div>
             </div>
             <div>
-                <div className="productInputContV">
+                <div className="productInputContV w-full">
                     <label htmlFor="observations" className="text-sm/6 font-medium text-gray-900">Observations:</label>
-                    <textarea rows={3} {...register('observations')} disabled={!received} id='observations' type="text" className="textarea textarea-bordered text-sm"/>
+                    <textarea rows={3} {...register('observations')} disabled={!received} id='observations' type="text" className="textarea textarea-bordered text-sm self-stretch"/>
                 </div>
             </div>
             <div className="rowForProduct3">
@@ -266,15 +266,15 @@ function ProductRegistrationForm () {
             <div className="rowForProduct3">
                 <div className="productInputContV">
                     <label htmlFor="brand" className="text-sm/6 font-medium text-gray-900">Brand:</label>
-                    <input {...register('brand')} id='brand' type="text" className="input input-bordered w-full max-w-xs text-sm"/>
+                    <input {...register('brand')} id='brand' type="text" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                 </div>
                 <div className="productInputContV">
                     <label htmlFor="manufacturer" className="text-sm/6 font-medium text-gray-900">Manufacturer:</label>
-                    <input {...register('manufacturer')} id="manufacturer" type="text" className="input input-bordered w-full max-w-xs text-sm"/>
+                    <input {...register('manufacturer')} id="manufacturer" type="text" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                 </div>
                 <div className="productInputContV">
                     <label htmlFor="sold_by" className="text-sm/6 font-medium text-gray-900">Sold by:</label>
-                    <input {...register('sold_by')} id="sold_by" type="text" className="input input-bordered w-full max-w-xs text-sm"/>
+                    <input {...register('sold_by')} id="sold_by" type="text" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                 </div>
             </div>
             <div className="rowForProduct3">
@@ -288,7 +288,7 @@ function ProductRegistrationForm () {
                 </div>
                 <div className="productInputContV">
                     <label htmlFor="bought_price" className="text-sm/6 font-medium text-gray-900">Bought price:</label>
-                    <input id="bought_price" {...register('bought_price' , {valueAsNumber:true})} className="input input-bordered w-full max-w-xs text-sm"/> 
+                    <input id="bought_price" {...register('bought_price' , {valueAsNumber:true})} className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/> 
                 </div>
             </div>
             <div className="divider m-0"></div>
@@ -297,11 +297,11 @@ function ProductRegistrationForm () {
             <div className="rowForProduct3">
                 <div className="productInputContV">
                     <label htmlFor="name" className="text-sm/6 font-medium text-gray-900">Name:</label>
-                    <input {...register('name' , {required:true})} id="name" type="text" className="input input-bordered w-full max-w-xs text-sm"/>
+                    <input {...register('name' , {required:true})} id="name" type="text" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                 </div>
                 <div className="productInputContV">
                     <label htmlFor="model" className="text-sm/6 font-medium text-gray-900">Model:</label>
-                    <input {...register('model')} id="model" type="text" className="input input-bordered w-full max-w-xs text-sm"/>
+                    <input {...register('model')} id="model" type="text" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                 </div>
                 <div className="productInputContV">
                     <label htmlFor="color_id" className="text-sm/6 font-medium text-gray-900">Colors:</label>
@@ -317,23 +317,25 @@ function ProductRegistrationForm () {
             <div className="rowForProduct3">
                 <div className="productInputContV">
                     <label htmlFor="height" className="text-sm/6 font-medium text-gray-900">Height (cm):</label>
-                    <input {...register('height' , {valueAsNumber:true})} className="input input-bordered w-full max-w-xs text-sm" id="height"/> 
+                    <input {...register('height' , {valueAsNumber:true})} className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" id="height"/> 
                 </div>
                 <div className="productInputContV">
                     <label htmlFor="length" className="text-sm/6 font-medium text-gray-900">Length (cm):</label>
-                    <input {...register('length' , {valueAsNumber:true})} className="input input-bordered w-full max-w-xs text-sm" id="length"/>
+                    <input {...register('length' , {valueAsNumber:true})} className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" id="length"/>
                 </div>
                 <div className="productInputContV">
                     <label htmlFor="width" className="text-sm/6 font-medium text-gray-900">Width (cm):</label>
-                    <input {...register('width' , {valueAsNumber:true})} className="input input-bordered w-full max-w-xs text-sm" id="width" />
+                    <input {...register('width' , {valueAsNumber:true})} className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" id="width" />
                 </div>
             </div>
-            <div className="rowForProduct2">
-                <div className="productInputContV">
+            <div>
+                <div className="productInputContV w-full">
                     <label htmlFor="description" className="text-sm/6 font-medium text-gray-900">Description:</label>
-                    <textarea rows={3} {...register('description')} className="textarea textarea-bordered text-sm" id="description" type="text"/>
+                    <textarea rows={3} {...register('description')} className="textarea textarea-bordered text-sm self-stretch" id="description" type="text"/>
                 </div>
-                <div className="productInputContV">
+            </div>
+            <div>
+                <div className="productInputContV gap-3">
                     <div className="productInputCont">
                         <label htmlFor="other_details" className="text-sm/6 font-medium text-gray-900">Other details:</label>
                         <input type="checkbox" id="other_details" className="checkbox" defaultChecked={false} onChange={toggleOtherDet}/>
@@ -341,9 +343,9 @@ function ProductRegistrationForm () {
                     <div className="productInputContV">
                         {Array(otherDetCont).fill(null).map(
                             ( value , index) => <div key={index+1} className="productInputCont">
-                            <input id={`detName${index+1}`} {...register(`detName${index+1}` , {required:true})} placeholder="Nombre" className="input input-bordered w-full max-w-xs text-sm"/>
+                            <input id={`detName${index+1}`} {...register(`detName${index+1}` , {required:true})} placeholder="Nombre" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                             :
-                            <input id={`detDet${index+1}`} {...register(`detDet${index+1}` , {required:true})} placeholder="Detalle" className="input input-bordered w-full max-w-xs text-sm"/>
+                            <input id={`detDet${index+1}`} {...register(`detDet${index+1}` , {required:true})} placeholder="Detalle" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                             {index+1 == otherDetCont ? 
                                 <button className="btn btn-circle btn-sm" onClick={otherDetContplus}>+</button>
                             :
@@ -354,8 +356,8 @@ function ProductRegistrationForm () {
                     </div>
                 </div>
             </div>
-            <div className="rowForProduct2">
-                <div className="productInputContV">
+            <div>
+                <div className="productInputCont w-full">
                     <label htmlFor="materials_ids" className="text-sm/6 font-medium text-gray-900">Materials:</label>
                     <select {...register('materials_ids')} id="materials_ids" multiple={true} className="select select-bordered select-sm w-52 max-w-xs">
                         {/* <option value={null}>Elige los materiales</option> */}
@@ -416,7 +418,7 @@ function ProductRegistrationForm () {
                 </div>
                 <div className="productInputContV">
                     <label htmlFor="discount" className="text-sm/6 font-medium text-gray-900">Discount:</label>
-                    <input {...register('discount' , {valueAsNumber:true , value:0})} id="discount" className="input input-bordered w-full max-w-xs text-sm"/>
+                    <input {...register('discount' , {valueAsNumber:true , value:0})} id="discount" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                 </div>
                 <div className="productInputContV">
                     <label htmlFor="allow_reservation" className="text-sm/6 font-medium text-gray-900">Allow reservation:</label>
@@ -430,7 +432,7 @@ function ProductRegistrationForm () {
                 </div>
                 <div className="productInputCont">
                     <label htmlFor="price" className="text-sm/6 font-medium text-gray-900">Price:</label>
-                    <input {...register('price' , {valueAsNumber:true , required:true})} id="price" className="input input-bordered w-full max-w-xs text-sm"/>
+                    <input {...register('price' , {valueAsNumber:true , required:true})} id="price" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                 </div> 
             </div>
             <button type="submit" className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
