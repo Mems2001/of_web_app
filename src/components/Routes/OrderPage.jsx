@@ -69,7 +69,7 @@ function OrderPage () {
             // } else {
             //     URL = 'https://localhost:443/api/v1/orders/' + order_id;
             // }
-            
+
         axios.delete(URL)
             .then(res => {
                 // console.log(res);
@@ -109,11 +109,11 @@ function OrderPage () {
                         <FontAwesomeIcon icon={faArrowLeft} size="xl"/>
                     </button>
                     <div className="orderNCard">
-                        <label htmlFor="order_count">Pedido N°: </label>
+                        <label className="block text-sm/6 font-medium text-gray-900" htmlFor="order_count">Pedido N°: </label>
                         <a id="order_count">{order?.orderCount}</a>
                     </div>
                     <div className="orderPageTitles">
-                        <label htmlFor="user_name">Autor: </label>
+                        <label className="block text-sm/6 font-medium text-gray-900" htmlFor="user_name">Autor: </label>
                         <a id="user_name">{order?.User.user_name}</a>
                     </div>
                 </nav>
@@ -132,17 +132,17 @@ function OrderPage () {
                     <div className="rowForOrder">
                         <div className="orderInputCont">
                             <label className="block text-sm/6 font-medium text-gray-900" htmlFor="temu_id">Temu Id:</label>
-                            <input disabled={!edition} {...register('temu_id')} id="temu_id" name="temu_id" defaultValue={order?.temuId} />
+                            <input className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled={!edition} {...register('temu_id')} id="temu_id" name="temu_id" defaultValue={order?.temuId} />
                         </div>
                     </div>
                     <div className="rowForOrder">
-                        <div className="orderInputCont">
-                            <label htmlFor="delivery_company">Delivery Company:</label>
-                            <input disabled={!edition} {...register('delivery_company')} id="delivery_company" defaultValue={order?.deliveryCompany}/>
+                        <div className="orderInputContV">
+                            <label className="block text-sm/6 font-medium text-gray-900" htmlFor="delivery_company">Delivery Company:</label>
+                            <input className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" name="delivery_company" disabled={!edition} {...register('delivery_company')} id="delivery_company" defaultValue={order?.deliveryCompany}/>
                         </div>
-                        <div className="orderInputCont">
-                            <label htmlFor="delivery_id">Delivery Id:</label>
-                            <input disabled={!edition} {...register('delivery_id')} id="delivery_id" defaultValue={order?.deliveryId}/>
+                        <div className="orderInputContV">
+                            <label className="block text-sm/6 font-medium text-gray-900" htmlFor="delivery_id">Delivery Id:</label>
+                            <input className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled={!edition} {...register('delivery_id')} id="delivery_id" name="delivery_id" defaultValue={order?.deliveryId}/>
                         </div>
                     </div>
                     <div className="rowForOrder">

@@ -163,8 +163,9 @@
 .rowForOrder {
     display: flex;
     flex-direction: row;
+    
+    width: 100%;
 
-    width: 75vw;
     justify-content: space-between;
 }
 
@@ -173,6 +174,8 @@
     flex-direction: row;
     
     justify-content: space-between;
+
+    width: 100%;
 }
 
 .orderInputContV {
