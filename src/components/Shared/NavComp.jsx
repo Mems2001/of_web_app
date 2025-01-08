@@ -74,28 +74,24 @@ function NavComp () {
     }
 
     useEffect(
-        async () => {
-            try {
-                const token = await localStorage.getItem('token')
-                if (!isLogged) {
-                    if (token) {
-                        dispatch(setLogin());
-                        console.log('logged in');
-                        axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
-                        getProfile();
-                        getAdmin();
-                    }
-                } else {
-                    if (token) {
-                        dispatch(setLogin());
-                        console.log('logged in');
-                        axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
-                        getProfile();
-                        getAdmin();
-                    }
+        () => {
+            const token = localStorage?.getItem('token')
+            if (!isLogged) {
+                if (token) {
+                    dispatch(setLogin());
+                    console.log('logged in');
+                    axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
+                    getProfile();
+                    getAdmin();
                 }
-            } catch (error) {
-                throw error
+            } else {
+                if (token) {
+                    dispatch(setLogin());
+                    console.log('logged in');
+                    axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
+                    getProfile();
+                    getAdmin();
+                }
             }
         } , []
     )

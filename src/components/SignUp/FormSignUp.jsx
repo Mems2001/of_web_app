@@ -1,22 +1,22 @@
 import axios from "axios";
-import { useForm } from "react-hook-form"
-import { useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import variables from "../../../utils/variables";
+import { useState } from "react";
 
 function FormSignUp() {
     const {handleSubmit , register , reset} = useForm();
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const ip = variables.ip;
+    const [isLoading , setIsLoading] = useState(false);
 
     const submit = data => {
-        let URL = undefined
-            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://' + ip + '/api/v1/auth/register';
-            } else {
-                URL = 'https://localhost:443/api/v1/auth/register';
-            }
+        setIsLoading(true);
+        let URL = variables.url_prefix + '/api/v1/auth/register';
+            // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+            //     URL = 'https://' + ip + '/api/v1/auth/register';
+            // } else {
+            //     URL = 'https://localhost:443/api/v1/auth/register';
+            // }
 
         const defaultUser = {
             user_name: '',
@@ -26,11 +26,13 @@ function FormSignUp() {
 
         axios.post(URL ,  data)
             .then(res => {
-                reset(defaultUser)
+                reset(defaultUser);
+                setIsLoading(false);
                 navigate('/login')
             })
             .catch(err => {
-                console.log(err)
+                console.log(err);
+                setIsLoading(false)
             })
     }
 
@@ -58,7 +60,11 @@ function FormSignUp() {
                 <div>
             </div>
                 <div>
-                    <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Regístrate</button>
+                    <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    {isLoading? 
+                    <span className="loading loading-infinity loading-md"></span>
+                    : 'Regístrate'}
+                    </button>
                 </div>
 
                 <p className="mt-10 text-center text-sm/6 text-gray-500">
