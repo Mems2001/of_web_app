@@ -1,9 +1,8 @@
-import { NavLink, useNavigate } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 
 function AdminConsole () {
-    const navigate = useNavigate();
     const location = window.location.href.split('#')[1];
-    console.log(location);
+    // console.log(location);
 
     return (
         <div role="tablist" className="tabs tabs-boxed">

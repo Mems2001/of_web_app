@@ -6,15 +6,15 @@ import variables from "../../../utils/variables";
 
 function MyOrders () {
     const [orders , setOrders] = useState();
-    const ip = variables.ip;
+    // const ip = variables.ip;
 
     const getOrders = () => {
-        let URL = undefined
-        if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-            URL = 'https://' + ip + '/api/v1/orders/my_orders'
-        } else {
-            URL = 'https://localhost:443/api/v1/orders/my_orders';
-        }
+        let URL = variables.url_prefix + '/api/v1/orders/my_orders';
+        // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+        //     URL = 'https://' + ip + '/api/v1/orders/my_orders'
+        // } else {
+        //     URL = 'https://localhost:443/api/v1/orders/my_orders';
+        // }
 
         axios.get(URL)
             .then(res => {

@@ -56,12 +56,12 @@ function UserForm () {
     return (
         <form onSubmit={handleSubmit(submit)} className="space-y-5 w-4/5">
             <div className="flex flex-col items-center gap-y-3">
-                <h2 className="text-center text-2xl/9 font-bold tracking-tight text-gray-900">{profile?.userName}</h2>
                 <div className="avatar">
                     <div className="w-24 rounded-full">
                         <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
                     </div>
                 </div>
+                <h2 className="text-center text-2xl/9 font-bold tracking-tight text-gray-900">{profile?.userName}</h2>
             </div>
             <div className="userFormCont2 space-y-2">
                 <div className="userFormInputCont">

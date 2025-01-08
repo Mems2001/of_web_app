@@ -83,6 +83,8 @@ function NavComp () {
                     axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
                     getProfile();
                     getAdmin();
+                } else {
+                    dispatch(setLogout())
                 }
             } else {
                 if (token) {
@@ -91,6 +93,8 @@ function NavComp () {
                     axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
                     getProfile();
                     getAdmin();
+                } else {
+                    dispatch(setLogout())
                 }
             }
         } , []
