@@ -66,15 +66,15 @@ function UserForm () {
             <div className="userFormCont2 space-y-2">
                 <div className="userFormInputCont">
                     <label className="block text-sm/6 font-medium text-gray-900" htmlFor="user_name">Username:</label>
-                    <input className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled={!edition} defaultValue={profile?.userName} {...register('user_name')} type='text' id="user_name" name="user_name"/>
+                    <input className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled={!edition} defaultValue={profile?.userName} autoComplete="user_name" {...register('user_name')} type='text' id="user_name" name="user_name"/>
                 </div>
                 <div className="userFormInputCont">
                     <label className="block text-sm/6 font-medium text-gray-900" htmlFor="name">Name:</label>
-                    <input className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled={!edition} defaultValue={profile?.name} {...register('name')} type="text" id="name" name="name"/>
+                    <input className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled={!edition} defaultValue={profile?.name} autoComplete="name" {...register('name')} type="text" id="name" name="name"/>
                 </div>
                 <div className="userFormInputCont">
                     <label className="block text-sm/6 font-medium text-gray-900" htmlFor="last_name">Lastname:</label>
-                    <input className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled={!edition} defaultValue={profile?.lastName} {...register('last_name')} type="text" id="last_name" name="last_name"/>
+                    <input className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled={!edition} defaultValue={profile?.lastName} autoComplete="last_name" {...register('last_name')} type="text" id="last_name" name="last_name"/>
                 </div>
                 <div className="userFormInputCont">
                     <label className="block text-sm/6 font-medium text-gray-900" htmlFor="birth_date">Birth date</label>
@@ -82,7 +82,7 @@ function UserForm () {
                 </div>
                 <div className="userFormInputCont">
                     <label className="block text-sm/6 font-medium text-gray-900" htmlFor="email">email:</label>
-                    <input className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled={!edition} defaultValue={profile?.email} {...register('email')} type="email" id="email" name="email"/>
+                    <input className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled={!edition} defaultValue={profile?.email} autoComplete="email" {...register('email')} type="email" id="email" name="email"/>
                 </div>
                 <div className="userFormInputCont">
                     <label className="block text-sm/6 font-medium text-gray-900" htmlFor="phone">Phone:</label>

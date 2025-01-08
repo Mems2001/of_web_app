@@ -14,9 +14,14 @@
     display: flex;
 
     height: 15vh;
+    width: 55vw;
 
     justify-content: right;
     align-items: center;
+}
+
+.navbar {
+    position: fixed;
 }
 
 .titleCont {
@@ -29,10 +34,6 @@
 
 .navTitle {
     margin: 0;
-}
-
-.navBar {
-    width: 55vw;
 }
 
 .navList {

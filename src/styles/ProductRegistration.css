@@ -3,16 +3,13 @@
     flex-direction: column;
 
     justify-self: center;
-    /* align-items: center; */
+    align-items: center;
 
     gap: 1rem;
 
     width: 100vw;
 
     overflow: hidden;
-
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
 }
 
 .productRegisterForm {
@@ -20,6 +17,8 @@
     flex-direction: column;
 
     gap: 1rem;
+
+    width: 85vw;
 }
 
 .rowForProduct2 {

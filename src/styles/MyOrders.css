@@ -5,6 +5,8 @@
     gap: 1rem;
 
     align-items: center;
+
+    padding-bottom: 2rem;
 }
 
 .ordersCont {
@@ -14,6 +16,8 @@
     justify-self: center;
 
     gap: 1rem;
+
+    width: 85vw;
 }
 
  .orderLabel {

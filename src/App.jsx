@@ -35,23 +35,25 @@ function App() {
   return (
     <div className='App'> 
       <NavComp profile={profile}/>
-      <Routes>
-        <Route path='/' element={<Home profile={profile}/>} />
-        <Route path='/login' element={<Login />}/>
-        <Route path='/register' element={<SignUp />} />
-        <Route path='/products/:product_id' element={<ProductPage />}/>
+      <div className='pt-20'>
+        <Routes>
+          <Route path='/' element={<Home profile={profile}/>} />
+          <Route path='/login' element={<Login />}/>
+          <Route path='/register' element={<SignUp />} />
+          <Route path='/products/:product_id' element={<ProductPage />}/>
 
-        <Route element={<ProtectedRoutes />}>
-          <Route path='/user' element={<UserInfo />}/>
-        </Route>
-        <Route element={<ProtectedRoutesAdmin />}>
-          <Route path='/admin' element={<AdminConsole />}/>
-          <Route path='/admin/create_order' element={<CreateOrder />}/>
-          <Route path='/admin/my_orders' element={<MyOrders />}/>
-          <Route path='/admin/my_orders/:order_id' element={<OrderPage />}/>
-          <Route path='/admin/product_registration' element={<ProductRegistration />}/> 
-        </Route>
-      </Routes>
+          <Route element={<ProtectedRoutes />}>
+            <Route path='/user' element={<UserInfo />}/>
+          </Route>
+          <Route element={<ProtectedRoutesAdmin />}>
+            <Route path='/admin' element={<AdminConsole />}/>
+            <Route path='/admin/create_order' element={<CreateOrder />}/>
+            <Route path='/admin/my_orders' element={<MyOrders />}/>
+            <Route path='/admin/my_orders/:order_id' element={<OrderPage />}/>
+            <Route path='/admin/product_registration' element={<ProductRegistration />}/> 
+          </Route>
+        </Routes>
+      </div>
     </div>
   )
 }

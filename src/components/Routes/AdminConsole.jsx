@@ -5,7 +5,7 @@ function AdminConsole () {
     // console.log(location);
 
     return (
-        <div role="tablist" className="tabs tabs-boxed">
+        <div role="tablist" className="flex tabs tabs-boxed justify-self-center">
             
                 <NavLink role="tab" className={location?.includes('my_orders') ? 'tab bg-gray-300' : 'tab'} to={'/admin/my_orders'}>
                     Mis pedidos

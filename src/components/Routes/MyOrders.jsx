@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
-import OrdersCard from "../MyOrders/OrderCard";
+import OrderCard from "../MyOrders/OrderCard";
+import OrderCardMobile from '../MyOrders/OrderCardMobile';
 import AdminConsole from "./AdminConsole";
 import variables from "../../../utils/variables";
 
@@ -38,7 +39,7 @@ function MyOrders () {
             <AdminConsole />
             <div className="ordersCont">
                 {orders?.map(
-                    order => <OrdersCard order={order} key={order.id}/>
+                    order => <OrderCardMobile order={order} key={order.id}/>
                 )}
             </div>
         </div>
