@@ -21,12 +21,12 @@ function OrderPage () {
     const [edition , setEdition] = useState(false);
 
     const submit = data => {
-        let URL = undefined
-            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://192.168.1.6:443/api/v1/orders/' + order_id;
-            } else {
-                URL = 'https://localhost:443/api/v1/orders/' + order_id;
-            }
+        let URL = variables.url_prefix + '/api/v1/orders/' + order_id;
+            // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+            //     URL = 'https://192.168.1.6:443/api/v1/orders/' + order_id;
+            // } else {
+            //     URL = 'https://localhost:443/api/v1/orders/' + order_id;
+            // }
 
         axios.put(URL , data)
             .then(res => {
@@ -63,12 +63,13 @@ function OrderPage () {
     }
 
     const deleteOrder = () => {
-        let URL = undefined
-            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://192.168.1.6:443/api/v1/orders/' + order_id;
-            } else {
-                URL = 'https://localhost:443/api/v1/orders/' + order_id;
-            }
+        let URL = variables.url_prefix + '/api/v1/orders/' + order_id;
+            // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+            //     URL = 'https://192.168.1.6:443/api/v1/orders/' + order_id;
+            // } else {
+            //     URL = 'https://localhost:443/api/v1/orders/' + order_id;
+            // }
+            
         axios.delete(URL)
             .then(res => {
                 // console.log(res);
@@ -130,8 +131,8 @@ function OrderPage () {
                 <form className="orderDataCont" >
                     <div className="rowForOrder">
                         <div className="orderInputCont">
-                            <label htmlFor="temu_id">Temu Id:</label>
-                            <input disabled={!edition} {...register('temu_id')} id="temu_id" defaultValue={order?.temuId} />
+                            <label className="block text-sm/6 font-medium text-gray-900" htmlFor="temu_id">Temu Id:</label>
+                            <input disabled={!edition} {...register('temu_id')} id="temu_id" name="temu_id" defaultValue={order?.temuId} />
                         </div>
                     </div>
                     <div className="rowForOrder">
