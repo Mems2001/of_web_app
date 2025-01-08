@@ -103,6 +103,8 @@
     align-items: center;
 
     gap: 1rem;
+
+    padding-bottom: 2rem;
 }
 
 .orderAuxCont {
@@ -167,6 +169,8 @@
     width: 100%;
 
     justify-content: space-between;
+
+    gap: 1rem;
 }
 
 .orderInputCont {
