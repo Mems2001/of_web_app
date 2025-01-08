@@ -146,12 +146,43 @@ function OrderPage () {
                         </div>
                     </div>
                     <div className="rowForOrder">
-                        <div className="orderInputCont">
-                            <label htmlFor="products_count">Products count:</label>
-                            <input disabled={!edition} {...register('products_count')} type="number" id="products_count" defaultValue={order?.productsCount}/>
+                        <div className="orderInputContV">
+                            <label className="block text-sm/6 font-medium text-gray-900" htmlFor="products_count">Products count:</label>
+                            <input className="block w-full text-sm rounded-md bg-white px-3 py-1.5 text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" disabled={!edition} {...register('products_count')} type="number" id="products_count" defaultValue={order?.productsCount}/>
                         </div>
-                        <div>
-                            Productos
+                        <div className="flex flex-col w-1/2 overflow-hidden">
+                            <label className="block text-sm/6 font-medium text-gray-900">Products:</label>
+                            <div className="carousel carousel-end rounded-box">
+                                <div className="carousel-item w-14 h-14">
+                                    <img src="https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp" alt="Drink" />
+                                </div>
+                                <div className="carousel-item w-14 h-14">
+                                    <img
+                                    src="https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.webp"
+                                    alt="Drink" />
+                                </div>
+                                <div className="carousel-item w-14 h-14">
+                                    <img
+                                    src="https://img.daisyui.com/images/stock/photo-1572635148818-ef6fd45eb394.webp"
+                                    alt="Drink" />
+                                </div>
+                                <div className="carousel-item w-14 h-14">
+                                    <img
+                                    src="https://img.daisyui.com/images/stock/photo-1494253109108-2e30c049369b.webp"
+                                    alt="Drink" />
+                                </div>
+                                <div className="carousel-item w-14 h-14">
+                                    <img src="https://img.daisyui.com/images/stock/photo-1550258987-190a2d41a8ba.webp" alt="Drink" />
+                                </div>
+                                <div className="carousel-item w-14 h-14">
+                                    <img src="https://img.daisyui.com/images/stock/photo-1559181567-c3190ca9959b.webp" alt="Drink" />
+                                </div>
+                                <div className="carousel-item w-14 h-14">
+                                    <img
+                                    src="https://img.daisyui.com/images/stock/photo-1601004890684-d8cbf643f5f2.webp"
+                                    alt="Drink" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className="rowForOrder">
