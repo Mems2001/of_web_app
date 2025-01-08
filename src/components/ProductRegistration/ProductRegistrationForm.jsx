@@ -17,7 +17,6 @@ function ProductRegistrationForm () {
     const [otherDetCont , setOtherDetCont] = useState(0);
     const [loading , setLoading] = useState(false);
     const navigate = useNavigate();
-    const ip = variables.ip;
 
     const toggleLoading = (value) => {
         setLoading(value)
@@ -43,16 +42,16 @@ function ProductRegistrationForm () {
     const submit = data => {
         console.log(data)
 
-        let URL = undefined
-            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://' + ip + '/api/v1/admin/products';
-            } else {
-                URL = 'https://localhost:443/api/v1/admin/products';
-            }
+        let URL = variables.url_prefix + '/api/v1/admin/products';
+            // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+            //     URL = 'https://' + ip + '/api/v1/admin/products';
+            // } else {
+            //     URL = 'https://localhost:443/api/v1/admin/products';
+            // }
 
         axios.post(URL , data)
             .then(res => {
-                // console.log(res)
+                console.log(res)
                 navigate('/admin/my_orders')
             })
             .catch(err => {
@@ -150,21 +149,21 @@ function ProductRegistrationForm () {
 
     useEffect (
         () => {
-            let URL = undefined;
-            let URL2 = undefined;
-            let URL3 = undefined;
-            let URL4 = undefined;
-            if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                URL = 'https://' + ip + '/api/v1/orders/my_orders';
-                URL2 = 'https://' + ip + '/api/v1/main_categories';
-                URL3 = 'https://' + ip + '/api/v1/product_details/colors';
-                URL4 = 'https://' + ip + '/api/v1/product_details/materials';
-            } else {
-                URL = 'https://localhost:443/api/v1/orders/my_orders';
-                URL2 = 'https://localhost:443/api/v1/main_categories';
-                URL3 = 'https://localhost:443/api/v1/product_details/colors';
-                URL4 = 'https://localhost:443/api/v1/product_details/materials';
-            }
+            let URL = variables.url_prefix + '/api/v1/orders/my_orders';
+            let URL2 = variables.url_prefix + '/api/v1/main_categories';
+            let URL3 = variables.url_prefix + '/api/v1/product_details/colors';
+            let URL4 = variables.url_prefix + '/api/v1/product_details/materials';
+            // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+            //     URL = 'https://' + ip + '/api/v1/orders/my_orders';
+            //     URL2 = 'https://' + ip + '/api/v1/main_categories';
+            //     URL3 = 'https://' + ip + '/api/v1/product_details/colors';
+            //     URL4 = 'https://' + ip + '/api/v1/product_details/materials';
+            // } else {
+            //     URL = 'https://localhost:443/api/v1/orders/my_orders';
+            //     URL2 = 'https://localhost:443/api/v1/main_categories';
+            //     URL3 = 'https://localhost:443/api/v1/product_details/colors';
+            //     URL4 = 'https://localhost:443/api/v1/product_details/materials';
+            // }
 
             axios.get(URL)
                 .then(res => {
@@ -288,7 +287,7 @@ function ProductRegistrationForm () {
                 </div>
                 <div className="productInputContV">
                     <label htmlFor="bought_price" className="text-sm/6 font-medium text-gray-900">Bought price:</label>
-                    <input id="bought_price" {...register('bought_price' , {valueAsNumber:true})} className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/> 
+                    <input id="bought_price" {...register('bought_price' , {valueAsNumber:true , required:true})} className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/> 
                 </div>
             </div>
             <div className="divider m-0"></div>
@@ -331,7 +330,7 @@ function ProductRegistrationForm () {
             <div>
                 <div className="productInputContV w-full">
                     <label htmlFor="description" className="text-sm/6 font-medium text-gray-900">Description:</label>
-                    <textarea rows={3} {...register('description')} className="textarea textarea-bordered text-sm self-stretch" id="description" type="text"/>
+                    <textarea rows={3} {...register('description' , {required:true})} className="textarea textarea-bordered text-sm self-stretch" id="description" type="text"/>
                 </div>
             </div>
             <div>
@@ -367,6 +366,10 @@ function ProductRegistrationForm () {
                     </select>
                     <AddMaterial setLoading={toggleLoading}/>
                 </div>
+            </div>
+            <div className="productInputCont">
+                <label className="text-sm/6 font-medium text-gray-900 w-full">Card Image:</label>
+                <input {...register('card_image')} className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" placeholder="URL" type="text" id="card_image" name="card_image"/>
             </div>
             <div className="rowForProduct3">
                 <div className="productInputContV">

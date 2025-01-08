@@ -21,7 +21,7 @@ function ProductCard ({product}) {
                                 <div key={product.id} className="group">
                                     <img
                                         alt={product.imageAlt}
-                                        src={'https://tailwindui.com/plus/img/ecommerce-images/product-page-02-tertiary-product-shot-01.jpg'}
+                                        src={product.cardImage}
                                         className="aspect-square w-full bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
                                     />
                                 </div>
