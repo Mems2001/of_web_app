@@ -18,7 +18,7 @@ function OrderCardMobile ({order}) {
     )
 
     return (
-        <article className="flex flex-col w-full card card-bordered shadow-md p-0">
+        <article className="flex flex-col w-full card card-bordered shadow p-0">
             <div className="flex flex-row card card-bordered justify-between bg-gray-100 py-2 px-4">
                 <span>N° {order?.orderCount}</span>
                 <span>ID: {order?.temuId}</span>

@@ -9,12 +9,13 @@ function UserForm () {
     // const ip = variables.ip;
     const profile = useSelector(state => state.profileSlice)
     const [edition , setEdition] = useState(false);
+    const [isLoading , setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const {register , handleSubmit , reset} = useForm();
 
     const handleEdition = (data) => {
         if (edition) {
-           
+            setIsLoading(true)
             let URL = variables.url_prefix + '/api/v1/profiles/' + profile.id;
             // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
             //     URL = 'https://' + ip + '/api/v1/profiles/' + profile.id;
@@ -30,6 +31,7 @@ function UserForm () {
                 .catch(err => {
                     console.log(err)
                 })
+            setIsLoading(false)
             setEdition(false)
         } else {
             setEdition(true)
@@ -102,7 +104,12 @@ function UserForm () {
                 </div>
             </div>
             <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                {edition ? 'Guardar' : 'Editar'}
+                {edition ? 
+                    isLoading ? 
+                    <span className="loading loading-infinity loading-md"></span>
+                    :
+                    'Guardar'
+                 : 'Editar'}
             </button>
         </form>
     )

@@ -14,6 +14,7 @@
     flex-direction: column;
 
     justify-self: center;
+    align-items: center;
 
     gap: 1rem;
 
@@ -99,6 +100,17 @@
     display: flex;
     flex-direction: column;
 
+    align-items: center;
+
+    gap: 1rem;
+}
+
+.orderAuxCont {
+    display: flex;
+    flex-direction: column;
+    
+    width: 85vw;
+
     gap: 1rem;
 }
 
@@ -118,9 +130,7 @@
 
     justify-content: space-between;
 
-    padding-top: 2rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    width: 100%;
 }
 
 .orderPageTitles {
@@ -138,14 +148,15 @@
     flex-direction: row;
 
     justify-content: center;
+    align-items: center;
     gap: 1rem;
 }
 
-.btn-active {
+.btn-inactive {
     display: none;
 }
 
-.btn-inactive {
+.btn-active {
     display: flex;
 }
 
