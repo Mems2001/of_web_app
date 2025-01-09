@@ -5,6 +5,18 @@
     border: solid black 1px;
 }
 
+.productHero2 {
+    height: 75%;
+}
+
+.productHero3 {
+    height: 25%;
+}
+
 .productPageCont {
+    height: 92vh;
+}
+
+.skeletonHeight {
     height: 92vh;
 }

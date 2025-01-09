@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import variables from "../../../utils/variables";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 function ProductPage () {
     const {product_id} = useParams();
@@ -12,35 +14,79 @@ function ProductPage () {
     const [starV3 , setStarV3] = useState(0);
     const [starV4 , setStarV4] = useState(0);
     const [starV5 , setStarV5] = useState(0);
+
+    const setStars = (rating) => {
+        let values = rating
+        if (values > 1) {
+            setStarV1(100);
+        } else {
+            setStarV1(values * 100)
+        }
+        values -= 1
+
+        if (values > 1) {
+            setStarV2(100);
+        } else {
+            setStarV2(values * 100)
+        }
+        values -= 1
+
+        if (values > 1) {
+            setStarV3(100);
+        }  else {
+            setStarV3(values * 100)
+        }
+        values -= 1
+
+        if (values > 1) {
+            setStarV4(100);
+        } else {
+            setStarV4(values * 100);
+        }
+        values -= 1
+
+        if (values > 1) {
+            setStarV5(100);
+        } else {
+            setStarV5(values * 100);
+        }
+        
+        return setLoading(false)
+    }
+
+    const navBack = () => {
+
+    }
     
     useEffect(
         () => {
-            console.log(loading)
-            setLoading(true)
-            let URL = variables.url_prefix + '/api/v1/products/' + product_id;
-            // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-            //     URL = 'https://' + ip + '/api/v1/products/' + product_id;
-            // } else {
-            //     URL = 'https://localhost:443/api/v1/products/' + product_id;
-            // }
-            
-            axios.get(URL)
-            .then(res => {
-                console.log(res)
-                setProduct(res.data.data);
-                setLoading(false)
-            })
-            .catch(err => {
-                throw err
-            })
-
-        } , []
+            if (product) {
+                setStars(product.rating)
+            } else {
+                let URL = variables.url_prefix + '/api/v1/products/' + product_id;
+                // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+                //     URL = 'https://' + ip + '/api/v1/products/' + product_id;
+                // } else {
+                //     URL = 'https://localhost:443/api/v1/products/' + product_id;
+                // }
+                
+                axios.get(URL)
+                .then(res => {
+                    console.log(res)
+                    setProduct(res.data.data);
+                })
+                .catch(err => {
+                    throw err
+                })
+            }
+           
+        } , [product]
     )
 
     if (loading) {
         return (
-            <div className="flex px-4 w-full h-3/4 flex-col gap-4">
-                <div className="skeleton h-32 w-full"></div>
+            <div className="skeletonHeight flex px-4 w-full flex-col gap-4">
+                <div className="skeleton h-3/4 w-full"></div>
                 <div className="skeleton h-4 w-28"></div>
                 <div className="skeleton h-4 w-full"></div>
                 <div className="skeleton h-4 w-full"></div>
@@ -49,10 +95,45 @@ function ProductPage () {
     } else if(!loading) {
         return (
             <div className="productPageCont bg-white overscroll-auto overflow-auto">
-                <section className="productHero1 flex flex-col w-full gap-4">
-                    <img src="https://tailwindui.com/plus/img/ecommerce-images/product-page-02-secondary-product-shot.jpg" className="w-full h-3/4 object-cover"/>
+                <section className="productHero1 flex flex-col w-full gap-4 relative">
+                    <div className="productHero2 relative">
+                        {/* <div className="w-full relative h-3/4">
+                            <button onClick={navBack} className="btn btn-circle btn-md absolute z-10 top-3 left-3">
+                                <FontAwesomeIcon icon={faArrowLeft} size="2xl"/>
+                            </button>
+                            <img src={product?.cardImage} className="w-full h-full object-cover absolute"/>
+                        </div> */}
+                        <div className="carousel w-full">
+                                <div id="item1" className="carousel-item w-full">
+                                    <img
+                                    src="https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp"
+                                    className="w-full" />
+                                </div>
+                                <div id="item2" className="carousel-item w-full">
+                                    <img
+                                    src="https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp"
+                                    className="w-full" />
+                                </div>
+                                <div id="item3" className="carousel-item w-full">
+                                    <img
+                                    src="https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp"
+                                    className="w-full" />
+                                </div>
+                                <div id="item4" className="carousel-item w-full">
+                                    <img
+                                    src="https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp"
+                                    className="w-full" />
+                                </div>
+                            </div>
+                            <div className="flex w-full justify-center gap-2 py-2">
+                                <a href="#item1" className="btn btn-xs">1</a>
+                                <a href="#item2" className="btn btn-xs">2</a>
+                                <a href="#item3" className="btn btn-xs">3</a>
+                                <a href="#item4" className="btn btn-xs">4</a>
+                            </div>
+                    </div>
                     
-                    <div className="flex flex-col w-full px-4 gap-3">
+                    <div className="productHero3 flex flex-col w-full px-4 gap-3">
                         <div className="flex flex-row justify-between">
                             <div className="flex flex-col gap-1">
                                 <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{product?.name}</h1>
