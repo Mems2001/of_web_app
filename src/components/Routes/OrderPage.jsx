@@ -173,7 +173,7 @@ function OrderPage () {
                         </div>
                         <div className="flex flex-col w-4/5 overflow-hidden">
                             <label className="block text-sm/6 font-medium text-gray-900">Products:</label>
-                            <div className="carousel carousel-end rounded-box">
+                            <div className="carousel rounded-box">
                                 {!isLoading && products? 
                                     products?.map(product => 
                                         <ProductMiniCard product={product} key={`miniCard${product.id}`}/>

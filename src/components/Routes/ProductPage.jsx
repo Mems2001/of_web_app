@@ -14,6 +14,7 @@ function ProductPage () {
     const [starV3 , setStarV3] = useState(0);
     const [starV4 , setStarV4] = useState(0);
     const [starV5 , setStarV5] = useState(0);
+    const [selectedImage , setSelectedImage] = useState()
 
     const setStars = (rating) => {
         let values = rating
@@ -61,6 +62,7 @@ function ProductPage () {
     useEffect(
         () => {
             if (product) {
+                setSelectedImage(product.otherImages[0])
                 setStars(product.rating)
             } else {
                 let URL = variables.url_prefix + '/api/v1/products/' + product_id;
@@ -97,42 +99,28 @@ function ProductPage () {
             <div className="productPageCont bg-white overscroll-auto overflow-auto">
                 <section className="productHero1 flex flex-col w-full gap-4 relative">
                     <div className="productHero2 relative">
-                        {/* <div className="w-full relative h-3/4">
+                        <div className="w-full relative h-3/4">
                             <button onClick={navBack} className="btn btn-circle btn-md absolute z-10 top-3 left-3">
                                 <FontAwesomeIcon icon={faArrowLeft} size="2xl"/>
                             </button>
-                            <img src={product?.cardImage} className="w-full h-full object-cover absolute"/>
-                        </div> */}
-                        <div className="carousel w-full">
-                                <div id="item1" className="carousel-item w-full">
-                                    <img
-                                    src="https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp"
-                                    className="w-full" />
-                                </div>
-                                <div id="item2" className="carousel-item w-full">
-                                    <img
-                                    src="https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp"
-                                    className="w-full" />
-                                </div>
-                                <div id="item3" className="carousel-item w-full">
-                                    <img
-                                    src="https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp"
-                                    className="w-full" />
-                                </div>
-                                <div id="item4" className="carousel-item w-full">
-                                    <img
-                                    src="https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp"
-                                    className="w-full" />
-                                </div>
+                            <img src={selectedImage} className="w-full h-full object-cover absolute"/>
+                        </div>
+                        <div className="h-1/4 px-3 flex justify-center">
+                            <div className="carousel carousel-center rounded-box h-full w-44">
+                                {/* <div className="carousel-item"></div> */}
+                                {product.otherImages.map(
+                                    (image) => 
+                                        <div onClick={() => setSelectedImage(image)} key={image} className="carousel-item carouselImageWidth">
+                                            <img
+                                            src={image}
+                                            />
+                                        </div>
+                                    
+                                )}
+                                {/* <div className="carousel-item"></div> */}
                             </div>
-                            <div className="flex w-full justify-center gap-2 py-2">
-                                <a href="#item1" className="btn btn-xs">1</a>
-                                <a href="#item2" className="btn btn-xs">2</a>
-                                <a href="#item3" className="btn btn-xs">3</a>
-                                <a href="#item4" className="btn btn-xs">4</a>
-                            </div>
+                        </div> 
                     </div>
-                    
                     <div className="productHero3 flex flex-col w-full px-4 gap-3">
                         <div className="flex flex-row justify-between">
                             <div className="flex flex-col gap-1">
