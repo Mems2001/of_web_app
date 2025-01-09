@@ -99,19 +99,19 @@ function ProductPage () {
             <div className="productPageCont bg-white overscroll-auto overflow-auto">
                 <section className="productHero1 flex flex-col w-full gap-4 relative">
                     <div className="productHero2 relative">
-                        <div className="w-full relative h-3/4">
-                            <button onClick={navBack} className="btn btn-circle btn-md absolute z-10 top-3 left-3">
+                        <div className="w-full relative h-5/6">
+                            <button onClick={navBack} className="btn btn-circle btn-md absolute z-10 top-3 left-12">
                                 <FontAwesomeIcon icon={faArrowLeft} size="2xl"/>
                             </button>
-                            <img src={selectedImage} className="w-full h-full object-cover absolute"/>
+                            <img src={selectedImage} className="w-full h-full object-contain absolute"/>
                         </div>
-                        <div className="h-1/4 px-3 flex justify-center">
+                        <div className="h-1/4 flex absolute bottom-0 right-0">
                             <div className="carousel carousel-center rounded-box h-full w-44">
                                 {/* <div className="carousel-item"></div> */}
                                 {product.otherImages.map(
                                     (image) => 
-                                        <div onClick={() => setSelectedImage(image)} key={image} className="carousel-item carouselImageWidth">
-                                            <img
+                                        <div onClick={() => setSelectedImage(image)} key={image} className="carousel-item carouselImageWidth bg-black h-full justify-center items-center">
+                                            <img className={selectedImage !== image? 'w-full h-full' : 'w-10/12 h-5/6'}
                                             src={image}
                                             />
                                         </div>
