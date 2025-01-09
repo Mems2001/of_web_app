@@ -369,7 +369,7 @@ function ProductRegistrationForm () {
             </div>
             <div className="productInputCont">
                 <label className="text-sm/6 font-medium text-gray-900 w-full">Card Image:</label>
-                <input {...register('card_image')} className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" placeholder="URL" type="text" id="card_image" name="card_image"/>
+                <input {...register('card_image' , {required:true})} className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" placeholder="URL" type="text" id="card_image" name="card_image"/>
             </div>
             <div className="rowForProduct3">
                 <div className="productInputContV">
@@ -403,7 +403,7 @@ function ProductRegistrationForm () {
                 <div className="productInputContV">
                     <label htmlFor="main_category_id" className="text-sm/6 font-medium text-gray-900">Main Category:</label>
                     <select {...register('main_category_id' , {required:true})} id="main_category_id" className="select select-bordered select-sm w-52 max-w-xs">
-                        <option value={undefined} disabled={true} hidden={true}>Elige una categoría</option> 
+                        <option value={undefined}>Elige una categoría</option> 
                         {mainCategories?.map(
                             category => <option key={category.id} value={category.id}>{category.name}</option>
                         )}

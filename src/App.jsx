@@ -11,6 +11,7 @@ import './styles/MyOrders.css'
 import './styles/ProductRegistration.css'
 import './styles/Home.css'
 import './styles/ProductPage.css'
+import './styles/ProductPageAdmin.css'
 
 import NavComp from './components/Shared/NavComp'
 import Login from './components/Routes/Login'
@@ -27,6 +28,7 @@ import MyOrders from './components/Routes/MyOrders'
 import OrderPage from './components/Routes/OrderPage'
 import ProductRegistration from './components/Routes/ProductRegistration'
 import ProductPage from './components/Routes/ProductPage';
+import ProductPageAdmin from './components/Routes/ProductPageAdmin';
 
 function App() {
 
@@ -50,6 +52,7 @@ function App() {
             <Route path='/admin/create_order' element={<CreateOrder />}/>
             <Route path='/admin/my_orders' element={<MyOrders />}/>
             <Route path='/admin/my_orders/:order_id' element={<OrderPage />}/>
+            <Route path='/admin/my_orders/:order_id/products/:product_id' element={<ProductPageAdmin />}/>
             <Route path='/admin/product_registration' element={<ProductRegistration />}/> 
           </Route>
         </Routes>

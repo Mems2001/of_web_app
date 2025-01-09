@@ -83,7 +83,7 @@ function OrderForm () {
                         <input {...register('delivery_id')} id="delivery_id" type="text"/>
                     </div>
                 </div>
-                <div className='rowForOrder'>
+                {/* <div className='rowForOrder'>
                     <div className="orderInputCont">
                         <label htmlFor="products_count">Products count:</label>
                         <input {...register('products_count' , {required:true , valueAsNumber:true})} id="products_count" type="number"/>
@@ -100,7 +100,7 @@ function OrderForm () {
                         <label htmlFor='discount_products_count'>Discounted products count:</label>
                         <input id='discount_products_count' type='number' {...register('discount_products_count' , {valueAsNumber:true})}/>
                     </div>
-                </div>
+                </div> */}
                 <div className='rowForOrder'>
                     <div className="orderInputContV">
                         <label htmlFor="order_date">Order Date:</label>
