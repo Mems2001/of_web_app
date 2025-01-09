@@ -1,10 +1,10 @@
 .productHero1 {
-    height: 89vh;
-    /* 94vh */
+    height: 92vh;
+    /* 89 o 94vh */
 
     border: solid black 1px;
 }
 
 .productPageCont {
-    height: 91vh;
+    height: 92vh;
 }
