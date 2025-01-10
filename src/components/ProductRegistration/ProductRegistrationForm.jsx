@@ -303,11 +303,11 @@ function ProductRegistrationForm () {
                     <input {...register('model')} id="model" type="text" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                 </div>
                 <div className="productInputContV">
-                    <label htmlFor="color_id" className="text-sm/6 font-medium text-gray-900">Colors:</label>
-                    <select {...register('color_id' , {required:true})} id="color_id" className="select select-bordered select-sm w-full max-w-xs">
-                        <option value={null}>Elige un color</option>
+                    <label htmlFor="colors_ids" className="text-sm/6 font-medium text-gray-900">Colors:</label>
+                    <select {...register('colors_ids' , {required:true})} multiple={true} id="colors_ids" className="select select-bordered select-sm w-full max-w-xs">
+                        {/* <option value={null}>Elige un color</option> */}
                         {colors?.map(
-                            color => <option key={color.id} value={color.id}>{color.name}</option>
+                            color => <option  key={color.id} value={color.id}>{color.name}</option>
                         )}
                     </select>
                     <AddColor setLoading={toggleLoading}/>

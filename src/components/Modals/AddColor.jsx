@@ -6,15 +6,14 @@ import { useState } from "react";
 function AddColor ({setLoading}) {
     const {register , reset , handleSubmit} = useForm();
     const [modal , setModal] = useState(false);
-    const ip = variables.ip;
 
     const submit = (data) => {
-        let URL = undefined;
-        if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-            URL = 'https://' + ip + '/api/v1/product_details/colors'
-        } else {
-            URL = 'https://localhost:443/api/v1/product_details/colors';
-        }
+        let URL = variables.url_prefix + '/api/v1/product_details/colors';
+        // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+        //     URL = 'https://' + ip + '/api/v1/product_details/colors'
+        // } else {
+        //     URL = 'https://localhost:443/api/v1/product_details/colors';
+        // }
 
         const defaultData = {
             'name': '',
