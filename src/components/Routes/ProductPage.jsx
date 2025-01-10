@@ -74,7 +74,7 @@ function ProductPage () {
                 
                 axios.get(URL)
                 .then(res => {
-                    console.log(res)
+                    // console.log(res)
                     setProduct(res.data.data);
                 })
                 .catch(err => {
@@ -97,17 +97,17 @@ function ProductPage () {
     } else if(!loading) {
         return (
             <div className="productPageCont bg-white overscroll-auto overflow-auto">
-                <section className="productHero1 flex flex-col w-full gap-4 relative">
+                <section className="productHero1 flex flex-col w-full relative">
                     <div className="productHero2 relative">
                         <div className="w-full relative h-5/6">
-                            <button onClick={navBack} className="btn btn-circle btn-md absolute z-10 top-3 left-12">
+                            <button onClick={navBack} className="btn btn-circle btn-md absolute z-10 top-3 left-10">
                                 <FontAwesomeIcon icon={faArrowLeft} size="2xl"/>
                             </button>
                             <img src={selectedImage} className="w-full h-full object-contain absolute"/>
                         </div>
                         <div className="h-1/4 flex absolute bottom-0 right-0">
                             <div className="carousel carousel-center rounded-box h-full w-44">
-                                {/* <div className="carousel-item"></div> */}
+                               
                                 {product.otherImages.map(
                                     (image) => 
                                         <div onClick={() => setSelectedImage(image)} key={image} className="carousel-item carouselImageWidth bg-black h-full justify-center items-center">
@@ -115,13 +115,34 @@ function ProductPage () {
                                             src={image}
                                             />
                                         </div>
-                                    
                                 )}
-                                {/* <div className="carousel-item"></div> */}
+                               
                             </div>
-                        </div> 
+                        </div>
+                        <div className="w-1/2 ml-4 h-1/6 flex items-center justify-center">
+                            <div className="carousel carousel-center rounded-box gap-4">
+                                <div className="carousel-item overflow-hidden h-20 w-20">
+                                    <img className="object-cover rounded-full h-full w-full" src="https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp" alt="Drink" />
+                                </div>
+                                <div className="carousel-item overflow-hidden w-20 h-20">
+                                    <img className="object-cover rounded-full h-full w-full"
+                                    src="https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.webp"
+                                    alt="Drink" />
+                                </div>
+                                <div className="carousel-item overflow-hidden w-20 h-20">
+                                    <img className="object-cover rounded-full h-full w-full"
+                                    src="https://img.daisyui.com/images/stock/photo-1572635148818-ef6fd45eb394.webp"
+                                    alt="Drink" />
+                                </div>
+                                <div className="carousel-item overflow-hidden w-20 h-20">
+                                    <img className="object-cover rounded-full h-full w-full"
+                                    src="https://img.daisyui.com/images/stock/photo-1494253109108-2e30c049369b.webp"
+                                    alt="Drink" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="productHero3 flex flex-col w-full px-4 gap-3">
+                    <div className="productHero3 flex flex-col w-full px-4 gap-3 py-6">
                         <div className="flex flex-row justify-between">
                             <div className="flex flex-col gap-1">
                                 <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{product?.name}</h1>
