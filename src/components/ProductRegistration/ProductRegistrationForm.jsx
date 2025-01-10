@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import variables from "../../../utils/variables";
 import AddColor from "../Modals/AddColor";
 import AddMaterial from "../Modals/AddMaterial";
+import AddImages from "../Modals/AddImages";
 
 function ProductRegistrationForm () {
     const [myOrders , setMyOrders] = useState([]);
@@ -16,6 +17,7 @@ function ProductRegistrationForm () {
     const [otherDetails , setOtherDetails] = useState(false);
     const [otherDetCont , setOtherDetCont] = useState(0);
     const [loading , setLoading] = useState(false);
+    const [selectedColors , setSelectedColors] = useState([]);
     const navigate = useNavigate();
 
     const toggleLoading = (value) => {
@@ -23,7 +25,7 @@ function ProductRegistrationForm () {
     }
 
     const numbers = [1 , 2 , 3 , 4 , 5];
-    const {register , handleSubmit , reset} = useForm();
+    const {register , handleSubmit , reset , getValues} = useForm();
 
     const selectedReceptionDate = (e) => {
         for (let order of myOrders) {
@@ -145,6 +147,12 @@ function ProductRegistrationForm () {
 
     const otherDetContMinus = () => {
         setOtherDetCont(otherDetCont - 1)
+    }
+
+    const addSelectedColors = () => {
+        const colors = getValues('colors_ids')
+        // console.log(colors)
+        return setSelectedColors(colors)
     }
 
     useEffect (
@@ -307,7 +315,7 @@ function ProductRegistrationForm () {
                     <select {...register('colors_ids' , {required:true})} multiple={true} id="colors_ids" className="select select-bordered select-sm w-full max-w-xs">
                         {/* <option value={null}>Elige un color</option> */}
                         {colors?.map(
-                            color => <option  key={color.id} value={color.id}>{color.name}</option>
+                            color => <option onClick={addSelectedColors} key={color.id} value={color.id}>{color.name}</option>
                         )}
                     </select>
                     <AddColor setLoading={toggleLoading}/>
@@ -367,6 +375,12 @@ function ProductRegistrationForm () {
                     <AddMaterial setLoading={toggleLoading}/>
                 </div>
             </div>
+
+            <div className="productInputCont">
+                <label>Images:</label>
+                <AddImages colors={selectedColors} allColors={colors}/>
+            </div>
+
             <div className="productInputCont">
                 <label className="text-sm/6 font-medium text-gray-900 w-full">Card Image:</label>
                 <input {...register('card_image' , {required:true})} className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" placeholder="URL" type="text" id="card_image" name="card_image"/>
@@ -430,8 +444,8 @@ function ProductRegistrationForm () {
             </div>
             <div className="rowForProduct2">
                 <div className="productInputCont">
-                    <label htmlFor="market_testing" className="text-sm/6 font-medium text-gray-900">Market Testing:</label>
-                    <input {...register('market_testing')} id="market_testing" defaultChecked={false} type="checkbox" className="checkbox"/>
+                    <label htmlFor="for_sale" className="text-sm/6 font-medium text-gray-900">For sale:</label>
+                    <input {...register('for_sale')} id="for_sale" defaultChecked={true} type="checkbox" className="checkbox"/>
                 </div>
                 <div className="productInputCont">
                     <label htmlFor="price" className="text-sm/6 font-medium text-gray-900">Price:</label>
