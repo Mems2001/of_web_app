@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import variables from "../../../utils/variables";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -14,7 +14,8 @@ function ProductPage () {
     const [starV3 , setStarV3] = useState(0);
     const [starV4 , setStarV4] = useState(0);
     const [starV5 , setStarV5] = useState(0);
-    const [selectedImage , setSelectedImage] = useState()
+    const [selectedImage , setSelectedImage] = useState();
+    const navigate = useNavigate();
 
     const setStars = (rating) => {
         let values = rating
@@ -56,7 +57,7 @@ function ProductPage () {
     }
 
     const navBack = () => {
-
+        navigate('/')
     }
     
     useEffect(
@@ -100,7 +101,7 @@ function ProductPage () {
                 <section className="productHero1 flex flex-col w-full relative">
                     <div className="productHero2 relative">
                         <div className="w-full relative h-5/6">
-                            <button onClick={navBack} className="btn btn-circle btn-md absolute z-10 top-3 left-10">
+                            <button onClick={navBack} className="btn btn-circle btn-md absolute z-10 top-5 left-10">
                                 <FontAwesomeIcon icon={faArrowLeft} size="2xl"/>
                             </button>
                             <img src={selectedImage} className="w-full h-full object-contain absolute"/>
