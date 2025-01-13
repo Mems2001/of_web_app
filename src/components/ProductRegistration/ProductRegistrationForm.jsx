@@ -18,6 +18,8 @@ function ProductRegistrationForm () {
     const [otherDetCont , setOtherDetCont] = useState(0);
     const [loading , setLoading] = useState(false);
     const [selectedColors , setSelectedColors] = useState([]);
+    const [cardImage , setCardImage] = useState();
+    const [commonImages , setCommonImages] = useState();
     const navigate = useNavigate();
 
     const toggleLoading = (value) => {
@@ -51,7 +53,7 @@ function ProductRegistrationForm () {
             //     URL = 'https://localhost:443/api/v1/admin/products';
             // }
 
-        axios.post(URL , data)
+        axios.post(URL , data , {headers: {"Content-Type":'multipart/form-data'}})
             .then(res => {
                 console.log(res)
                 navigate('/admin/my_orders')
@@ -121,6 +123,11 @@ function ProductRegistrationForm () {
 
         if (otherDetailsData.length > 0) {
             newData['other_details'] = otherDetailsData
+        }
+
+        //Setting images
+        if (cardImage.length > 0) {
+            newData['card_image'] = cardImage[0]
         }
 
         console.log("New data is:" , newData);
@@ -213,7 +220,7 @@ function ProductRegistrationForm () {
     )
 
     return (
-        <form className="productRegisterForm" onSubmit={handleSubmit(parseData)}>
+        <form encType="multipart/form-data" className="productRegisterForm">
             <h2 className="text-base/7 font-semibold text-gray-900">Reception data:</h2>
             <div className="rowForProduct2">
                 <div className="productInputCont">
@@ -378,13 +385,9 @@ function ProductRegistrationForm () {
 
             <div className="productInputCont">
                 <label>Images:</label>
-                <AddImages colors={selectedColors} allColors={colors}/>
+                <AddImages colors={selectedColors} allColors={colors} setCard={setCardImage} setCommon={setCommonImages}/>
             </div>
 
-            <div className="productInputCont">
-                <label className="text-sm/6 font-medium text-gray-900 w-full">Card Image:</label>
-                <input {...register('card_image' , {required:true})} className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" placeholder="URL" type="text" id="card_image" name="card_image"/>
-            </div>
             <div className="rowForProduct3">
                 <div className="productInputContV">
                     <label htmlFor="authenticated" className="text-sm/6 font-medium text-gray-900">Authenticated:</label>
@@ -452,7 +455,7 @@ function ProductRegistrationForm () {
                     <input {...register('price' , {valueAsNumber:true , required:true})} id="price" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                 </div> 
             </div>
-            <button type="submit" className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            <button type="submit" onClick={handleSubmit(parseData)} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 Registrar
             </button>
         </form>

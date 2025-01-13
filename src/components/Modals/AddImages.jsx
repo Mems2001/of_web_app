@@ -3,12 +3,27 @@ import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { faFileImage } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
+import { useForm } from 'react-hook-form';
 
-function AddImages ({colors , allColors}) {
+function AddImages ({colors , allColors , setCard , setCommon}) {
     const [open, setOpen] = useState(false);
     const [selectedColors , setSelectedColors] = useState([]);
+    const {register , handleSubmit} = useForm();
 
     // console.log(allColors)
+
+    const handleImages = (data) => {
+        console.log(data);
+        if (data.common_images.length > 0) {
+            setCommon(data.common_images);
+            console.log('set common')
+        }
+
+        if (data.card_image.length > 0) {
+            setCard(data.card_image);
+            console.log('set_card')
+        }
+    }
 
     useEffect (
         () => {
@@ -20,7 +35,7 @@ function AddImages ({colors , allColors}) {
                     }
                 }
             }
-            console.log(auxArray)
+            // console.log(auxArray)
             return setSelectedColors(auxArray)
         } , [open]
     )
@@ -60,10 +75,15 @@ function AddImages ({colors , allColors}) {
                                 </div>
                             </div>
                             <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 flex flex-col gap-y-4">
-                                    <div className='flex flex-row gap-4 items-center'>
+                                    <div className='flex flex-row gap-4 items-center justify-between'>
                                         {/* <div>{color.code}</div> */}
-                                        <div className='w-6 h-6 rounded-full'>All</div>
-                                        <input type='file' multiple={true}/>
+                                        <div className='h-6 rounded-full'>Common</div>
+                                        <input {...register('common_images')} id='common_images' name='common_images' type='file' multiple={true}/>
+                                    </div>
+                                    <div className='flex flex-row gap-4 items-center justify-between'>
+                                        {/* <div>{color.code}</div> */}
+                                        <div className='h-6 rounded-full'>Card</div>
+                                        <input {...register('card_image' , {required:true})} id='card_image' name='card_image' type='file'/>
                                     </div>
                                 {selectedColors.map(
                                     color => 
@@ -77,7 +97,7 @@ function AddImages ({colors , allColors}) {
                             <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                                 <button
                                     type="button"
-                                    onClick={() => setOpen(false)}
+                                    onClick={handleSubmit(handleImages)}
                                     className="inline-flex w-full bg-blue-600 justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
                                 >
                                     Add
