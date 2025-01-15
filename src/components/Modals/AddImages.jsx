@@ -1,50 +1,56 @@
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { faFileImage } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useForm } from 'react-hook-form';
 
-function AddImages ({colors , allColors , setCard , setCommon}) {
+function AddImages ({image_type , setLoading , setCard , common , setCommon , coloured , setColoured}) {
     const [open, setOpen] = useState(false);
-    const [selectedColors , setSelectedColors] = useState([]);
+    const [altLoading , setAltLoading] = useState(false);
     const {register , handleSubmit} = useForm();
 
-    // console.log(allColors)
-
     const handleImages = (data) => {
+        setAltLoading(true);
         console.log(data);
-        if (data.common_images.length > 0) {
-            setCommon(data.common_images);
-            console.log('set common')
+
+        if (image_type == 'common') {
+            console.log('set common');
+            let aux = common;
+            aux.push(data.common_image[0]);
+            setCommon(aux);
+            setLoading(false);
+            setAltLoading(false);
+            return setOpen(false)
+        } else if (image_type == 'card') {
+            console.log('set card');
+            setCard(data.card_image[0]);
+            setLoading(false);
+            setAltLoading(false);
+            return setOpen(false)
+        } else {
+            //If the file is none of the above then we proceed with color related images
+            console.log(`set ${image_type}`);
+            let aux = coloured;
+            aux[image_type].push(data[`${image_type}_image`][0])
+            setColoured(aux);
+            setLoading(false);
+            setAltLoading(false);
+            return setOpen(false)  
         }
 
-        if (data.card_image.length > 0) {
-            setCard(data.card_image);
-            console.log('set_card')
-        }
     }
 
     useEffect (
         () => {
-            let auxArray = []
-            for (let color of allColors) {
-                for (let color2 of colors) {
-                    if (color2 === color.id) {
-                        auxArray.push(color)
-                    }
-                }
-            }
-            // console.log(auxArray)
-            return setSelectedColors(auxArray)
-        } , [open]
+    
+        } , [altLoading]
     )
 
     return (
         <>
-            <button className='btn-circle btn btn-sm btn-warning' onClick={() => setOpen(true)}>
+            <span className='btn-circle btn btn-sm btn-warning' onClick={() =>{setLoading(true);setOpen(true)}}>
                 <FontAwesomeIcon icon={faFileImage}/>
-            </button>
+            </span>
             <Dialog open={open} onClose={() => setOpen(false)} className="relative z-50">
                 <DialogBackdrop
                     transition
@@ -59,57 +65,40 @@ function AddImages ({colors , allColors , setCard , setCommon}) {
                         >
                             <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                                 <div className="sm:flex sm:items-start">
-                                    {/* <div className="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-warning sm:mx-0 sm:size-10">
-                                        <FontAwesomeIcon icon={faFileImage}/>
-                                    </div> */}
+                                   
                                     <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                                         <DialogTitle as="h3" className="text-base font-semibold text-gray-900">
-                                            Add Images
+                                            {`Add a ${image_type} image`}
                                         </DialogTitle>
-                                        <div className="mt-2">
-                                            <p className="text-sm text-gray-500">
-                                                Pick the images corresponding to the product's color and the common images in the "All" section (the ones that not depends on color)
-                                            </p>
-                                        </div>
+                                    
                                     </div>
                                 </div>
                             </div>
-                            <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 flex flex-col gap-y-4">
-                                    <div className='flex flex-row gap-4 items-center justify-between'>
-                                        {/* <div>{color.code}</div> */}
-                                        <div className='h-6 rounded-full'>Common</div>
-                                        <input {...register('common_images')} id='common_images' name='common_images' type='file' multiple={true}/>
-                                    </div>
-                                    <div className='flex flex-row gap-4 items-center justify-between'>
-                                        {/* <div>{color.code}</div> */}
-                                        <div className='h-6 rounded-full'>Card</div>
-                                        <input {...register('card_image' , {required:true})} id='card_image' name='card_image' type='file'/>
-                                    </div>
-                                {selectedColors.map(
-                                    color => 
-                                    <div className='flex flex-row gap-4 items-center'>
-                                        {/* <div>{color.code}</div> */}
-                                        <div className='w-6 h-6 rounded-full' style={{backgroundColor: color.code}}></div>
-                                        <input type='file' multiple={true}/>
-                                    </div>
-                                )}
+                            <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-y-4">
+                                               
+                                <input {...register(`${image_type}_image` , {required:true})} id={`${image_type}_image`} name={`${image_type}_image`} type='file'/>
+                                    
                             </div>
                             <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                <button
+                                <span
                                     type="button"
                                     onClick={handleSubmit(handleImages)}
                                     className="inline-flex w-full bg-blue-600 justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
                                 >
-                                    Add
-                                </button>
-                                <button
+                                    {altLoading?
+                                        <span className="loading loading-infinity loading-md"></span>
+                                    :
+                                        "Add"
+                                    }
+                                </span>
+                                <span
                                     type="button"
                                     data-autofocus
-                                    onClick={() => setOpen(false)}
+                                    onClick={() => {setOpen(false)}}
                                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                                 >
                                     Cancel
-                                </button>
+                                </span>
                             </div>
                         </DialogPanel>
                     </div>

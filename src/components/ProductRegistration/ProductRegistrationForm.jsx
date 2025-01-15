@@ -6,21 +6,27 @@ import variables from "../../../utils/variables";
 import AddColor from "../Modals/AddColor";
 import AddMaterial from "../Modals/AddMaterial";
 import AddImages from "../Modals/AddImages";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 function ProductRegistrationForm () {
+    const navigate = useNavigate();
+    //For useEffect
     const [myOrders , setMyOrders] = useState([]);
     const [mainCategories , setMainCategories] = useState([]);
     const [colors , setColors] = useState([]);
     const [materials , setMaterials] = useState([]);
     const [receptionDate , setReceptionDate] = useState();
+    //For dynamic content
     const [received , setReceived] = useState(false);
     const [otherDetails , setOtherDetails] = useState(false);
     const [otherDetCont , setOtherDetCont] = useState(0);
     const [loading , setLoading] = useState(false);
     const [selectedColors , setSelectedColors] = useState([]);
     const [cardImage , setCardImage] = useState();
-    const [commonImages , setCommonImages] = useState();
-    const navigate = useNavigate();
+    const [commonImages , setCommonImages] = useState([]);
+    const [colouredImages , setColouredImages] = useState({});
+    const [ready , setReady ] = useState(false);
 
     const toggleLoading = (value) => {
         setLoading(value)
@@ -44,7 +50,7 @@ function ProductRegistrationForm () {
     }
 
     const submit = data => {
-        console.log(data)
+        // console.log(data)
 
         let URL = variables.url_prefix + '/api/v1/admin/products';
             // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
@@ -68,6 +74,13 @@ function ProductRegistrationForm () {
         const keys = Object.keys(data);
         console.log("data is:" , data);
         // console.log(keys);
+
+        if (cardImage.length > 0 && commonImages.length > 0) {
+            setReady(true)
+        } else {
+            alert('Please upload all the required images')
+            throw new Error('Please upload all the required images')
+        }
 
         let otherDetailsData = []
 
@@ -130,8 +143,23 @@ function ProductRegistrationForm () {
             newData['card_image'] = cardImage[0]
         }
 
+        if (commonImages.length > 0) {
+            newData['common_images'] = commonImages
+        }
+
+        if (colouredImages.length > 0) {
+           for (let file of colouredImages) {
+            newData[file.color] = file.file
+           }
+        }
+
         console.log("New data is:" , newData);
-        return submit(newData)
+        if (ready) {
+            setReady(false);
+            return submit(newData)
+        } else {
+            throw new Error('Form is not ready to upload')
+        }
     }
 
     const handleReception = (e) => {
@@ -157,13 +185,25 @@ function ProductRegistrationForm () {
     }
 
     const addSelectedColors = () => {
-        const colors = getValues('colors_ids')
-        // console.log(colors)
-        return setSelectedColors(colors)
+        let colors_ids = getValues('colors_ids');
+        let aux = []
+        let auxObj = {}
+        for (let color_id of colors_ids) {
+            for (let color of colors) {
+                if (color_id == color.id) {
+                    aux.push(color);
+                    auxObj[color.name] = []
+                }
+            }
+        }
+        setSelectedColors(aux);
+        setColouredImages(auxObj);
+        console.log(aux , auxObj);
     }
 
     useEffect (
         () => {
+            console.log('useEffect triggered' , selectedColors , colouredImages);
             let URL = variables.url_prefix + '/api/v1/orders/my_orders';
             let URL2 = variables.url_prefix + '/api/v1/main_categories';
             let URL3 = variables.url_prefix + '/api/v1/product_details/colors';
@@ -220,13 +260,13 @@ function ProductRegistrationForm () {
     )
 
     return (
-        <form encType="multipart/form-data" className="productRegisterForm">
+        <form onSubmit={handleSubmit(parseData)} encType="multipart/form-data" className="productRegisterForm">
             <h2 className="text-base/7 font-semibold text-gray-900">Reception data:</h2>
             <div className="rowForProduct2">
                 <div className="productInputCont">
                     <label htmlFor="order_id" className="text-sm/6 font-medium text-gray-900">Order N°: </label>
                     <select {...register('order_id' , {required:true})} onChange={selectedReceptionDate} id="order_id" className="select select-bordered select-sm w-full max-w-xs">
-                        <option value={undefined}>Elige un pedido</option>  
+                        <option value={null}>Elige un pedido</option>  
                         {myOrders?.map(
                             order => <option key={order.id} value={order.id}>{order.orderCount}</option>)
                         }
@@ -308,7 +348,7 @@ function ProductRegistrationForm () {
             <div className="divider m-0"></div>
             
             <h2 className="text-base/7 font-semibold text-gray-900">Product data:</h2>
-            <div className="rowForProduct3">
+            <div className="rowForProduct2">
                 <div className="productInputContV">
                     <label htmlFor="name" className="text-sm/6 font-medium text-gray-900">Name:</label>
                     <input {...register('name' , {required:true})} id="name" type="text" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
@@ -317,12 +357,14 @@ function ProductRegistrationForm () {
                     <label htmlFor="model" className="text-sm/6 font-medium text-gray-900">Model:</label>
                     <input {...register('model')} id="model" type="text" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                 </div>
-                <div className="productInputContV">
+            </div>
+            <div>
+                <div className="productInputCont">
                     <label htmlFor="colors_ids" className="text-sm/6 font-medium text-gray-900">Colors:</label>
                     <select {...register('colors_ids' , {required:true})} multiple={true} id="colors_ids" className="select select-bordered select-sm w-full max-w-xs">
                         {/* <option value={null}>Elige un color</option> */}
                         {colors?.map(
-                            color => <option onClick={addSelectedColors} key={color.id} value={color.id}>{color.name}</option>
+                            color => <option onClick={() => {toggleLoading(true);addSelectedColors();toggleLoading(false)}} key={color.id} value={color.id}>{color.name}</option>
                         )}
                     </select>
                     <AddColor setLoading={toggleLoading}/>
@@ -382,11 +424,90 @@ function ProductRegistrationForm () {
                     <AddMaterial setLoading={toggleLoading}/>
                 </div>
             </div>
-
-            <div className="productInputCont">
-                <label>Images:</label>
-                <AddImages colors={selectedColors} allColors={colors} setCard={setCardImage} setCommon={setCommonImages}/>
-            </div>
+           
+           <div className="flex flex-col border border-gray-300 rounded-md px-3 py-2">
+                <div>
+                    <label className="text-sm/6 font-medium text-gray-900">Card Image:</label>
+                    {cardImage?
+                        <div className="flex flex-row justify-center">
+                            <div className="flex flex-row justify-between items-center w-2/3">
+                                <img className="h-20 object-contain" src={URL.createObjectURL(cardImage)}/>
+                                <span onClick={() => {setLoading(true);setCardImage();setLoading(false)}} className="btn-circle btn btn-sm btn-error">
+                                    <FontAwesomeIcon icon={faTrashCan}/>
+                                </span>
+                            </div>
+                        </div>
+                    :
+                        <div className="flex flex-row justify-between items-center">
+                            <span>No image</span>
+                            <AddImages image_type={'card'} setLoading={toggleLoading} setCard={setCardImage} setCommon={setCommonImages} setColoured={setColouredImages}/>
+                        </div>
+                    }
+                </div>
+                <div>
+                    <label className="text-sm/6 font-medium text-gray-900">Common Images:</label>
+                    {commonImages.length > 0?
+                        <div className="flex flex-col items-center gap-2">
+                            {commonImages?.map(common_image =>
+                                <div key={common_image.lastModified} className="flex flex-row justify-between items-center w-2/3">
+                                    <img className="h-20 object-contain" src={URL.createObjectURL(common_image)}/>
+                                    <span onClick={() => {
+                                        toggleLoading(true);
+                                        let index = commonImages.indexOf(common_image);
+                                        commonImages.splice(index , 1);
+                                        toggleLoading(false)
+                                    }} className="btn-circle btn btn-sm btn-error">
+                                        <FontAwesomeIcon icon={faTrashCan}/>
+                                    </span>
+                                </div>
+                            )}
+                            <AddImages image_type={'common'} setLoading={toggleLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages}setColoured={setColouredImages}/>
+                        </div>
+                    :
+                        <div className="flex flex-row justify-between items-center">
+                            <span>No images</span>
+                            <AddImages image_type={'common'} setLoading={toggleLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages} setColoured={setColouredImages}/>
+                        </div>
+                    }
+                </div>
+                
+                {/* {selectedColors.length > 0?
+                    
+                        selectedColors.map(selectedColor => 
+                            <div key={selectedColor.id}>
+                                <label className="text-sm/6 font-medium text-gray-900">{`${selectedColor.name} images:`}</label>
+                                {colouredImages[selectedColor.name].length > 0?
+                                 <div className="flex flex-col items-center gap-2">
+                                    {colouredImages[selectedColor.name]?.map(coloured_image =>
+                                        <div key={coloured_image.lastModified} className="flex flex-row justify-between items-center w-2/3">
+                                            <img className="h-20 object-contain" src={URL.createObjectURL(coloured_image)}/>
+                                            <span onClick={() => {
+                                                setLoading(true);
+                                                let index = colouredImages[selectedColor.name].indexOf(coloured_image);
+                                                colouredImages[selectedColor.name].splice(index , 1);
+                                                setLoading(false)
+                                            }} className="btn-circle btn btn-sm btn-error">
+                                                <FontAwesomeIcon icon={faTrashCan}/>
+                                            </span>
+                                        </div>
+                                    )}
+                                    <AddImages image_type={`${selectedColor.name}`} setLoading={toggleLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages} coloured={colouredImages} setColoured={setColouredImages}/>
+                                 </div> 
+                                 : 
+                                 <div className="flex flex-row justify-between items-center">
+                                    <span>No images</span>
+                                    <AddImages image_type={`${selectedColor.name}`} setLoading={toggleLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages} coloured={colouredImages} setColoured={setColouredImages}/>
+                                </div>
+                                }
+                            </div>
+                        )
+                    
+                        :
+                    <>No colors</>
+                } */}
+                
+           </div>
+           
 
             <div className="rowForProduct3">
                 <div className="productInputContV">
@@ -455,7 +576,7 @@ function ProductRegistrationForm () {
                     <input {...register('price' , {valueAsNumber:true , required:true})} id="price" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                 </div> 
             </div>
-            <button type="submit" onClick={handleSubmit(parseData)} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            <button type="submit" className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 Registrar
             </button>
         </form>
