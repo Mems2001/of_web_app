@@ -46,37 +46,18 @@ function ProductRegistrationForm () {
         } 
     }
 
-    const submit = data => {
-        // console.log(data)
-
-        let URL = variables.url_prefix + '/api/v1/admin/products';
-            // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-            //     URL = 'https://' + ip + '/api/v1/admin/products';
-            // } else {
-            //     URL = 'https://localhost:443/api/v1/admin/products';
-            // }
-
-        axios.post(URL , data , {headers: {"Content-Type":'multipart/form-data'}})
-            .then(res => {
-                console.log(res)
-                navigate('/admin/my_orders')
-            })
-            .catch(err => {
-                throw err
-            })
-    }
-
-    const parseData = data => {
+    const submit = (data) => {
+        setReady(true); 
+        //Parse Data
         let newData = {};
         const keys = Object.keys(data);
         console.log("data is:" , data);
-        // console.log(keys);
-        let isReady = false
 
         if (cardImage && commonImages.length > 0) {
-            isReady = true
+            
         } else {
-            alert('Please upload all the required images')
+            setReady(false);
+            alert('Please upload all the required images');
             throw new Error('Please upload all the required images')
         }
 
@@ -96,11 +77,13 @@ function ProductRegistrationForm () {
         };
         
         if (newData.order_id == undefined) {
+            setReady(false);
             alert('Order number is required');
             throw new Error ('An order n° is required')
         }
 
         if (newData.main_category_id == undefined) {
+            setReady(false);
             alert('Main category is required');
             throw new Error('Main category is required')
         }
@@ -164,12 +147,23 @@ function ProductRegistrationForm () {
 
         console.log("New data is:" , newData);
     
-        if (isReady) {
-            return submit(newData)
-        } else {
-            throw new Error('The form is not ready')
-        }
-    
+        let URL = variables.url_prefix + '/api/v1/admin/products';
+            // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+            //     URL = 'https://' + ip + '/api/v1/admin/products';
+            // } else {
+            //     URL = 'https://localhost:443/api/v1/admin/products';
+            // }
+
+        axios.post(URL , newData , {headers: {"Content-Type":'multipart/form-data'}})
+            .then(res => {
+                console.log(res);
+                setReady(false);
+                // navigate('/admin/my_orders')
+            })
+            .catch(err => {
+                setReady(false)
+                throw err
+            })
     }
 
     const handleReception = (e) => {
@@ -279,7 +273,7 @@ function ProductRegistrationForm () {
                 .catch(err => {
                     throw err
                 })
-        } , [loading , selectedColors , colouredImages , commonImages , deleted , otherDetails ]
+        } , [loading , selectedColors , colouredImages , commonImages , deleted , otherDetails , ready]
     )
 
     return (
@@ -589,7 +583,7 @@ function ProductRegistrationForm () {
                     <input {...register('price' , {valueAsNumber:true , required:true})} id="price" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                 </div> 
             </div>
-            <button type="submit" onClick={handleSubmit(parseData)} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            <button type="submit" onClick={handleSubmit(submit)} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 {ready? <span className="loading loading-infinity loading-md"></span> : 'Registrar'}
             </button>
         </form>

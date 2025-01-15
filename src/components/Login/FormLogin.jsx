@@ -79,7 +79,7 @@ function FormLogin() {
                         navigate('/')
                         console.log(err)
                     })
-                setLoading(false)
+                return setLoading(false)
             })
             .catch(err => {
                 const message = err.response.data.message
@@ -88,7 +88,7 @@ function FormLogin() {
                     alert('El correo o nombre de usuario no son correctos')
                 } else if (message === 'Wrong password') {
                     alert('Contraseña incorrecta')
-                }
+                };
                 setLoading(false)
                 throw(err);
             })
