@@ -6,11 +6,9 @@ import { useForm } from 'react-hook-form';
 
 function AddImages ({image_type , setLoading , setCard , common , setCommon , coloured , setColoured}) {
     const [open, setOpen] = useState(false);
-    const [altLoading , setAltLoading] = useState(false);
     const {register , handleSubmit} = useForm();
 
     const handleImages = (data) => {
-        setAltLoading(true);
         console.log(data);
 
         if (image_type == 'common') {
@@ -19,13 +17,11 @@ function AddImages ({image_type , setLoading , setCard , common , setCommon , co
             aux.push(data.common_image[0]);
             setCommon(aux);
             setLoading(false);
-            setAltLoading(false);
             return setOpen(false)
         } else if (image_type == 'card') {
             console.log('set card');
             setCard(data.card_image[0]);
             setLoading(false);
-            setAltLoading(false);
             return setOpen(false)
         } else {
             //If the file is none of the above then we proceed with color related images
@@ -34,7 +30,6 @@ function AddImages ({image_type , setLoading , setCard , common , setCommon , co
             aux[image_type].push(data[`${image_type}_image`][0])
             setColoured(aux);
             setLoading(false);
-            setAltLoading(false);
             return setOpen(false)  
         }
 
@@ -43,7 +38,7 @@ function AddImages ({image_type , setLoading , setCard , common , setCommon , co
     useEffect (
         () => {
     
-        } , [altLoading]
+        } , []
     )
 
     return (
@@ -51,7 +46,7 @@ function AddImages ({image_type , setLoading , setCard , common , setCommon , co
             <span className='btn-circle btn btn-sm btn-warning' onClick={() =>{setLoading(true);setOpen(true)}}>
                 <FontAwesomeIcon icon={faFileImage}/>
             </span>
-            <Dialog open={open} onClose={() => setOpen(false)} className="relative z-50">
+            <Dialog open={open} onClose={() =>{setLoading(false);setOpen(false)}} className="relative z-50">
                 <DialogBackdrop
                     transition
                     className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
@@ -85,16 +80,13 @@ function AddImages ({image_type , setLoading , setCard , common , setCommon , co
                                     onClick={handleSubmit(handleImages)}
                                     className="inline-flex w-full bg-blue-600 justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
                                 >
-                                    {altLoading?
-                                        <span className="loading loading-infinity loading-md"></span>
-                                    :
-                                        "Add"
-                                    }
+                                   Add
+                                
                                 </span>
                                 <span
                                     type="button"
                                     data-autofocus
-                                    onClick={() => {setOpen(false)}}
+                                    onClick={() => {setLoading(false);setOpen(false)}}
                                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                                 >
                                     Cancel

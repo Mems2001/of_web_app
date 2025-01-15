@@ -27,10 +27,7 @@ function ProductRegistrationForm () {
     const [commonImages , setCommonImages] = useState([]);
     const [colouredImages , setColouredImages] = useState({});
     const [ready , setReady ] = useState(false);
-
-    const toggleLoading = (value) => {
-        setLoading(value)
-    }
+    const [deleted , setDeleted] = useState(false);
 
     const numbers = [1 , 2 , 3 , 4 , 5];
     const {register , handleSubmit , reset , getValues} = useForm();
@@ -74,9 +71,10 @@ function ProductRegistrationForm () {
         const keys = Object.keys(data);
         console.log("data is:" , data);
         // console.log(keys);
+        let isReady = false
 
-        if (cardImage.length > 0 && commonImages.length > 0) {
-            setReady(true)
+        if (cardImage && commonImages.length > 0) {
+            isReady = true
         } else {
             alert('Please upload all the required images')
             throw new Error('Please upload all the required images')
@@ -139,27 +137,29 @@ function ProductRegistrationForm () {
         }
 
         //Setting images
-        if (cardImage.length > 0) {
-            newData['card_image'] = cardImage[0]
+        if (cardImage) {
+            newData['card_image'] = cardImage
         }
 
         if (commonImages.length > 0) {
             newData['common_images'] = commonImages
         }
 
-        if (colouredImages.length > 0) {
-           for (let file of colouredImages) {
-            newData[file.color] = file.file
+        let colouredImagesKeys = Object.keys(colouredImages);
+        if (colouredImagesKeys.length > 0) {
+           for (let key of colouredImagesKeys) {
+            newData[key] = colouredImages[key]
            }
         }
 
         console.log("New data is:" , newData);
-        if (ready) {
-            setReady(false);
+    
+        if (isReady) {
             return submit(newData)
         } else {
-            throw new Error('Form is not ready to upload')
+            throw new Error('The form is not ready')
         }
+    
     }
 
     const handleReception = (e) => {
@@ -201,9 +201,23 @@ function ProductRegistrationForm () {
         console.log(aux , auxObj);
     }
 
+    const deleteImage = ( array , image) => {
+        try {
+            // console.log(array , image);
+            let index = array.indexOf(image);
+            array.splice(index , 1);
+            return setDeleted(true)
+        } catch (error) {
+            throw error
+        }
+    }
+
     useEffect (
         () => {
-            console.log('useEffect triggered' , selectedColors , colouredImages);
+            if (deleted) {
+                setDeleted(false)
+            }
+            console.log('useEffect triggered' , selectedColors , colouredImages , loading , deleted);
             let URL = variables.url_prefix + '/api/v1/orders/my_orders';
             let URL2 = variables.url_prefix + '/api/v1/main_categories';
             let URL3 = variables.url_prefix + '/api/v1/product_details/colors';
@@ -255,12 +269,11 @@ function ProductRegistrationForm () {
                 .catch(err => {
                     throw err
                 })
-            
-        } , [loading]
+        } , [loading , selectedColors , colouredImages , commonImages , deleted , otherDetails ]
     )
 
     return (
-        <form onSubmit={handleSubmit(parseData)} encType="multipart/form-data" className="productRegisterForm">
+        <form encType="multipart/form-data" className="productRegisterForm">
             <h2 className="text-base/7 font-semibold text-gray-900">Reception data:</h2>
             <div className="rowForProduct2">
                 <div className="productInputCont">
@@ -364,10 +377,10 @@ function ProductRegistrationForm () {
                     <select {...register('colors_ids' , {required:true})} multiple={true} id="colors_ids" className="select select-bordered select-sm w-full max-w-xs">
                         {/* <option value={null}>Elige un color</option> */}
                         {colors?.map(
-                            color => <option onClick={() => {toggleLoading(true);addSelectedColors();toggleLoading(false)}} key={color.id} value={color.id}>{color.name}</option>
+                            color => <option onClick={() => {addSelectedColors()}} key={color.id} value={color.id}>{color.name}</option>
                         )}
                     </select>
-                    <AddColor setLoading={toggleLoading}/>
+                    <AddColor setLoading={setLoading}/>
                 </div>
             </div>
             <div className="rowForProduct3">
@@ -396,16 +409,16 @@ function ProductRegistrationForm () {
                         <label htmlFor="other_details" className="text-sm/6 font-medium text-gray-900">Other details:</label>
                         <input type="checkbox" id="other_details" className="checkbox" defaultChecked={false} onChange={toggleOtherDet}/>
                     </div>
-                    <div className="productInputContV">
+                    <div className="productInputContV gap-2">
                         {Array(otherDetCont).fill(null).map(
                             ( value , index) => <div key={index+1} className="productInputCont">
                             <input id={`detName${index+1}`} {...register(`detName${index+1}` , {required:true})} placeholder="Nombre" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                             :
                             <input id={`detDet${index+1}`} {...register(`detDet${index+1}` , {required:true})} placeholder="Detalle" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                             {index+1 == otherDetCont ? 
-                                <button className="btn btn-circle btn-sm" onClick={otherDetContplus}>+</button>
+                                <span className="btn btn-circle btn-sm" onClick={otherDetContplus}>+</span>
                             :
-                                <button className="btn btn-circle btn-sm" onClick={otherDetContMinus}>-</button>
+                                <span className="btn btn-circle btn-sm" onClick={otherDetContMinus}>-</span>
                                 }
                         </div>
                         )}
@@ -421,7 +434,7 @@ function ProductRegistrationForm () {
                             material => <option key={material.id} value={material.id}>{material.name}</option>
                         )}
                     </select>
-                    <AddMaterial setLoading={toggleLoading}/>
+                    <AddMaterial setLoading={setLoading}/>
                 </div>
             </div>
            
@@ -432,7 +445,7 @@ function ProductRegistrationForm () {
                         <div className="flex flex-row justify-center">
                             <div className="flex flex-row justify-between items-center w-2/3">
                                 <img className="h-20 object-contain" src={URL.createObjectURL(cardImage)}/>
-                                <span onClick={() => {setLoading(true);setCardImage();setLoading(false)}} className="btn-circle btn btn-sm btn-error">
+                                <span onClick={() => {setCardImage()}} className="btn-circle btn btn-sm btn-error">
                                     <FontAwesomeIcon icon={faTrashCan}/>
                                 </span>
                             </div>
@@ -440,7 +453,7 @@ function ProductRegistrationForm () {
                     :
                         <div className="flex flex-row justify-between items-center">
                             <span>No image</span>
-                            <AddImages image_type={'card'} setLoading={toggleLoading} setCard={setCardImage} setCommon={setCommonImages} setColoured={setColouredImages}/>
+                            <AddImages image_type={'card'} setLoading={setLoading} setCard={setCardImage} setCommon={setCommonImages} setColoured={setColouredImages}/>
                         </div>
                     }
                 </div>
@@ -451,27 +464,22 @@ function ProductRegistrationForm () {
                             {commonImages?.map(common_image =>
                                 <div key={common_image.lastModified} className="flex flex-row justify-between items-center w-2/3">
                                     <img className="h-20 object-contain" src={URL.createObjectURL(common_image)}/>
-                                    <span onClick={() => {
-                                        toggleLoading(true);
-                                        let index = commonImages.indexOf(common_image);
-                                        commonImages.splice(index , 1);
-                                        toggleLoading(false)
-                                    }} className="btn-circle btn btn-sm btn-error">
+                                    <span onClick={() => {deleteImage( commonImages , common_image)}} className="btn-circle btn btn-sm btn-error">
                                         <FontAwesomeIcon icon={faTrashCan}/>
                                     </span>
                                 </div>
                             )}
-                            <AddImages image_type={'common'} setLoading={toggleLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages}setColoured={setColouredImages}/>
+                            <AddImages image_type={'common'} setLoading={setLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages}setColoured={setColouredImages}/>
                         </div>
                     :
                         <div className="flex flex-row justify-between items-center">
                             <span>No images</span>
-                            <AddImages image_type={'common'} setLoading={toggleLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages} setColoured={setColouredImages}/>
+                            <AddImages image_type={'common'} setLoading={setLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages} setColoured={setColouredImages}/>
                         </div>
                     }
                 </div>
                 
-                {/* {selectedColors.length > 0?
+                {selectedColors.length > 0?
                     
                         selectedColors.map(selectedColor => 
                             <div key={selectedColor.id}>
@@ -481,22 +489,17 @@ function ProductRegistrationForm () {
                                     {colouredImages[selectedColor.name]?.map(coloured_image =>
                                         <div key={coloured_image.lastModified} className="flex flex-row justify-between items-center w-2/3">
                                             <img className="h-20 object-contain" src={URL.createObjectURL(coloured_image)}/>
-                                            <span onClick={() => {
-                                                setLoading(true);
-                                                let index = colouredImages[selectedColor.name].indexOf(coloured_image);
-                                                colouredImages[selectedColor.name].splice(index , 1);
-                                                setLoading(false)
-                                            }} className="btn-circle btn btn-sm btn-error">
+                                            <span onClick={() => {deleteImage(colouredImages[selectedColor.name] , coloured_image)}} className="btn-circle btn btn-sm btn-error">
                                                 <FontAwesomeIcon icon={faTrashCan}/>
                                             </span>
                                         </div>
                                     )}
-                                    <AddImages image_type={`${selectedColor.name}`} setLoading={toggleLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages} coloured={colouredImages} setColoured={setColouredImages}/>
+                                    <AddImages image_type={`${selectedColor.name}`} setLoading={setLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages} coloured={colouredImages} setColoured={setColouredImages}/>
                                  </div> 
                                  : 
                                  <div className="flex flex-row justify-between items-center">
                                     <span>No images</span>
-                                    <AddImages image_type={`${selectedColor.name}`} setLoading={toggleLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages} coloured={colouredImages} setColoured={setColouredImages}/>
+                                    <AddImages image_type={`${selectedColor.name}`} setLoading={setLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages} coloured={colouredImages} setColoured={setColouredImages}/>
                                 </div>
                                 }
                             </div>
@@ -504,7 +507,7 @@ function ProductRegistrationForm () {
                     
                         :
                     <>No colors</>
-                } */}
+                }
                 
            </div>
            
@@ -576,8 +579,8 @@ function ProductRegistrationForm () {
                     <input {...register('price' , {valueAsNumber:true , required:true})} id="price" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                 </div> 
             </div>
-            <button type="submit" className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                Registrar
+            <button type="submit" onClick={handleSubmit(parseData)} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                {ready? <span className="loading loading-infinity loading-md"></span> : 'Registrar'}
             </button>
         </form>
     )
