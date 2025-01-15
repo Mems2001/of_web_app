@@ -81,7 +81,7 @@ function ProductRegistrationForm () {
         }
 
         let otherDetailsData = []
-
+        
         for (let key of keys) {
             if (data[key] != '' && data[key] != 'Elige un pedido' && data[key] != 'Elige una categoría' && data[key] != 'Elige un color' && data[key] != 'Elige un número' && data[key] != NaN && data[key] != undefined && !(key.includes('detName')) && !(key.includes('detDet'))) {
                 if (data[key] === "false") {
@@ -94,6 +94,16 @@ function ProductRegistrationForm () {
                 newData[key] = undefined
             }
         };
+        
+        if (newData.order_id == undefined) {
+            alert('Order number is required');
+            throw new Error ('An order n° is required')
+        }
+
+        if (newData.main_category_id == undefined) {
+            alert('Main category is required');
+            throw new Error('Main category is required')
+        }
 
         // Correct the inputs that have to be null when the product is not received
         if (!received) {
