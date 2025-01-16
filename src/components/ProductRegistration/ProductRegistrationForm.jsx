@@ -8,7 +8,7 @@ import AddMaterial from "../Modals/AddMaterial";
 import AddImages from "../Modals/AddImages";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import SelectModal from "../Modals/SelectModal";
+import SelectColorModal from "../Modals/SelectColorModal";
 
 function ProductRegistrationForm () {
     const navigate = useNavigate();
@@ -381,9 +381,7 @@ function ProductRegistrationForm () {
             <div>
                 <div className="productInputCont">
                     <label htmlFor="colors_ids" className="text-sm/6 font-medium text-gray-900">Colors:</label>
-                    {/* <select {...register('colors_ids' , {required:true})}  multiple={true} id="colors_ids" className="select select-bordered select-sm w-full max-w-xs">
-                    </select> */}
-                    <SelectModal allColors={colors} selectedColors={selectedColors} setLoading={setLoading} setSelectedColors={setSelectedColors}/>
+                    <SelectColorModal allColors={colors} selectedColors={selectedColors} setLoading={setLoading} setSelectedColors={setSelectedColors}/>
 
                     <AddColor setLoading={setLoading}/>
                 </div>

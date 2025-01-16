@@ -1,11 +1,17 @@
 import { useDispatch } from "react-redux";
 import FormLogin from "../Login/FormLogin"
 import { setLocation } from "../../store/slices/location.slice";
+import { useEffect } from "react";
 
 function Login() {
 
     const dispatch = useDispatch();
-    dispatch(setLocation(window.location.href.split('#')[1]));
+    
+    useEffect(
+        () => {
+            dispatch(setLocation(window.location.href.split('#')[1]));
+        } , []
+    )
 
     return(
         <div className="loginCont flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">

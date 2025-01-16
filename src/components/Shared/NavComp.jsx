@@ -9,9 +9,8 @@ import variables from "../../../utils/variables.js";
 
 function NavComp () {
     const dispatch = useDispatch();
-
     const location = useSelector(state => state.locationSlice);
-
+    
     const profile = useSelector(state => state.profileSlice );
     const [isLogged , setIsLogged] = useState(localStorage.getItem('onlyFancyLog'));
     const [isAdmin , setIsAdmin] = useState(localStorage.getItem('onlyFancyAdmin'));

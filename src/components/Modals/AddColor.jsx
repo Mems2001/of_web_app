@@ -55,7 +55,7 @@ function AddColor ({setLoading}) {
             <span className='btn-circle btn btn-sm btn-warning' onClick={() => {setLoading(true);setOpen(true)}}>
             <FontAwesomeIcon icon={faPlus} />
             </span>
-                        <Dialog open={open} onClose={() =>{setLoading;setOpen(false)}} className="relative z-50">
+                        <Dialog open={open} onClose={() =>{setLoading(false);setOpen(false)}} className="relative z-50">
                             <DialogBackdrop
                                 transition
                                 className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
@@ -69,9 +69,6 @@ function AddColor ({setLoading}) {
                                     >
                                         <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                                             <div className="sm:flex sm:items-start">
-                                                {/* <div className="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-warning sm:mx-0 sm:size-10">
-                                                    <FontAwesomeIcon icon={faFileImage}/>
-                                                </div> */}
                                                 <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                                                     <DialogTitle as="h3" className="text-base font-semibold text-gray-900">
                                                         Add Colors

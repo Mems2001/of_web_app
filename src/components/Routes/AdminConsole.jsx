@@ -1,12 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { setLocation } from "../../store/slices/location.slice";
+import { useEffect } from "react";
 
 function AdminConsole () {
     
     const dispatch = useDispatch();
-    dispatch(setLocation(window.location.href.split('#')[1]));
     const location = useSelector(state => state.locationSlice);
+    
+    useEffect(
+        () => {
+            dispatch(setLocation(window.location.href.split('#')[1]));
+        } , []
+    )
 
     return (
         <div role="tablist" className="flex tabs tabs-boxed justify-self-center">

@@ -32,14 +32,13 @@ import ProductPageAdmin from './components/Routes/ProductPageAdmin';
 
 function App() {
 
-  const profile = useSelector(state => state.profileSlice)
 
   return (
     <div className='App'> 
-      <NavComp profile={profile}/>
+      <NavComp location={location}/>
       <div className='pt-20'>
         <Routes>
-          <Route path='/' element={<Home profile={profile}/>} />
+          <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />}/>
           <Route path='/register' element={<SignUp />} />
           <Route path='/products/:product_id' element={<ProductPage />}/>
