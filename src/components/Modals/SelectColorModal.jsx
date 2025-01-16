@@ -2,14 +2,32 @@ import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/re
 import { useState } from "react"
 import { useForm } from "react-hook-form";
 
-function SelectColorModal ({setLoading , allColors , setSelectedColors , selectedColors}) {
+function SelectColorModal ({setLoading , allColors , setSelectedColors , selectedColors , setColoured}) {
     const [open , setOpen] = useState(false);
     const { register , handleSubmit } = useForm();
 
     // console.log(allColors)
 
     const submit3 = (data) => {
-        console.log(data)
+        console.log(data);
+        const keys = Object.keys(data);
+        let aux = [];
+        let aux2 = {}
+        for (let key of keys) {
+            if (data[key]) {
+                for (let color of allColors) {
+                    if (key === color.id) {
+                        aux.push(color);
+                        aux2[color.name] = []
+                    }
+                }
+            }
+        }
+        setSelectedColors(aux);
+        setColoured(aux2);
+        console.log(aux);
+        setLoading(false);
+        return setOpen(false)
     }
 
     return (

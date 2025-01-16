@@ -381,7 +381,7 @@ function ProductRegistrationForm () {
             <div>
                 <div className="productInputCont">
                     <label htmlFor="colors_ids" className="text-sm/6 font-medium text-gray-900">Colors:</label>
-                    <SelectColorModal allColors={colors} selectedColors={selectedColors} setLoading={setLoading} setSelectedColors={setSelectedColors}/>
+                    <SelectColorModal allColors={colors} selectedColors={selectedColors} setLoading={setLoading} setSelectedColors={setSelectedColors} setColoured={setColouredImages}/>
 
                     <AddColor setLoading={setLoading}/>
                 </div>
@@ -482,7 +482,7 @@ function ProductRegistrationForm () {
                     }
                 </div>
                 
-                {selectedColors.length > 0?
+                {selectedColors?.length > 0?
                     
                         selectedColors.map(selectedColor => 
                             <div key={selectedColor.id}>
