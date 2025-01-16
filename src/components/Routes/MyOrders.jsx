@@ -1,6 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react"
-import OrderCard from "../MyOrders/OrderCard";
+import { useEffect, useState } from "react";
 import OrderCardMobile from '../MyOrders/OrderCardMobile';
 import AdminConsole from "./AdminConsole";
 import variables from "../../../utils/variables";

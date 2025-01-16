@@ -1,29 +1,29 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useNavigate } from "react-router-dom";
-import {setLogin , setLogout} from '../../store/slices/user.slice'
-import { setAdmin, unsetAdmin } from "../../store/slices/admin.slice";
+import { NavLink } from "react-router-dom";
 import { setProfile } from "../../store/slices/profile.slice";
 import axios from "axios";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { faBars, faIdCard, faRightFromBracket, faRightToBracket, faUserPlus, faUserTie } from "@fortawesome/free-solid-svg-icons";
 import variables from "../../../utils/variables.js";
 
 function NavComp () {
-    const location = window.location.href.split('#')[1]
-    // console.log(location)
-
-    const isLogged = useSelector(state => state.userSlice);
-    const isAdmin = useSelector(state => state.adminSlice)
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    // const ip = variables.ip;
+
+    const location = useSelector(state => state.locationSlice);
+
+    const profile = useSelector(state => state.profileSlice );
+    const [isLogged , setIsLogged] = useState(localStorage.getItem('onlyFancyLog'));
+    const [isAdmin , setIsAdmin] = useState(localStorage.getItem('onlyFancyAdmin'));
 
     const logOut = () => {
-        dispatch(setLogout());
-        dispatch(unsetAdmin());
+        setIsLogged(false);
+        setIsAdmin(false);
         dispatch(setProfile(null));
-        localStorage.removeItem('token')
+        delete axios.defaults.headers.common['Authorization'];
+        localStorage.removeItem('token');
+        localStorage.removeItem('onlyFancyLog');
+        localStorage.removeItem('onlyFancyAdmin');
     };
 
     const getProfile = () => {
@@ -37,67 +37,26 @@ function NavComp () {
         axios.get(URL)
             .then(res => {
                 // console.log(res.data.data);
-                dispatch(setProfile(res.data.data))
+                return dispatch(setProfile(res.data.data))
             })
             .catch(err => {
-                console.log({
+                return console.log({
                     location: 'NavComp.jsx',
                     err
                 })
             })
     }
 
-    const getAdmin = () => {
-        let URL = variables.url_prefix + '/api/v1/auth/adminV';
-            // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-            //     URL = 'https://' + ip + '/api/v1/auth/adminV'
-            // } else {
-            //     URL = 'https://localhost:443/api/v1/auth/adminV';
-            // }
-
-        axios.get(URL)
-            .then(res => {
-                if (res.data.auth) {
-                    dispatch(setAdmin())
-                } else {
-                    console.log({
-                        location: 'NavComp.jsx',
-                        message: 'This user is not an admin'
-                    })
-                }
-            })
-            .catch(err => {
-                dispatch(unsetAdmin());
-                navigate('/')
-                throw err
-            })
-    }
-
     useEffect(
         () => {
-            const token = localStorage?.getItem('token')
-            if (!isLogged) {
-                if (token) {
-                    dispatch(setLogin());
-                    console.log('logged in');
-                    axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
-                    getProfile();
-                    getAdmin();
-                } else {
-                    dispatch(setLogout())
-                }
-            } else {
-                if (token) {
-                    dispatch(setLogin());
-                    console.log('logged in');
-                    axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
-                    getProfile();
-                    getAdmin();
-                } else {
-                    dispatch(setLogout())
-                }
-            }
-        } , []
+            setIsLogged(localStorage.getItem('onlyFancyLog'));
+            setIsAdmin(localStorage.getItem('onlyFancyAdmin'));
+            axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
+
+          if (isLogged && profile==null) {
+            getProfile()
+          }
+        } , [ isLogged , profile , isAdmin]
     )
 
     return(
@@ -150,7 +109,7 @@ function NavComp () {
                     <FontAwesomeIcon icon={faRightFromBracket} size="lg"/>
                 </button>
                     :
-                <NavLink className={location?.includes('login') ? 'btn btn-ghost bg-gray-200' : 'btn btn-ghost'} to='/login'>
+                <NavLink to='/login' className={location?.includes('login') ? 'btn btn-ghost bg-gray-200' : 'btn btn-ghost'}>
                     <FontAwesomeIcon icon={faRightToBracket} size="lg"/>
                 </NavLink>
                 }

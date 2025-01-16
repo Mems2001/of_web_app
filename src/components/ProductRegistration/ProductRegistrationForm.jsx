@@ -8,6 +8,7 @@ import AddMaterial from "../Modals/AddMaterial";
 import AddImages from "../Modals/AddImages";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import SelectModal from "../Modals/SelectModal";
 
 function ProductRegistrationForm () {
     const navigate = useNavigate();
@@ -189,6 +190,7 @@ function ProductRegistrationForm () {
     }
 
     const addSelectedColors = () => {
+        setLoading(true);
         let colors_ids = getValues('colors_ids');
         let aux = []
         let auxObj = {}
@@ -203,9 +205,10 @@ function ProductRegistrationForm () {
         setSelectedColors(aux);
         setColouredImages(auxObj);
         console.log(aux , auxObj);
+        setLoading(false)
     }
 
-    const deleteImage = ( array , image) => {
+    const deleteImage = async ( array , image) => {
         try {
             // console.log(array , image);
             let index = array.indexOf(image);
@@ -378,12 +381,10 @@ function ProductRegistrationForm () {
             <div>
                 <div className="productInputCont">
                     <label htmlFor="colors_ids" className="text-sm/6 font-medium text-gray-900">Colors:</label>
-                    <select {...register('colors_ids' , {required:true})} multiple={true} id="colors_ids" className="select select-bordered select-sm w-full max-w-xs">
-                        {/* <option value={null}>Elige un color</option> */}
-                        {colors?.map(
-                            color => <option onClick={() => {addSelectedColors()}} key={color.id} value={color.id}>{color.name}</option>
-                        )}
-                    </select>
+                    {/* <select {...register('colors_ids' , {required:true})}  multiple={true} id="colors_ids" className="select select-bordered select-sm w-full max-w-xs">
+                    </select> */}
+                    <SelectModal allColors={colors} selectedColors={selectedColors} setLoading={setLoading} setSelectedColors={setSelectedColors}/>
+
                     <AddColor setLoading={setLoading}/>
                 </div>
             </div>

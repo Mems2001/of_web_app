@@ -1,8 +1,11 @@
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux";
 import UserForm from "../UserInfo/UserForm"
-import { setProfile } from "../../store/slices/profile.slice";
+import { setLocation } from "../../store/slices/location.slice";
 
 function UserInfo () {
+
+    const dispatch = useDispatch();
+    dispatch(setLocation(window.location.href.split('#')[1]));
 
     return(
         <div className="userInfoCont">

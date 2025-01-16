@@ -1,9 +1,7 @@
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { setLogin } from "../../store/slices/user.slice";
 import { useNavigate } from "react-router-dom";
-import { setAdmin, unsetAdmin } from "../../store/slices/admin.slice";
 import { setProfile } from "../../store/slices/profile.slice";
 import variables from "../../../utils/variables.js";
 import { useState } from "react";
@@ -31,14 +29,15 @@ function FormLogin() {
         axios.get(URL)
             .then(res => {
                 // console.log(res.data.data);
-                dispatch(setProfile(res.data.data))
+                dispatch(setProfile(res.data.data));
+                // localStorage.setItem('onlyFancyProfile' , res.data.data)
             })
             .catch(err => {
                 console.log(err)
             })
     }
 
-    const submit = async(data) => {
+    const submit = (data) => {
         setLoading(true);
 
         let URL = variables.url_prefix + '/api/v1/auth/login';
@@ -58,26 +57,24 @@ function FormLogin() {
 
         // console.log(URL , URL2)
 
-        await axios.post(URL , data)
+        axios.post(URL , data)
             .then(res => {
                 // console.log(res.data);
                 localStorage.setItem('token' , res.data.token);
+                localStorage.setItem('onlyFancyLog' , true);
                 axios.defaults.headers.common['Authorization'] = `jwt ${res.data.token}`;
-                dispatch(setLogin());
                 getUser();
                 reset(defaultUser);
                 axios.get(URL2)
                     .then(res => {
                         // console.log(res);
                         if (res.data.auth) {
-                            dispatch(setAdmin())
+                            localStorage.setItem('onlyFancyAdmin' , true)
                         }
-                        navigate('/')
+                        return navigate('/')
                     })
                     .catch(err => {
-                        dispatch(unsetAdmin());
-                        navigate('/')
-                        console.log(err)
+                        throw err
                     })
                 return setLoading(false)
             })
@@ -100,7 +97,7 @@ function FormLogin() {
                 <div className="inputCont">
                     <label className="loginLabel block text-sm/6 font-medium text-gray-900" htmlFor="user_name">username:</label>
                     <div className="mt-2">
-                        <input {...register('user_name')} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" autoComplete="user_name" type="text" id="user_name" />
+                        <input {...register('user_name')} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" autoComplete="username" type="text" id="user_name" />
                     </div>
                 </div>
                 <div className="inputCont">

@@ -1,8 +1,7 @@
-import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 
 function ProtectedRoutesAdmin () {
-    const isAdmin = useSelector(state => state.adminSlice);
+    const isAdmin = localStorage.getItem('onlyFancyAdmin');
 
     if (isAdmin) {
         return <Outlet />

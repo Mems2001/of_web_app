@@ -31,8 +31,8 @@ function FormSignUp() {
                 navigate('/login')
             })
             .catch(err => {
-                console.log(err);
-                setIsLoading(false)
+                setIsLoading(false);
+                throw err
             })
     }
 
@@ -42,7 +42,7 @@ function FormSignUp() {
                 <div className="inputCont">
                     <label className="loginLabel block text-sm/6 font-medium text-gray-900" htmlFor="user_name">username:</label>
                     <div className="mt-2">
-                        <input {...register('user_name' , {required:true})} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" autoComplete="user_name" type="text" id="user_name"/>
+                        <input {...register('user_name' , {required:true})} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" autoComplete="username" type="text" id="user_name"/>
                     </div>
                 </div>
                 <div className="inputCont">
