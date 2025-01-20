@@ -10,7 +10,7 @@ function AddMaterial ({setLoading}) {
     const [open , setOpen] = useState(false);
     const {register , handleSubmit , reset} = useForm();
 
-    const submit2 = data => {
+    const submitMaterial = data => {
         let URL = variables.url_prefix + '/api/v1/product_details/materials';
         // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
         //     URL = 'https://' + ip + '/api/v1/product_details/materials'
@@ -89,7 +89,7 @@ function AddMaterial ({setLoading}) {
                                                     <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                                                         <span
                                                             type="button"
-                                                            onClick={handleSubmit(submit2)}
+                                                            onClick={handleSubmit(submitMaterial)}
                                                             className="inline-flex w-full bg-blue-600 justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
                                                         >
                                                             Add

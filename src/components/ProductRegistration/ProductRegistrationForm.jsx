@@ -130,6 +130,13 @@ function ProductRegistrationForm () {
             newData['other_details'] = otherDetailsData
         }
 
+        //Setting colors_ids
+        let colors_ids = [];
+        for (let color of selectedColors) {
+            colors_ids.push(color.id)
+        };
+        newData['colors_ids'] = colors_ids;
+
         //Setting images
         if (cardImage) {
             newData['card_image'] = cardImage
@@ -159,7 +166,7 @@ function ProductRegistrationForm () {
             .then(res => {
                 console.log(res);
                 setReady(false);
-                // navigate('/admin/my_orders')
+                navigate('/admin/my_orders')
             })
             .catch(err => {
                 setReady(false)
@@ -224,7 +231,7 @@ function ProductRegistrationForm () {
             if (deleted) {
                 setDeleted(false)
             }
-            console.log('useEffect triggered' , selectedColors , colouredImages , loading , deleted);
+            console.log('useEffect triggered' , selectedColors , colouredImages , ready , loading , deleted);
             let URL = variables.url_prefix + '/api/v1/orders/my_orders';
             let URL2 = variables.url_prefix + '/api/v1/main_categories';
             let URL3 = variables.url_prefix + '/api/v1/product_details/colors';

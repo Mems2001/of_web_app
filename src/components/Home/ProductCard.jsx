@@ -1,8 +1,33 @@
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import variables from '../../../utils/variables';
+import axios from 'axios'
 
 function ProductCard ({product}) {
+
+    const cardImageId = product.cardImage.split('_')[1] + '_' + product.cardImage.split('_')[2];
+
+    function getCardImage (cardImageId) {
+        let URL = variables.url_prefix + `/api/v1/products/${product.id}/${cardImageId}`;
+
+        axios.get(URL)
+            .then(data => {
+                console.log(data)
+            })
+            .catch(err => {
+                throw err
+            })
+    }
+
+    useEffect (
+        () => {
+            console.log(product.cardImage , cardImageId);
+            getCardImage(cardImageId)
+        } , []
+    )
+
     return (
         <label key={product.id} className="swap swap-flip place-content-stretch w-28 place-self-center">
                             {/* this hidden checkbox controls the state */}
@@ -20,8 +45,8 @@ function ProductCard ({product}) {
                             <div className="swap-off w-28">
                                 <div key={product.id} className="group">
                                     <img
-                                        alt={product.imageAlt}
-                                        src={product.cardImage}
+                                        alt={product.cardImage}
+                                        src="https://drive.google.com/uc?id=1YbXwJfuSzrMef01_8f5NSzjJ4Tuziznc"
                                         className="aspect-square w-full bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
                                     />
                                 </div>
