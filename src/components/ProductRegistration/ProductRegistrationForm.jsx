@@ -139,17 +139,17 @@ function ProductRegistrationForm () {
 
         //Setting images
         if (cardImage) {
-            newData['card_image'] = cardImage
+            newData[`${data.name}_card`] = cardImage
         }
 
         if (commonImages.length > 0) {
-            newData['common_images'] = commonImages
+            newData[`${data.name}_common`] = commonImages
         }
 
         let colouredImagesKeys = Object.keys(colouredImages);
         if (colouredImagesKeys.length > 0) {
            for (let key of colouredImagesKeys) {
-            newData[key] = colouredImages[key]
+            newData[`${data.name}_${key}`] = colouredImages[key]
            }
         }
 
