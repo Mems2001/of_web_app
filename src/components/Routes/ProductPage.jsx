@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios, { all } from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 import variables from "../../../utils/variables";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faBan } from "@fortawesome/free-solid-svg-icons";
 
 function ProductPage () {
     const {product_id} = useParams();
@@ -14,7 +14,10 @@ function ProductPage () {
     const [starV3 , setStarV3] = useState(0);
     const [starV4 , setStarV4] = useState(0);
     const [starV5 , setStarV5] = useState(0);
+    const [allColors , setAllColors] = useState();
     const [selectedImage , setSelectedImage] = useState();
+    const [selectedImages , setSelectedImages] = useState();
+    const [selectedColors , setSelectedColors] = useState();
     const navigate = useNavigate();
 
     const setStars = (rating) => {
@@ -59,31 +62,68 @@ function ProductPage () {
     const navBack = () => {
         navigate('/')
     }
+
+    function setColouredImage (name) {
+        let aux = []
+        if (name === 'all') {
+            aux = product.allImages;
+        } else {
+            for (let image of product.allImages) {
+               if (image.includes(name)) {
+                aux.push(image)
+               }
+            }
+        }
+        if (aux.length > 0) {
+            setSelectedImages(aux);
+            setSelectedImage(aux[0])
+        }
+    }
     
     useEffect(
         () => {
-            if (product) {
-                setSelectedImage(product.otherImages[0])
-                setStars(product.rating)
+            if (product && allColors) {
+                setSelectedImages(product.allImages);
+                setSelectedImage(product.allImages[0]);
+                setStars(product.rating);
+                let aux = []
+                for (let color of allColors) {
+                    for (let colorId of product.colorsIds) {
+                        if (color.id === colorId) {
+                            aux.push(color)
+                        }
+                    }
+                }
+                setSelectedColors(aux)
             } else {
                 let URL = variables.url_prefix + '/api/v1/products/' + product_id;
+                let URL2 = variables.url_prefix + '/api/v1/product_details/colors';
                 // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
                 //     URL = 'https://' + ip + '/api/v1/products/' + product_id;
                 // } else {
                 //     URL = 'https://localhost:443/api/v1/products/' + product_id;
                 // }
                 
+                axios.get(URL2)
+                    .then(res =>{
+                        // console.log(res);
+                        setAllColors(res.data.data)
+                    })
+                    .catch(err => {
+                        throw err
+                    })
+
                 axios.get(URL)
-                .then(res => {
-                    // console.log(res)
-                    setProduct(res.data.data);
-                })
-                .catch(err => {
-                    throw err
-                })
+                    .then(res => {
+                        // console.log(res)
+                        setProduct(res.data.data);
+                    })
+                    .catch(err => {
+                        throw err
+                    })
             }
            
-        } , [product]
+        } , [product , allColors]
     )
 
     if (loading) {
@@ -104,16 +144,16 @@ function ProductPage () {
                             <button onClick={navBack} className="btn btn-circle btn-md absolute z-10 top-5 left-10">
                                 <FontAwesomeIcon icon={faArrowLeft} size="2xl"/>
                             </button>
-                            <img src={selectedImage} className="w-full h-full object-contain absolute"/>
+                            <img src={variables.url_prefix + '/' + selectedImage} alt={selectedImage} className="w-full h-full object-contain absolute"/>
                         </div>
                         <div className="h-1/4 flex absolute bottom-0 right-0">
                             <div className="carousel carousel-center rounded-box h-full w-44">
                                
-                                {product.otherImages.map(
+                                {selectedImages.map(
                                     (image) => 
                                         <div onClick={() => setSelectedImage(image)} key={image} className="carousel-item carouselImageWidth bg-black h-full justify-center items-center">
                                             <img className={selectedImage !== image? 'w-full h-full' : 'w-10/12 h-5/6'}
-                                            src={image}
+                                            src={variables.url_prefix + '/' + image}
                                             />
                                         </div>
                                 )}
@@ -122,24 +162,14 @@ function ProductPage () {
                         </div>
                         <div className="w-1/2 ml-4 h-1/6 flex items-center justify-center">
                             <div className="carousel carousel-center rounded-box gap-4">
-                                <div className="carousel-item overflow-hidden h-20 w-20">
-                                    <img className="object-cover rounded-full h-full w-full" src="https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp" alt="Drink" />
+                                <div onClick={() => setColouredImage('all')} className="carousel-item overflow-hidden justify-center items-center h-20 w-20 rounded-full">
+                                    <FontAwesomeIcon size="5x" icon={faBan} />     
                                 </div>
-                                <div className="carousel-item overflow-hidden w-20 h-20">
-                                    <img className="object-cover rounded-full h-full w-full"
-                                    src="https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.webp"
-                                    alt="Drink" />
-                                </div>
-                                <div className="carousel-item overflow-hidden w-20 h-20">
-                                    <img className="object-cover rounded-full h-full w-full"
-                                    src="https://img.daisyui.com/images/stock/photo-1572635148818-ef6fd45eb394.webp"
-                                    alt="Drink" />
-                                </div>
-                                <div className="carousel-item overflow-hidden w-20 h-20">
-                                    <img className="object-cover rounded-full h-full w-full"
-                                    src="https://img.daisyui.com/images/stock/photo-1494253109108-2e30c049369b.webp"
-                                    alt="Drink" />
-                                </div>
+                                {selectedColors?.map(selectedColor => 
+                                    <div key={selectedColor.id} onClick={() => setColouredImage(selectedColor.name)} className="carousel-item overflow-hidden h-20 w-20 rounded-full" style={{'backgroundColor':`${selectedColor.code}`}}>
+                                        
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

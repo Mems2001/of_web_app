@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom"
+import variables from "../../../utils/variables";
 
 function ProductMiniCard ({product}) {
     const navigate = useNavigate();
@@ -10,7 +11,7 @@ function ProductMiniCard ({product}) {
 
     return (
         <div onClick={navToProductDetAdmin} className="carousel-item w-16 h-24">
-            <img src={product.cardImage}/>
+            <img src={variables.url_prefix + '/' + product.cardImage}/>
         </div>
     )
 }
