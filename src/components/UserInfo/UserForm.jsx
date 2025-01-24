@@ -23,7 +23,7 @@ function UserForm () {
             //     URL = 'https://localhost:443/api/v1/profiles/' + profile.id;
             // }
             // console.log(newProfile , URL);
-            axios.put(URL , data)
+            axios.patch(URL , data)
                 .then(res => {
                     // console.log(res);
                     dispatch(setProfile(res.data.data.updatedProfile));

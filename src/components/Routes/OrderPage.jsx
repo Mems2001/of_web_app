@@ -32,7 +32,7 @@ function OrderPage () {
             //     URL = 'https://localhost:443/api/v1/orders/' + order_id;
             // }
 
-        axios.put(URL , data)
+        axios.patch(URL , data)
             .then(res => {
                 // console.log(res);
                 editionOff()
@@ -77,10 +77,10 @@ function OrderPage () {
         axios.delete(URL)
             .then(res => {
                 // console.log(res);
-                setOpen(false);
-                navBack()
+                return true
             })
             .catch(err => {
+                console.log(err);
                 throw err
             })
     }
@@ -144,7 +144,7 @@ function OrderPage () {
                         Cancelar
                     </button>
                         :
-                    <DeleteSomethig deleteFunction={deleteOrder} />
+                    <DeleteSomethig key={order_id} deleteFunction={deleteOrder} navBackFunction={navBack}/>
                     }
                 </div>
                 <form className="orderDataCont" >

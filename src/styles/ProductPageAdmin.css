@@ -10,5 +10,10 @@
 }
 
 .productPageAdminAuxCont {
+    display: flex;
+    flex-direction: column;
+
     width: 85vw;
+    
+    gap: 1rem;
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { setProfile } from "../../store/slices/profile.slice";
 import axios from "axios";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -10,6 +10,7 @@ import variables from "../../../utils/variables.js";
 function NavComp () {
     const dispatch = useDispatch();
     const location = useSelector(state => state.locationSlice);
+    const navigate = useNavigate();
     
     const profile = useSelector(state => state.profileSlice );
     const [isLogged , setIsLogged] = useState(localStorage.getItem('onlyFancyLog'));
@@ -23,6 +24,7 @@ function NavComp () {
         localStorage.removeItem('token');
         localStorage.removeItem('onlyFancyLog');
         localStorage.removeItem('onlyFancyAdmin');
+        navigate('/')
     };
 
     const getProfile = () => {
