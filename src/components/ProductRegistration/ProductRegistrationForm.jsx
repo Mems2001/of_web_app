@@ -166,7 +166,7 @@ function ProductRegistrationForm () {
             .then(res => {
                 console.log(res);
                 setReady(false);
-                navigate('/admin/my_orders')
+                // navigate('/admin/my_orders')
             })
             .catch(err => {
                 setReady(false)
