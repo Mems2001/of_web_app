@@ -3,9 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import variables from '../../../utils/variables';
-import axios from 'axios'
 
 function ProductCard ({product}) {
+
+    const isAdmin = localStorage.getItem('onlyFancyAdmin');
 
     return (
         <label key={product.id} className="swap swap-flip place-content-stretch w-28 place-self-center">
@@ -16,7 +17,7 @@ function ProductCard ({product}) {
                                 <div key={product.id} className="group flex flex-col gap-4 content-center place-items-center">
                                     <h3 className="text-sm text-gray-700 text-center">{product.name}</h3>
                                     {/* <p className="mt-1 text-lg font-medium text-gray-900">{product.price}</p> */}
-                                    <NavLink to={`/products/${product.id}`}>
+                                    <NavLink to={isAdmin ? `/admin/products/${product.id}` : `/products/${product.id}`}>
                                         <FontAwesomeIcon icon={faCircleQuestion} size="lg" />
                                     </NavLink>
                                 </div>

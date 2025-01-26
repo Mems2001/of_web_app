@@ -231,7 +231,7 @@ function ProductRegistrationForm () {
             if (deleted) {
                 setDeleted(false)
             }
-            console.log('useEffect triggered' , selectedColors , colouredImages , ready , loading , deleted);
+            console.log('useEffect triggered' , selectedColors , colouredImages , `ready: ${ready}` , `loading: ${loading}` , `deleted: ${deleted}`);
             let URL = variables.url_prefix + '/api/v1/orders/my_orders';
             let URL2 = variables.url_prefix + '/api/v1/main_categories';
             let URL3 = variables.url_prefix + '/api/v1/product_details/colors';

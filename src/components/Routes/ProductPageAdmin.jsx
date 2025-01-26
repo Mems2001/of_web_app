@@ -53,13 +53,15 @@ function ProductPageAdmin () {
                     throw err
                 })
 
-            axios.get(URL2)
-                .then(res => {
-                    setOrder(res.data.data)
-                })
-                .catch(err => {
-                    throw err
-                })
+            if (order_id) {
+                axios.get(URL2)
+                    .then(res => {
+                        setOrder(res.data.data)
+                    })
+                    .catch(err => {
+                        throw err
+                    })
+            }
 
         } , [edition]
     )
@@ -73,7 +75,11 @@ function ProductPageAdmin () {
                         <FontAwesomeIcon icon={faArrowLeft} size="xl"/>
                     </button>
                     <h1 className="text-3xl">{product?.name}</h1>
+                    {order_id?
                     <span className="text-lg">{`Order N° ${order?.orderCount}`}</span>
+                    :
+                    <span></span>
+                    }
                 </nav>
                 <div className="flex justify-center gap-6">
                     <button className="btn btn-sm" onClick={() => {edition? handleEdition() : setEdition(true) }}>

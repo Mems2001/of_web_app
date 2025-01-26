@@ -53,6 +53,7 @@ function App() {
             <Route path='/admin/my_orders/:order_id' element={<OrderPage />}/>
             <Route path='/admin/my_orders/:order_id/products/:product_id' element={<ProductPageAdmin />}/>
             <Route path='/admin/product_registration' element={<ProductRegistration />}/> 
+            <Route path='/admin/products/:product_id' element={<ProductPageAdmin />} />
           </Route>
         </Routes>
       </div>

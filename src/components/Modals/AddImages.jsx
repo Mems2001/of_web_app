@@ -7,20 +7,24 @@ import { useForm } from 'react-hook-form';
 function AddImages ({image_type , setLoading , setCard , common , setCommon , coloured , setColoured}) {
     const [open, setOpen] = useState(false);
     const {register , handleSubmit} = useForm();
+    const [uploading , setUploading] = useState(false);
 
     const handleImages = (data) => {
-        console.log(data);
+        // console.log(data);
+        setUploading(true)
 
         if (image_type == 'common') {
             console.log('set common');
             let aux = common;
             aux.push(data.common_image[0]);
             setCommon(aux);
+            setUploading(false);
             setLoading(false);
             return setOpen(false)
         } else if (image_type == 'card') {
             console.log('set card');
             setCard(data.card_image[0]);
+            setUploading(false);
             setLoading(false);
             return setOpen(false)
         } else {
@@ -29,6 +33,7 @@ function AddImages ({image_type , setLoading , setCard , common , setCommon , co
             let aux = coloured;
             aux[image_type].push(data[`${image_type}_image`][0])
             setColoured(aux);
+            setUploading(false);
             setLoading(false);
             return setOpen(false)  
         }
@@ -78,17 +83,14 @@ function AddImages ({image_type , setLoading , setCard , common , setCommon , co
                                 <span
                                     type="button"
                                     onClick={handleSubmit(handleImages)}
-                                    className="inline-flex w-full bg-blue-600 justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
-                                >
-                                   Add
-                                
+                                    className="inline-flex w-full bg-blue-600 justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto">
+                                   {uploading? <span className="loading loading-infinity loading-md"></span> : 'Add'}
                                 </span>
                                 <span
                                     type="button"
                                     data-autofocus
                                     onClick={() => {setLoading(false);setOpen(false)}}
-                                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                                >
+                                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
                                     Cancel
                                 </span>
                             </div>
