@@ -38,15 +38,14 @@ function NavComp () {
         axios.get(URL)
             .then(res => {
                 // console.log(res.data.data);
-                dispatch(setProfile(res.data.data))
-                return true 
+                return dispatch(setProfile(res.data.data))
             })
             .catch(err => {
                 console.log({
                     location: 'NavComp.jsx',
                     err
-                })
-                return false
+                });
+                return logOut()
             })
     }
 
@@ -57,10 +56,7 @@ function NavComp () {
             axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
 
           if (isLogged && profile==null) {
-            let prof = getProfile();
-            if (!prof) {
-                logOut()
-            }
+            getProfile()
           }
         } , [ isLogged , profile , isAdmin]
     )
