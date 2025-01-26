@@ -7,9 +7,9 @@ import { useState } from 'react';
 function DeleteSomethig ({deleteFunction , navBackFunction}) {
     const [open, setOpen] = useState(false);
 
-    async function handleDelete () {
+    function handleDelete () {
         try {
-            await deleteFunction();
+            deleteFunction();
 
             setOpen(false);
             navBackFunction()
