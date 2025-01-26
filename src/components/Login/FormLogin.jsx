@@ -68,7 +68,7 @@ function FormLogin() {
                 axios.get(URL2)
                     .then(res => {
                         // console.log(res);
-                        if (res.data.auth) {
+                        if (res.data?.auth === 'admin') {
                             localStorage.setItem('onlyFancyAdmin' , true)
                         }
                         return navigate('/')

@@ -55,7 +55,7 @@ function NavComp () {
             axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
 
           if (isLogged && profile==null) {
-            getProfile()
+            logOut()
           }
         } , [ isLogged , profile , isAdmin]
     )

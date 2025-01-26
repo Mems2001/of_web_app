@@ -9,8 +9,7 @@ function DeleteSomethig ({deleteFunction , navBackFunction}) {
 
     async function handleDelete () {
         try {
-            const response = await deleteFunction();
-            console.log(response);
+            await deleteFunction();
 
             setOpen(false);
             navBackFunction()
