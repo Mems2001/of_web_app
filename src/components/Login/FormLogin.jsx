@@ -63,15 +63,16 @@ function FormLogin() {
                 localStorage.setItem('token' , res.data.token);
                 localStorage.setItem('onlyFancyLog' , true);
                 axios.defaults.headers.common['Authorization'] = `jwt ${res.data.token}`;
-                getUser();
                 reset(defaultUser);
                 axios.get(URL2)
-                    .then(res => {
-                        // console.log(res);
-                        if (res.data?.auth === 'admin') {
-                            localStorage.setItem('onlyFancyAdmin' , true)
-                        }
-                        return navigate('/')
+                .then(res => {
+                    // console.log(res);
+                    if (res.data?.auth === 'admin') {
+                        localStorage.setItem('onlyFancyAdmin' , true)
+                    }
+                    getUser();
+                    setLoading(false);
+                    return navigate('/')
                     })
                     .catch(err => {
                         throw err
