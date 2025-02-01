@@ -18,7 +18,7 @@ function SelectColorModal ({setLoading , allColors , setSelectedColors , selecte
                 for (let color of allColors) {
                     if (key === color.id) {
                         aux.push(color);
-                        aux2[color.name] = []
+                        aux2[color.id] = []
                     }
                 }
             }

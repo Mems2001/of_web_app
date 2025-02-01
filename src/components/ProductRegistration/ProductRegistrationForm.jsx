@@ -196,25 +196,6 @@ function ProductRegistrationForm () {
         setOtherDetCont(otherDetCont - 1)
     }
 
-    const addSelectedColors = () => {
-        setLoading(true);
-        let colors_ids = getValues('colors_ids');
-        let aux = []
-        let auxObj = {}
-        for (let color_id of colors_ids) {
-            for (let color of colors) {
-                if (color_id == color.id) {
-                    aux.push(color);
-                    auxObj[color.name] = []
-                }
-            }
-        }
-        setSelectedColors(aux);
-        setColouredImages(auxObj);
-        console.log(aux , auxObj);
-        setLoading(false)
-    }
-
     const deleteImage = async ( array , image) => {
         try {
             // console.log(array , image);
@@ -494,22 +475,22 @@ function ProductRegistrationForm () {
                         selectedColors.map(selectedColor => 
                             <div key={selectedColor.id}>
                                 <label className="text-sm/6 font-medium text-gray-900">{`${selectedColor.name} images:`}</label>
-                                {colouredImages[selectedColor.name].length > 0?
+                                {colouredImages[selectedColor.id].length > 0?
                                  <div className="flex flex-col items-center gap-2">
-                                    {colouredImages[selectedColor.name]?.map(coloured_image =>
+                                    {colouredImages[selectedColor.id]?.map(coloured_image =>
                                         <div key={coloured_image.lastModified} className="flex flex-row justify-between items-center w-2/3">
                                             <img className="h-20 object-contain" src={URL.createObjectURL(coloured_image)}/>
-                                            <span onClick={() => {deleteImage(colouredImages[selectedColor.name] , coloured_image)}} className="btn-circle btn btn-sm btn-error">
+                                            <span onClick={() => {deleteImage(colouredImages[selectedColor.id] , coloured_image)}} className="btn-circle btn btn-sm btn-error">
                                                 <FontAwesomeIcon icon={faTrashCan}/>
                                             </span>
                                         </div>
                                     )}
-                                    <AddImages image_type={`${selectedColor.name}`} setLoading={setLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages} coloured={colouredImages} setColoured={setColouredImages}/>
+                                    <AddImages image_type={`${selectedColor.id}`} setLoading={setLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages} coloured={colouredImages} setColoured={setColouredImages}/>
                                  </div> 
                                  : 
                                  <div className="flex flex-row justify-between items-center">
                                     <span>No images</span>
-                                    <AddImages image_type={`${selectedColor.name}`} setLoading={setLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages} coloured={colouredImages} setColoured={setColouredImages}/>
+                                    <AddImages image_type={`${selectedColor.id}`} setLoading={setLoading} setCard={setCardImage} common={commonImages} setCommon={setCommonImages} coloured={colouredImages} setColoured={setColouredImages}/>
                                 </div>
                                 }
                             </div>
