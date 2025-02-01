@@ -1,12 +1,32 @@
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import variables from '../../../utils/variables';
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function ProductCard ({product}) {
+    const [cardImage , setCardImage] = useState();
 
     const isAdmin = localStorage.getItem('onlyFancyAdmin');
+
+    useEffect (
+        () => {   
+        const URL = variables.url_prefix + '/api/v1/product_images/' + product.id
+        axios.get(URL)
+            .then(res => {
+                // console.log(res);
+                for (let image of res.data) {
+                    if (image.type === 'card') {
+                        setCardImage(image.data);
+                    }
+                }
+            })
+            .catch(err => {
+                throw err
+            })
+        } , [cardImage]
+    )
 
     return (
         <label key={product.id} className="swap swap-flip place-content-stretch w-28 place-self-center">
@@ -25,8 +45,8 @@ function ProductCard ({product}) {
                             <div className="swap-off w-28">
                                 <div key={product.id} className="group">
                                     <img
-                                        alt={product.cardImage}
-                                        src={variables.url_prefix + '/' + product.cardImage}
+                                        alt={'XD'}
+                                        src={ cardImage ? `data:image/jpeg;base64,${cardImage}` : undefined}
                                         className="aspect-square w-full bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
                                     />
                                 </div>
