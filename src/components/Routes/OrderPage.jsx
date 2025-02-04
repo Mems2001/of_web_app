@@ -99,7 +99,7 @@ function OrderPage () {
             axios.get(URL)
                 .then(res => {
                     // console.log(res);
-                    setOrder(res.data.data);
+                    setOrder(res.data);
                 })
                 .catch(err => {
                     throw err

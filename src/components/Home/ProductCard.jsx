@@ -46,7 +46,7 @@ function ProductCard ({product}) {
             <div className="swap-off w-28">
                 <div key={product.id} className="group">
                     <img
-                        alt={'XD'}
+                        alt={product.name}
                         src={`data:image/jpeg;base64,${cardImage}`}
                         className="aspect-square w-full bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
                     />
