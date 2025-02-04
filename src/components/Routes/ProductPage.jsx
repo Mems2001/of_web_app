@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 import variables from "../../../utils/variables";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faBan } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faBan, faUserTie } from "@fortawesome/free-solid-svg-icons";
 
 function ProductPage () {
+    const [isAdmin , setIsAdmin] = useState(localStorage.getItem('onlyFancyAdmin'));
+
     const {product_id} = useParams();
     // const [loading , setLoading] = useState(true);
     const [product , setProduct] = useState();
@@ -160,13 +162,22 @@ function ProductPage () {
         )
     } else {
         return (
-            <div className="productPageCont bg-white overscroll-auto overflow-auto">
-                <section className="productHero1 flex flex-col w-full relative">
+            <div className="productPageCont bg-white overscroll-contain overflow-scroll carousel carousel-vertical w-full">
+                <section className="productHero1 flex flex-col relative carousel-item">
                     <div className="productHero2 relative">
                         <div className="w-full relative h-5/6">
-                            <button onClick={navBack} className="btn btn-circle btn-md absolute z-10 top-5 left-10">
-                                <FontAwesomeIcon icon={faArrowLeft} size="2xl"/>
-                            </button>
+                            <div className="flex w-full absolute z-10 top-5 justify-between px-4">
+                                <button onClick={navBack} className="btn btn-circle btn-md">
+                                    <FontAwesomeIcon icon={faArrowLeft} size="2xl"/>
+                                </button>
+                                {isAdmin?
+                                    <button className="btn btn-circle btn-md">
+                                        <FontAwesomeIcon icon={faUserTie} size="lg"/>
+                                    </button>
+                                :
+                                    <></>
+                                }
+                            </div>
                             <img src={`data:image/jpeg;base64,${selectedImage.data}`} alt={selectedImage.id} className="w-full h-full object-contain absolute"/>
                         </div>
                         <div className="h-1/4 flex absolute bottom-0 right-0">
@@ -224,8 +235,8 @@ function ProductPage () {
                     </div>
                 </section>
     
-                <section>
-                    
+                <section className="productHero1 carousel-item h-full">
+                    XD
                 </section>
             </div>
         )

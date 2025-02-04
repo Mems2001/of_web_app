@@ -36,7 +36,7 @@ function App() {
   return (
     <div className='App'> 
       <NavComp location={location}/>
-      <div className='pt-20'>
+      <div className='pt-16'>
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />}/>
