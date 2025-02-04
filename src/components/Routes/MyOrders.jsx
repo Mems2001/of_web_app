@@ -6,6 +6,7 @@ import variables from "../../../utils/variables";
 
 function MyOrders () {
     const [orders , setOrders] = useState();
+    const [loading , setLoading] = useState(false);
     // const ip = variables.ip;
 
     const getOrders = () => {
@@ -19,15 +20,18 @@ function MyOrders () {
         axios.get(URL)
             .then(res => {
                 // console.log(res.data.data);
-                setOrders(res.data.data)
+                setOrders(res.data.data);
+                setLoading(false)
             })
             .catch(err => {
-                console.log(err)
+                console.log(err);
+                setLoading(false)
             })
     }
 
     useEffect(
         () => {
+            setLoading(true)
             getOrders()
         } , []
     )
@@ -37,9 +41,13 @@ function MyOrders () {
         <div className="myOrdersCont">
             <AdminConsole />
             <div className="ordersCont">
-                {orders?.map(
-                    order => <OrderCardMobile order={order} key={order.id}/>
-                )}
+                {!loading? 
+                    orders?.map(
+                        order => <OrderCardMobile order={order} key={order.id}/>
+                    )
+                :
+                    <div className="skeleton w-full h-56"></div>
+                }
             </div>
         </div>
     )

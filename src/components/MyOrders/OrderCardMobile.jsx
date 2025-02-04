@@ -18,7 +18,7 @@ function OrderCardMobile ({order}) {
     )
 
     return (
-        <article className="flex flex-col w-full card card-bordered shadow p-0">
+        <article onClick={navToOrderDet} className="flex flex-col w-full card card-bordered shadow p-0">
             <div className="flex flex-row card card-bordered justify-between bg-gray-100 py-2 px-4">
                 <span>N° {order?.orderCount}</span>
                 <span>ID: {order?.temuId}</span>
@@ -58,9 +58,9 @@ function OrderCardMobile ({order}) {
                         <label htmlFor="received" className="block text-sm/6 font-medium text-gray-900">Received:</label>
                         <input className="checkbox checkbox-sm" type="checkbox" id="received" name="received" disabled={true} checked={order?.received}/>
                     </div>
-                    <button onClick={navToOrderDet}>
+                    {/* <button onClick={navToOrderDet}>
                         <FontAwesomeIcon icon={faUpRightFromSquare} size="lg"/>
-                    </button>
+                    </button> */}
                 </div>
             </div>
         </article>

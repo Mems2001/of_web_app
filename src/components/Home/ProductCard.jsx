@@ -43,7 +43,7 @@ function ProductCard ({product}) {
                     </NavLink>
                 </div>
             </div>
-            <div className="swap-off w-28">
+            <div className="swap-off w-28 skeleton">
                 <div key={product.id} className="group">
                     <img
                         alt={product.name}
@@ -52,11 +52,11 @@ function ProductCard ({product}) {
                     />
                 </div>
             </div>
-</label>
+        </label>
         )
     } else {
         return (
-            <article className="skeleton w-28"></article>
+            <article className="skeleton w-28 aspect-square"></article>
         )
     }
        

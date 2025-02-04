@@ -288,7 +288,7 @@ function ProductRegistrationForm () {
             <div className="rowForProduct2">
                 <div className="productInputContV">
                     <label htmlFor="reception_date" className="text-sm/6 font-medium text-gray-900">Reception date:</label>
-                    <input className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" {...register('reception_date' , {valueAsDate:true})} disabled={!received} id="reception_date" type="date"/>
+                    <input className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" {...register('reception_date' , {valueAsDate:true})} disabled={!received} id="reception_date" name="reception_date" type="date"/>
                 </div>
                 <div className="productInputContV">
                     <label htmlFor="received_state" className="text-sm/6 font-medium text-gray-900">Received state:</label>
