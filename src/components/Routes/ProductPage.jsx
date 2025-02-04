@@ -7,7 +7,7 @@ import { faArrowLeft, faBan } from "@fortawesome/free-solid-svg-icons";
 
 function ProductPage () {
     const {product_id} = useParams();
-    const [loading , setLoading] = useState(true);
+    // const [loading , setLoading] = useState(true);
     const [product , setProduct] = useState();
     const [starV1 , setStarV1] = useState(0);
     const [starV2 , setStarV2] = useState(0);
@@ -18,6 +18,7 @@ function ProductPage () {
     const [selectedImage , setSelectedImage] = useState();
     const [selectedImages , setSelectedImages] = useState();
     const [selectedColors , setSelectedColors] = useState();
+    const [commonImages , setCommonImages] = useState();
     const navigate = useNavigate();
 
     const setStars = (rating) => {
@@ -55,8 +56,28 @@ function ProductPage () {
         } else {
             setStarV5(values * 100);
         }
-        
-        return setLoading(false)
+    }
+
+    const setImages = () => {
+        let URL = variables.url_prefix + '/api/v1/product_images/' + product.id
+                
+        axios.get(URL)
+            .then(res => {
+                 // console.log(res);
+                let aux = [];
+                for (let image of res.data) {
+                    if (image.type == 'common' || image.type == 'card') {
+                        aux.push(image)
+                    }
+                };
+                // console.log(aux);
+                setCommonImages(aux);
+                setSelectedImages(aux);
+                setSelectedImage(aux[0])
+            })
+            .catch(err => {
+                throw err
+            })
     }
 
     const navBack = () => {
@@ -83,9 +104,8 @@ function ProductPage () {
     useEffect(
         () => {
             if (product && allColors) {
-                setSelectedImages(product.allImages);
-                setSelectedImage(product.allImages[0]);
-                setStars(product.rating);
+                
+                
                 let aux = []
                 for (let color of allColors) {
                     for (let colorId of product.colorsIds) {
@@ -93,8 +113,11 @@ function ProductPage () {
                             aux.push(color)
                         }
                     }
-                }
-                setSelectedColors(aux)
+                };
+                
+                setSelectedColors(aux);
+                setStars(product.rating);
+                setImages();
             } else {
                 let URL = variables.url_prefix + '/api/v1/products/' + product_id;
                 let URL2 = variables.url_prefix + '/api/v1/product_details/colors';
@@ -107,7 +130,7 @@ function ProductPage () {
                 axios.get(URL2)
                     .then(res =>{
                         // console.log(res);
-                        setAllColors(res.data.data)
+                        setAllColors(res.data)
                     })
                     .catch(err => {
                         throw err
@@ -116,7 +139,7 @@ function ProductPage () {
                 axios.get(URL)
                     .then(res => {
                         // console.log(res)
-                        setProduct(res.data.data);
+                        setProduct(res.data);
                     })
                     .catch(err => {
                         throw err
@@ -126,7 +149,7 @@ function ProductPage () {
         } , [product , allColors]
     )
 
-    if (loading) {
+    if (!selectedImage) {
         return (
             <div className="skeletonHeight flex px-4 w-full flex-col gap-4">
                 <div className="skeleton h-3/4 w-full"></div>
@@ -135,7 +158,7 @@ function ProductPage () {
                 <div className="skeleton h-4 w-full"></div>
             </div>
         )
-    } else if(!loading) {
+    } else {
         return (
             <div className="productPageCont bg-white overscroll-auto overflow-auto">
                 <section className="productHero1 flex flex-col w-full relative">
@@ -144,16 +167,17 @@ function ProductPage () {
                             <button onClick={navBack} className="btn btn-circle btn-md absolute z-10 top-5 left-10">
                                 <FontAwesomeIcon icon={faArrowLeft} size="2xl"/>
                             </button>
-                            <img src={variables.url_prefix + '/' + selectedImage} alt={selectedImage} className="w-full h-full object-contain absolute"/>
+                            <img src={`data:image/jpeg;base64,${selectedImage.data}`} alt={selectedImage.id} className="w-full h-full object-contain absolute"/>
                         </div>
                         <div className="h-1/4 flex absolute bottom-0 right-0">
                             <div className="carousel carousel-center rounded-box h-full w-44">
                                
                                 {selectedImages.map(
                                     (image) => 
-                                        <div onClick={() => setSelectedImage(image)} key={image} className="carousel-item carouselImageWidth bg-black h-full justify-center items-center">
+                                        <div onClick={() => setSelectedImage(image)} key={image.id} className="carousel-item carouselImageWidth bg-black h-full justify-center items-center">
                                             <img className={selectedImage !== image? 'w-full h-full' : 'w-10/12 h-5/6'}
-                                            src={variables.url_prefix + '/' + image}
+                                            src={`data:image/jpeg;base64,${image.data}`}
+                                            alt={image.id}
                                             />
                                         </div>
                                 )}

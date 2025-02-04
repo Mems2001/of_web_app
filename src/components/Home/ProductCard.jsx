@@ -38,7 +38,7 @@ function ProductCard ({product}) {
                 <div key={product.id} className="group flex flex-col gap-4 content-center place-items-center">
                     <h3 className="text-sm text-gray-700 text-center">{product.name}</h3>
                     {/* <p className="mt-1 text-lg font-medium text-gray-900">{product.price}</p> */}
-                    <NavLink to={isAdmin ? `/admin/products/${product.id}` : `/products/${product.id}`}>
+                    <NavLink to={`/products/${product.id}`}>
                         <FontAwesomeIcon icon={faCircleQuestion} size="lg" />
                     </NavLink>
                 </div>
