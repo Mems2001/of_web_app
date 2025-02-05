@@ -251,7 +251,7 @@ function ProductRegistrationForm () {
 
             axios.get(URL3)
                 .then(res => {
-                    setColors(res.data.data)
+                    setColors(res.data)
                 })
                 .catch(err => {
                     throw err
