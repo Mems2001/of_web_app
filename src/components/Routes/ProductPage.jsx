@@ -1,4 +1,4 @@
-import axios, { all } from "axios";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 import variables from "../../../utils/variables";
@@ -21,6 +21,7 @@ function ProductPage () {
     const [selectedImages , setSelectedImages] = useState();
     const [selectedColors , setSelectedColors] = useState();
     const [commonImages , setCommonImages] = useState();
+    const [materials , setMaterialsP] = useState();
     const navigate = useNavigate();
 
     const setStars = (rating) => {
@@ -82,6 +83,28 @@ function ProductPage () {
             })
     }
 
+    function setMaterials () {
+        let URL = variables.url_prefix + '/api/v1/product_details/materials'
+
+        axios.get(URL)
+            .then(res => {
+                // console.log(res);
+                let aux = []
+                for (let material of res.data) {
+                    // console.log(material);
+                    if (product.materialsIds.includes(material.id)) {
+                        aux.push(material)
+                    }
+                };
+                if (aux) {
+                    setMaterialsP(aux)
+                }
+            })
+            .catch(err => {
+                throw err
+            })
+    }
+
     const navBack = () => {
         navigate('/')
     }
@@ -119,6 +142,7 @@ function ProductPage () {
                 
                 setSelectedColors(aux);
                 setStars(product.rating);
+                setMaterials();
                 setImages();
             } else {
                 let URL = variables.url_prefix + '/api/v1/products/' + product_id;
@@ -162,83 +186,115 @@ function ProductPage () {
         )
     } else {
         return (
-            <div className="productPageCont bg-white overscroll-contain overflow-scroll carousel carousel-vertical w-full">
-                <section className="productHero1 flex flex-col relative carousel-item">
-                    <div className="productHero2 relative">
-                        <div className="w-full relative h-5/6">
-                            <div className="flex w-full absolute z-10 top-5 justify-between px-4">
-                                <button onClick={navBack} className="btn btn-circle btn-md">
-                                    <FontAwesomeIcon icon={faArrowLeft} size="2xl"/>
-                                </button>
-                                {isAdmin?
-                                    <button className="btn btn-circle btn-md">
-                                        <FontAwesomeIcon icon={faUserTie} size="lg"/>
-                                    </button>
-                                :
-                                    <></>
-                                }
+            <section className="relative flex flex-col">
+                <div className="flex w-full absolute z-10 top-5 justify-between px-4">
+                    <button onClick={navBack} className="btn btn-circle btn-md">
+                        <FontAwesomeIcon icon={faArrowLeft} size="2xl"/>
+                    </button>
+                    {isAdmin?
+                        <button className="btn btn-circle btn-md">
+                            <FontAwesomeIcon icon={faUserTie} size="lg"/>
+                        </button>
+                    :
+                        <></>
+                    }
+                </div>
+                <div className="productPageCont bg-white overscroll-contain overflow-scroll carousel carousel-vertical w-full">
+                    <section className="productHero1 flex flex-col relative carousel-item">
+                        <div className="productHero2 relative">
+                            <div className="w-full h-5/6">
+                                <img src={`data:image/jpeg;base64,${selectedImage.data}`} alt={selectedImage.id} className="w-full h-full object-contain"/>
                             </div>
-                            <img src={`data:image/jpeg;base64,${selectedImage.data}`} alt={selectedImage.id} className="w-full h-full object-contain absolute"/>
-                        </div>
-                        <div className="h-1/4 flex absolute bottom-0 right-0">
-                            <div className="carousel carousel-center rounded-box h-full w-44">
-                               
-                                {selectedImages.map(
-                                    (image) => 
-                                        <div onClick={() => setSelectedImage(image)} key={image.id} className="carousel-item carouselImageWidth bg-black h-full justify-center items-center">
-                                            <img className={selectedImage !== image? 'w-full h-full' : 'w-10/12 h-5/6'}
-                                            src={`data:image/jpeg;base64,${image.data}`}
-                                            alt={image.id}
-                                            />
-                                        </div>
-                                )}
-                               
-                            </div>
-                        </div>
-                        <div className="w-1/2 ml-4 h-1/6 flex items-center justify-center">
-                            <div className="carousel carousel-center rounded-box gap-4">
-                                <div onClick={() => setColouredImage('all')} className="carousel-item overflow-hidden justify-center items-center h-20 w-20 rounded-full">
-                                    <FontAwesomeIcon size="5x" icon={faBan} />     
+                            <div className="h-1/4 flex absolute bottom-0 right-0">
+                                <div className="carousel carousel-center rounded-box h-full w-44">
+                                
+                                    {selectedImages.map(
+                                        (image) => 
+                                            <div onClick={() => setSelectedImage(image)} key={image.id} className="carousel-item carouselImageWidth bg-black h-full justify-center items-center">
+                                                <img className={selectedImage !== image? 'w-full h-full' : 'w-10/12 h-5/6'}
+                                                src={`data:image/jpeg;base64,${image.data}`}
+                                                alt={image.id}
+                                                />
+                                            </div>
+                                    )}
+                                
                                 </div>
-                                {selectedColors?.map(selectedColor => 
-                                    <div key={selectedColor.id} onClick={() => setColouredImage(selectedColor.name)} className="carousel-item overflow-hidden h-20 w-20 rounded-full" style={{'backgroundColor':`${selectedColor.code}`}}>
-                                        
+                            </div>
+                            <div className="w-1/2 ml-4 h-1/6 flex items-center justify-center">
+                                <div className="carousel carousel-center rounded-box gap-4">
+                                    <div onClick={() => setColouredImage('all')} className="carousel-item overflow-hidden justify-center items-center h-20 w-20 rounded-full">
+                                        <FontAwesomeIcon size="5x" icon={faBan} />     
                                     </div>
+                                    {selectedColors?.map(selectedColor => 
+                                        <div key={selectedColor.id} onClick={() => setColouredImage(selectedColor.name)} className="carousel-item overflow-hidden h-20 w-20 rounded-full" style={{'backgroundColor':`${selectedColor.code}`}}>
+                                            
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="productHero3 flex flex-col w-full px-4 gap-3 py-6">
+                            <div className="flex flex-row justify-between">
+                                <div className="flex flex-col gap-1">
+                                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{product?.name}</h1>
+                                    <p className="text-3xl tracking-tight text-gray-900">$ {product?.price}</p>
+                                </div>
+                                <div id="ratingCont" className="w-1/2 flex flex-row justify-end items-center">
+                                    
+                                        <div id="rating" className="flex flex-row items-center justify-left rounded-xl glass bg-gray-200 h-7 w-40 pl-2">
+                                            <progress id="star1" value={starV1} max={100} className="progress progress-warning h-5 w-5 mask mask-star-2"></progress>
+                                            <progress id="star2" value={starV2} max={100} className="progress progress-warning h-5 w-5 mask mask-star-2"></progress>
+                                            <progress id="star3" value={starV3} max={100} className="progress progress-warning h-5 w-5 mask mask-star-2"></progress>
+                                            <progress id="star4" value={starV4} max={100} className="progress progress-warning h-5 w-5 mask mask-star-2"></progress>
+                                            <progress id="star5" value={starV5} max={100} className="progress progress-warning h-5 w-5 mask mask-star-2"></progress>
+                                            <div className="rounded-full bg-black absolute h-11 w-11 flex justify-center items-center end-0">
+                                                <p className="text-white text-lg">{product?.rating}</p>
+                                            </div>
+                                        </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+        
+                    <section className="productHero1 flex flex-col carousel-item h-full px-4 gap-2">
+                        <div className="flex justify-center h-20 w-full items-center">
+                            <label className="text-2xl font-bold">Detalles</label>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm/6 font-medium text-gray-900">Descripción:</label>
+                            <p className="text-m text-gray-400">
+                                {product.description}
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm/6 font-medium text-gray-900">Dimensiones:</label>
+                            <div className="flex flex-row justify-evenly">
+                                    <span className="flex flex-row justify-between gap-2">
+                                        <label className="text-sm/6 font-medium text-gray-900">Altura (cm)</label>
+                                        <p className="text-m text-gray-400">{product.height ? product.height : '-----'}</p>
+                                    </span>
+                                    <span className="flex flex-row justify-between gap-2">
+                                        <label className="text-sm/6 font-medium text-gray-900">Longitud (cm)</label>
+                                        <p className="text-m text-gray-400">{product.length ? product.length : '-----'}</p>
+                                    </span>
+                                    <span className="flex flex-row justify-between gap-2">
+                                        <label className="text-sm/6 font-medium text-gray-900">Anchura (cm)</label>
+                                        <p className="text-m text-gray-400">{product.width ? product.width : '-----'}</p>
+                                    </span>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm/6 font-medium text-gray-900">Materiales:</label>
+                            <div className="flex flex-row gap-1">
+                                {materials.map(material => 
+                                    <span className="text-m text-gray-400" key={material.id}>{material.name}</span>
                                 )}
                             </div>
                         </div>
-                    </div>
-                    <div className="productHero3 flex flex-col w-full px-4 gap-3 py-6">
-                        <div className="flex flex-row justify-between">
-                            <div className="flex flex-col gap-1">
-                                <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{product?.name}</h1>
-                                <p className="text-3xl tracking-tight text-gray-900">$ {product?.price}</p>
-                            </div>
-                            <div id="ratingCont" className="w-1/2 flex flex-row justify-end items-center">
-                                
-                                    <div id="rating" className="flex flex-row items-center justify-left rounded-xl glass bg-gray-200 h-7 w-40 pl-2">
-                                        <progress id="star1" value={starV1} max={100} className="progress progress-warning h-5 w-5 mask mask-star-2"></progress>
-                                        <progress id="star2" value={starV2} max={100} className="progress progress-warning h-5 w-5 mask mask-star-2"></progress>
-                                        <progress id="star3" value={starV3} max={100} className="progress progress-warning h-5 w-5 mask mask-star-2"></progress>
-                                        <progress id="star4" value={starV4} max={100} className="progress progress-warning h-5 w-5 mask mask-star-2"></progress>
-                                        <progress id="star5" value={starV5} max={100} className="progress progress-warning h-5 w-5 mask mask-star-2"></progress>
-                                        <div className="rounded-full bg-black absolute h-11 w-11 flex justify-center items-center end-0">
-                                            <p className="text-white text-lg">{product?.rating}</p>
-                                        </div>
-                                    </div>
-                                
-                            </div>
-                        </div>
-                        <div className="text-m text-gray-600">
-                            {product?.description}
-                        </div>
-                    </div>
-                </section>
-    
-                <section className="productHero1 carousel-item h-full">
-                    XD
-                </section>
-            </div>
+                    </section>
+                </div>
+            </section>
         )
     }
 }
