@@ -9,6 +9,7 @@ import { faArrowLeft, faBan, faCartPlus, faHeart, faHeartCrack, faMinus, faPlus,
 function ProductPage () {
     const [isAdmin , setIsAdmin] = useState(localStorage.getItem('onlyFancyAdmin'));
     const profile = useSelector(state => state.profileSlice );
+    const [cart , setCartP] = useState();
 
     const {product_id} = useParams();
     // const [loading , setLoading] = useState(true);
@@ -144,6 +145,20 @@ function ProductPage () {
             }
         }
     }
+
+    function getCart () {
+        let URL = variables.url_prefix + '/api/v1/shopping_carts'
+
+        axios.get(URL) 
+            .then(res => {
+                if(res.data) {
+                    setCartP(res.data)
+                }
+            })
+            .catch(err => {
+                throw err
+            })
+    }
     
     function setColouredImage (name) {
         let aux = []
@@ -205,6 +220,23 @@ function ProductPage () {
         if (cartN < product.stock) {
             setCartN(cartN + 1)
         };
+        if (cart) {
+
+        } else {
+            let URL = variables.url_prefix + '/api/v1/shopping_carts';
+
+            let aux = [product.id]
+
+            axios.post(URL , {
+                products_ids: aux
+            })
+                .then(res => {
+                    setCartP(res.data)
+                })
+                .catch(err => {
+                    throw err
+                })
+        }
         // console.log(cartN)
     }
 
@@ -239,6 +271,7 @@ function ProductPage () {
                 
                 setSelectedColors(aux);
                 getLikes();
+                getCart();
                 setStars(product.rating);
                 setMaterials();
                 setMainCategory();
@@ -393,7 +426,7 @@ function ProductPage () {
                             </div>
                             <div className="flex flex-row gap-2">
                                 <label className="text-sm/6 font-medium text-gray-900">Materiales:</label>
-                                <div className="flex flex-row gap-1">
+                                <div className="flex flex-row gap-2">
                                     {materials?.map(material => 
                                         <span className="text-m text-gray-400" key={material.id}>{material.name}</span>
                                     )}
