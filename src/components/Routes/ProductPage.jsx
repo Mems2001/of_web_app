@@ -90,10 +90,12 @@ function ProductPage () {
             .then(res => {
                 // console.log(res);
                 let aux = []
-                for (let material of res.data) {
-                    // console.log(material);
-                    if (product.materialsIds.includes(material.id)) {
-                        aux.push(material)
+                if (res.data) {
+                    for (let material of res.data) {
+                        // console.log(material);
+                        if (product.materialsIds.includes(material.id)) {
+                            aux.push(material)
+                        }
                     }
                 };
                 if (aux) {
@@ -287,7 +289,7 @@ function ProductPage () {
                         <div className="flex flex-col gap-2">
                             <label className="text-sm/6 font-medium text-gray-900">Materiales:</label>
                             <div className="flex flex-row gap-1">
-                                {materials.map(material => 
+                                {materials?.map(material => 
                                     <span className="text-m text-gray-400" key={material.id}>{material.name}</span>
                                 )}
                             </div>

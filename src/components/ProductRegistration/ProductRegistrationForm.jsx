@@ -259,7 +259,7 @@ function ProductRegistrationForm () {
 
             axios.get(URL4)
                 .then(res => {
-                    setMaterials(res.data.data)
+                    setMaterials(res.data)
                 })
                 .catch(err => {
                     throw err
