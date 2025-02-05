@@ -1,4 +1,4 @@
-import { Routes , Route } from 'react-router-dom'
+import { Routes , Route } from 'react-router-dom';
 
 import '@fortawesome/fontawesome-free/css/all.css';
 import './App.css'
@@ -19,7 +19,6 @@ import Home from './components/Routes/Home'
 import SignUp from './components/Routes/SignUp'
 import UserInfo from './components/Routes/UserInfo'
 
-import { useSelector } from 'react-redux'
 import ProtectedRoutes from './components/Routes/ProtectedRoutes'
 import ProtectedRoutesAdmin from './components/Routes/ProtectedRoutesAdmin'
 import AdminConsole from './components/Routes/AdminConsole'

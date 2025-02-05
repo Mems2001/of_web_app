@@ -69,15 +69,16 @@ function FormLogin() {
                     // console.log(res);
                     if (res.data?.auth === 'admin') {
                         localStorage.setItem('onlyFancyAdmin' , true)
+                    } else if(res.data?.message === 'Not an admin') {
+                        getUser();
+                        setLoading(false);
+                        return navigate('/')
                     }
-                    getUser();
-                    setLoading(false);
-                    return navigate('/')
                     })
                     .catch(err => {
+                        setLoading(false);
                         throw err
                     })
-                return setLoading(false)
             })
             .catch(err => {
                 const message = err.response.data.message

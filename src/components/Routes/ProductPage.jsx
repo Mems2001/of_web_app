@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom"
 import variables from "../../../utils/variables";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faBan, faUserTie } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faBan, faHeart, faHeartCrack, faUserTie } from "@fortawesome/free-solid-svg-icons";
 
 function ProductPage () {
     const [isAdmin , setIsAdmin] = useState(localStorage.getItem('onlyFancyAdmin'));
+    const profile = useSelector(state => state.profileSlice );
 
     const {product_id} = useParams();
     // const [loading , setLoading] = useState(true);
@@ -22,6 +24,9 @@ function ProductPage () {
     const [selectedColors , setSelectedColors] = useState();
     const [commonImages , setCommonImages] = useState();
     const [materials , setMaterialsP] = useState();
+    const [mainCategory , setMainCategoryP] = useState();
+    const [categories , setCategoriesP] = useState();
+    const [like , setLike] = useState(false);
     const navigate = useNavigate();
 
     const setStars = (rating) => {
@@ -93,7 +98,7 @@ function ProductPage () {
                 if (res.data) {
                     for (let material of res.data) {
                         // console.log(material);
-                        if (product.materialsIds.includes(material.id)) {
+                        if (product.materialsIds?.includes(material.id)) {
                             aux.push(material)
                         }
                     }
@@ -107,10 +112,38 @@ function ProductPage () {
             })
     }
 
-    const navBack = () => {
-        navigate('/')
+    function setMainCategory () {
+        let URL = variables.url_prefix + '/api/v1/main_categories/' + product.mainCategoryId
+
+        axios.get(URL)
+            .then(res => {
+                setMainCategoryP(res.data)
+            })
+            .catch(err => {
+                throw err
+            })
     }
 
+    function setSubCategories () {
+        if (product.subcategoriesIds) {
+            let subCategories = [];
+            for (let id of product.subcategoriesIds) {
+                let URL = variables.url_prefix + '/api/v1/main_categories/' + id;
+
+                axios.get(URL)
+                    .then(res => {
+                        subCategories.push(res.data)
+                    })
+                    .catch(err => {
+                        throw err
+                    })
+            }
+            if (subCategories.length > 0) {
+                setCategoriesP(subCategories)
+            }
+        }
+    }
+    
     function setColouredImage (name) {
         let aux = []
         if (name === 'all') {
@@ -126,6 +159,49 @@ function ProductPage () {
             setSelectedImages(aux);
             setSelectedImage(aux[0])
         }
+    }
+
+    function getLikes () {
+        let URL = variables.url_prefix + '/api/v1/favourites/' + product.id + '/' + profile?.user_id;
+
+        axios.get(URL)
+            .then(res => {
+                console.log(res);
+                if (res.data) {
+                    setLike(true)
+                }
+            })
+            .catch(err => {
+                throw err
+            })
+    }
+    
+    //Click interactions
+    
+    function handleLike () {
+        let URL = variables.url_prefix + '/api/v1/favourites/' + product.id + '/' + profile?.user_id;
+        if (like) {
+            try {
+                axios.delete(URL);
+                console.log('like deleted');
+                setLike(false)
+            } catch (error) {
+                throw error
+            }
+        } else {
+            axios.post(URL)
+                .then(res => {
+                    console.log('like created');
+                    setLike(true)
+                })
+                .catch(err => {
+                    throw err
+                })
+        }
+    }
+    
+    const navBack = () => {
+        navigate('/')
     }
     
     useEffect(
@@ -143,8 +219,11 @@ function ProductPage () {
                 };
                 
                 setSelectedColors(aux);
+                getLikes();
                 setStars(product.rating);
                 setMaterials();
+                setMainCategory();
+                setSubCategories();
                 setImages();
             } else {
                 let URL = variables.url_prefix + '/api/v1/products/' + product_id;
@@ -174,7 +253,7 @@ function ProductPage () {
                     })
             }
            
-        } , [product , allColors]
+        } , [product , allColors , like]
     )
 
     if (!selectedImage) {
@@ -189,7 +268,7 @@ function ProductPage () {
     } else {
         return (
             <section className="relative flex flex-col">
-                <div className="flex w-full absolute z-10 top-5 justify-between px-4">
+                <div className="flex w-full absolute z-10 top-5 justify-between px-4 items-center">
                     <button onClick={navBack} className="btn btn-circle btn-md">
                         <FontAwesomeIcon icon={faArrowLeft} size="2xl"/>
                     </button>
@@ -198,7 +277,15 @@ function ProductPage () {
                             <FontAwesomeIcon icon={faUserTie} size="lg"/>
                         </button>
                     :
-                        <></>
+                        like?
+                            <button onClick={handleLike}>
+                                <FontAwesomeIcon icon={faHeart} style={{color: "#ff4747",}} size="2xl"/>
+                            </button>
+                            :
+                            <button onClick={handleLike}>
+                                <FontAwesomeIcon icon={faHeartCrack} size="2xl" />
+                            </button>
+                        
                     }
                 </div>
                 <div className="productPageCont bg-white overscroll-contain overflow-scroll carousel carousel-vertical w-full">
@@ -293,6 +380,17 @@ function ProductPage () {
                                     <span className="text-m text-gray-400" key={material.id}>{material.name}</span>
                                 )}
                             </div>
+                        </div>
+                        {product.otherDetails? 
+                            <div></div>
+                        :
+                            <></>
+                        }
+                        <div id="categories">
+                            <span className="inline-flex items-center rounded-xl bg-gray-50 px-3 py-2 text-base font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">{mainCategory?.name}</span>
+                            {categories?.map(category => 
+                                <span className="inline-flex items-center rounded-xl bg-gray-50 px-3 py-2 text-base font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">{category.name}</span>
+                            )}
                         </div>
                     </section>
                 </div>

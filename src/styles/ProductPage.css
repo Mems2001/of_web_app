@@ -29,3 +29,7 @@
 .carouselImageWidth {
     width: 28vw;
 }
+
+button {
+    background-color: unset;
+}

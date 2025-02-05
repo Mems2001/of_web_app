@@ -12,7 +12,7 @@ function NavComp () {
     const location = useSelector(state => state.locationSlice);
     const navigate = useNavigate();
     
-    const profile = useSelector(state => state.profileSlice );
+    const profile = useSelector(state => state.profileSlice);
     const [isLogged , setIsLogged] = useState(localStorage.getItem('onlyFancyLog'));
     const [isAdmin , setIsAdmin] = useState(localStorage.getItem('onlyFancyAdmin'));
 
