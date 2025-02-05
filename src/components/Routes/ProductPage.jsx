@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom"
 import variables from "../../../utils/variables";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faBan, faHeart, faHeartCrack, faUserTie } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faBan, faCartPlus, faHeart, faHeartCrack, faMinus, faPlus, faTrashCan, faUserTie } from "@fortawesome/free-solid-svg-icons";
 
 function ProductPage () {
     const [isAdmin , setIsAdmin] = useState(localStorage.getItem('onlyFancyAdmin'));
@@ -27,6 +27,7 @@ function ProductPage () {
     const [mainCategory , setMainCategoryP] = useState();
     const [categories , setCategoriesP] = useState();
     const [like , setLike] = useState(false);
+    const [cartN , setCartN] = useState(0);
     const navigate = useNavigate();
 
     const setStars = (rating) => {
@@ -199,6 +200,24 @@ function ProductPage () {
                 })
         }
     }
+
+    function addToCart () {
+        if (cartN < product.stock) {
+            setCartN(cartN + 1)
+        };
+        // console.log(cartN)
+    }
+
+    function substractFromCart () {
+        if (cartN > 0) {
+            setCartN(cartN - 1)
+        };
+        // console.log(cartN)
+    }
+
+    function deleteFromCart () {
+        setCartN(0)
+    }
     
     const navBack = () => {
         navigate('/')
@@ -253,7 +272,7 @@ function ProductPage () {
                     })
             }
            
-        } , [product , allColors , like]
+        } , [product , allColors]
     )
 
     if (!selectedImage) {
@@ -278,11 +297,11 @@ function ProductPage () {
                         </button>
                     :
                         like?
-                            <button onClick={handleLike}>
+                            <button className="btn btn-circle btn-ghost" onClick={handleLike}>
                                 <FontAwesomeIcon icon={faHeart} style={{color: "#ff4747",}} size="2xl"/>
                             </button>
                             :
-                            <button onClick={handleLike}>
+                            <button className="btn btn-circle btn-ghost" onClick={handleLike}>
                                 <FontAwesomeIcon icon={faHeartCrack} size="2xl" />
                             </button>
                         
@@ -347,50 +366,79 @@ function ProductPage () {
                     </section>
         
                     <section className="productHero1 flex flex-col carousel-item h-full px-4 gap-2">
-                        <div className="flex justify-center h-20 w-full items-center">
-                            <label className="text-2xl font-bold">Detalles</label>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-sm/6 font-medium text-gray-900">Descripción:</label>
-                            <p className="text-m text-gray-400">
-                                {product.description}
-                            </p>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-sm/6 font-medium text-gray-900">Dimensiones:</label>
-                            <div className="flex flex-row justify-evenly">
-                                    <span className="flex flex-row justify-between gap-2">
-                                        <label className="text-sm/6 font-medium text-gray-900">Altura (cm)</label>
-                                        <p className="text-m text-gray-400">{product.height ? product.height : '-----'}</p>
-                                    </span>
-                                    <span className="flex flex-row justify-between gap-2">
-                                        <label className="text-sm/6 font-medium text-gray-900">Longitud (cm)</label>
-                                        <p className="text-m text-gray-400">{product.length ? product.length : '-----'}</p>
-                                    </span>
-                                    <span className="flex flex-row justify-between gap-2">
-                                        <label className="text-sm/6 font-medium text-gray-900">Anchura (cm)</label>
-                                        <p className="text-m text-gray-400">{product.width ? product.width : '-----'}</p>
-                                    </span>
+                        <div className="flex flex-col gap-3 h-1/2">
+                            <div className="flex justify-center h-20 w-full items-center">
+                                <label className="text-2xl font-bold">Detalles</label>
                             </div>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-sm/6 font-medium text-gray-900">Materiales:</label>
-                            <div className="flex flex-row gap-1">
-                                {materials?.map(material => 
-                                    <span className="text-m text-gray-400" key={material.id}>{material.name}</span>
+                            <div className="flex">
+                                <p className="text-m text-gray-400">
+                                    {product.description}
+                                </p>
+                            </div>
+                            <div className="flex w-full">
+                                <div className="flex flex-row justify-between w-full">
+                                        <span className="flex flex-row justify-between gap-2">
+                                            <label className="text-sm/6 font-medium text-gray-900">Altura (cm)</label>
+                                            <p className="text-m text-gray-400">{product.height ? product.height : '-----'}</p>
+                                        </span>
+                                        <span className="flex flex-row justify-between gap-2">
+                                            <label className="text-sm/6 font-medium text-gray-900">Longitud (cm)</label>
+                                            <p className="text-m text-gray-400">{product.length ? product.length : '-----'}</p>
+                                        </span>
+                                        <span className="flex flex-row justify-between gap-2">
+                                            <label className="text-sm/6 font-medium text-gray-900">Anchura (cm)</label>
+                                            <p className="text-m text-gray-400">{product.width ? product.width : '-----'}</p>
+                                        </span>
+                                </div>
+                            </div>
+                            <div className="flex flex-row gap-2">
+                                <label className="text-sm/6 font-medium text-gray-900">Materiales:</label>
+                                <div className="flex flex-row gap-1">
+                                    {materials?.map(material => 
+                                        <span className="text-m text-gray-400" key={material.id}>{material.name}</span>
+                                    )}
+                                </div>
+                            </div>
+                            {product.otherDetails? 
+                                <div></div>
+                            :
+                                <></>
+                            }
+                            <div id="categories">
+                                <span className="inline-flex items-center rounded-xl bg-gray-50 px-3 py-2 text-base font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">{mainCategory?.name}</span>
+                                {categories?.map(category => 
+                                    <span className="inline-flex items-center rounded-xl bg-gray-50 px-3 py-2 text-base font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">{category.name}</span>
                                 )}
                             </div>
                         </div>
-                        {product.otherDetails? 
-                            <div></div>
-                        :
-                            <></>
-                        }
-                        <div id="categories">
-                            <span className="inline-flex items-center rounded-xl bg-gray-50 px-3 py-2 text-base font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">{mainCategory?.name}</span>
-                            {categories?.map(category => 
-                                <span className="inline-flex items-center rounded-xl bg-gray-50 px-3 py-2 text-base font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">{category.name}</span>
-                            )}
+
+                        <div className="flex flex-row justify-between items-center px-4">
+                            <div className="flex flex-row gap-3 items-center">
+                                <label className="text-sm/6 font-medium text-gray-900">Stock:</label>
+                                <span className="text-lg font-medium text-gray-400">{product.stock}</span>
+                            </div>
+                            {cartN?
+                                <div className="flex flex-row gap-5 items-center">
+                                    <button onClick={substractFromCart} className="btn btn-circle btn-sm">
+                                        <FontAwesomeIcon icon={faMinus} />
+                                    </button>
+                                    <p className="text-xl">{cartN}</p>
+                                    <button onClick={addToCart} className="btn btn-circle btn-sm">
+                                        <FontAwesomeIcon icon={faPlus} />
+                                    </button>
+                                </div>
+                            :
+                                <></>
+                            }
+                            {cartN?
+                                <button onClick={deleteFromCart} className="btn btn-circle btn-md btn-error">
+                                    <FontAwesomeIcon icon={faTrashCan} size="lg"/>
+                                </button>
+                            :
+                                <button onClick={addToCart} className="btn btn-circle btn-md btn-ghost">
+                                    <FontAwesomeIcon icon={faCartPlus} style={{color: "#74C0FC",}} size="2xl" />
+                                </button>
+                            }
                         </div>
                     </section>
                 </div>
