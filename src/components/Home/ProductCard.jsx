@@ -8,19 +8,13 @@ import axios from "axios";
 function ProductCard ({product}) {
     const [cardImage , setCardImage] = useState();
 
-    const isAdmin = localStorage.getItem('onlyFancyAdmin');
-
     useEffect (
         () => {   
-        const URL = variables.url_prefix + '/api/v1/product_images/' + product.id
+        const URL = variables.url_prefix + '/api/v1/product_images/card/' + product.id;
         axios.get(URL)
             .then(res => {
-                // console.log(res);
-                for (let image of res.data) {
-                    if (image.type === 'card') {
-                        setCardImage(image.data);
-                    }
-                }
+                console.log(res);
+                setCardImage(`data:image/jpeg;base64,${res.data.data}`)
             })
             .catch(err => {
                 throw err
@@ -28,7 +22,6 @@ function ProductCard ({product}) {
         } , [cardImage]
     )
 
-    if (cardImage) {
         return (
             <label key={product.id} className="swap swap-flip place-content-stretch w-28 place-self-center">
             {/* this hidden checkbox controls the state */}
@@ -43,23 +36,21 @@ function ProductCard ({product}) {
                     </NavLink>
                 </div>
             </div>
-            <div className="swap-off w-28 skeleton">
-                <div key={product.id} className="group">
-                    <img
-                        alt={product.name}
-                        src={`data:image/jpeg;base64,${cardImage}`}
-                        className="aspect-square w-full bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
-                    />
+            {cardImage?
+                <div className="swap-off w-28">
+                    <div key={product.id} className="group">
+                        <img
+                            alt={product.name}
+                            src={cardImage}
+                            className="aspect-square w-full bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
+                        />
+                    </div>
                 </div>
-            </div>
+            :
+            <article className="skeleton swap-off w-28 aspect-square"></article>
+            }
         </label>
-        )
-    } else {
-        return (
-            <article className="skeleton w-28 aspect-square"></article>
-        )
-    }
-       
+        )       
 }
 
 export default ProductCard

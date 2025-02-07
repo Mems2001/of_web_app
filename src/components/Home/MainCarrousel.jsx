@@ -19,7 +19,7 @@ function MainCarrousel () {
             axios.get(URL)
                 .then(res => {
                     console.log(res);
-                    setProducts(res.data.data)
+                    setProducts(res.data)
                 })
                 .catch(err => {
                     throw err

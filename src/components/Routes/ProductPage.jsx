@@ -10,8 +10,8 @@ function ProductPage () {
     const [isAdmin , setIsAdmin] = useState(localStorage.getItem('onlyFancyAdmin'));
     const profile = useSelector(state => state.profileSlice );
     const [cart , setCartP] = useState();
-
     const {product_id} = useParams();
+
     // const [loading , setLoading] = useState(true);
     const [product , setProduct] = useState();
     const [starV1 , setStarV1] = useState(0);
@@ -19,16 +19,20 @@ function ProductPage () {
     const [starV3 , setStarV3] = useState(0);
     const [starV4 , setStarV4] = useState(0);
     const [starV5 , setStarV5] = useState(0);
-    const [allColors , setAllColors] = useState();
+    const [stocks , setStocks] = useState();
+    const [colorStock , setColorStock] = useState(); //Used for any selected stock
     const [selectedImage , setSelectedImage] = useState();
     const [selectedImages , setSelectedImages] = useState();
     const [selectedColors , setSelectedColors] = useState();
+    const [selectedColor , setSelectedColor] = useState();
     const [commonImages , setCommonImages] = useState();
+    const [colouredImages , setColouredImages] = useState();
     const [materials , setMaterialsP] = useState();
-    const [mainCategory , setMainCategoryP] = useState();
+    const [mainCategory , setMainCategory] = useState();
     const [categories , setCategoriesP] = useState();
     const [like , setLike] = useState(false);
     const [cartN , setCartN] = useState(0);
+    const [deletingCart , setDeletingCart] = useState(false);
     const navigate = useNavigate();
 
     const setStars = (rating) => {
@@ -69,19 +73,24 @@ function ProductPage () {
     }
 
     const setImages = () => {
-        let URL = variables.url_prefix + '/api/v1/product_images/' + product.id
+        let URL = variables.url_prefix + '/api/v1/product_images/' + product_id
                 
         axios.get(URL)
             .then(res => {
-                 // console.log(res);
+                console.log(res);
                 let aux = [];
+                let coloredAux = [];
                 for (let image of res.data) {
-                    if (image.type == 'common' || image.type == 'card') {
+                    if (image.type == 'common') {
                         aux.push(image)
                     }
+                    if (image.type == 'color') {
+                        coloredAux.push(image)
+                    }
                 };
-                // console.log(aux);
+                console.log(aux);
                 setCommonImages(aux);
+                setColouredImages(coloredAux);
                 setSelectedImages(aux);
                 setSelectedImage(aux[0])
             })
@@ -90,7 +99,7 @@ function ProductPage () {
             })
     }
 
-    function setMaterials () {
+    function setMaterials (product) {
         let URL = variables.url_prefix + '/api/v1/product_details/materials'
 
         axios.get(URL)
@@ -114,19 +123,7 @@ function ProductPage () {
             })
     }
 
-    function setMainCategory () {
-        let URL = variables.url_prefix + '/api/v1/main_categories/' + product.mainCategoryId
-
-        axios.get(URL)
-            .then(res => {
-                setMainCategoryP(res.data)
-            })
-            .catch(err => {
-                throw err
-            })
-    }
-
-    function setSubCategories () {
+    function setSubCategories (product) {
         if (product.subcategoriesIds) {
             let subCategories = [];
             for (let id of product.subcategoriesIds) {
@@ -151,8 +148,10 @@ function ProductPage () {
 
         axios.get(URL) 
             .then(res => {
+                console.log('Cart' ,res);
                 if(res.data) {
-                    setCartP(res.data)
+                    setCartP(res.data);
+                    setCartN(1)
                 }
             })
             .catch(err => {
@@ -160,29 +159,34 @@ function ProductPage () {
             })
     }
     
-    function setColouredImage (name) {
+    function setColouredImage (name , color) {
         let aux = []
         if (name === 'all') {
-            aux = product.allImages;
+            aux = commonImages;
+            setSelectedColor();
+            setColorStock();
         } else {
-            for (let image of product.allImages) {
-               if (image.includes(name)) {
-                aux.push(image)
-               }
+            aux = colouredImages;
+            setSelectedColor(color);
+            for (let stock of stocks) {
+                if (stock.colorId == color.id) {
+                    setColorStock(stock)
+                }
             }
         }
         if (aux.length > 0) {
             setSelectedImages(aux);
             setSelectedImage(aux[0])
         }
+        console.log(aux)
     }
 
     function getLikes () {
-        let URL = variables.url_prefix + '/api/v1/favourites/' + product.id + '/' + profile?.user_id;
+        let URL = variables.url_prefix + '/api/v1/favourites/' + product_id + '/' + profile?.user_id;
 
         axios.get(URL)
             .then(res => {
-                console.log(res);
+                console.log('Favourites' , res);
                 if (res.data) {
                     setLike(true)
                 }
@@ -218,25 +222,25 @@ function ProductPage () {
 
     function addToCart () {
         if (cartN < product.stock) {
+            if (cart) {
+    
+            } else {
+                let URL = variables.url_prefix + '/api/v1/shopping_carts';
+    
+                let aux = [product.id]
+    
+                axios.post(URL , {
+                    products_ids: aux
+                })
+                    .then(res => {
+                        setCartP(res.data)
+                    })
+                    .catch(err => {
+                        throw err
+                    })
+            }
             setCartN(cartN + 1)
         };
-        if (cart) {
-
-        } else {
-            let URL = variables.url_prefix + '/api/v1/shopping_carts';
-
-            let aux = [product.id]
-
-            axios.post(URL , {
-                products_ids: aux
-            })
-                .then(res => {
-                    setCartP(res.data)
-                })
-                .catch(err => {
-                    throw err
-                })
-        }
         // console.log(cartN)
     }
 
@@ -248,7 +252,30 @@ function ProductPage () {
     }
 
     function deleteFromCart () {
-        setCartN(0)
+        let URL = variables.url_prefix + '/api/v1/shopping_carts';
+        if (cart.productsIds.length > 1) {
+            let prods = cart.productsIds;
+            let index = prods.indexOf(product.id);
+            prods.splice(index , 1);
+            axios.patch(URL , prods)
+                .then(res => {
+                    setCartP(res.data)
+                    setCartN(0)
+                })
+                .catch(err => {
+                    throw err
+                })
+        } else {
+            setDeletingCart(true)
+            try {
+                axios.delete(URL)
+                setCartP()
+                setCartN(0)
+                setDeletingCart(false)
+            } catch (error) {
+                throw error
+            }
+        }   
     }
     
     const navBack = () => {
@@ -257,58 +284,55 @@ function ProductPage () {
     
     useEffect(
         () => {
-            if (product && allColors) {
-                
-                
-                let aux = []
-                for (let color of allColors) {
-                    for (let colorId of product.colorsIds) {
-                        if (color.id === colorId) {
-                            aux.push(color)
-                        }
-                    }
-                };
-                
-                setSelectedColors(aux);
-                getLikes();
-                getCart();
-                setStars(product.rating);
-                setMaterials();
-                setMainCategory();
-                setSubCategories();
-                setImages();
-            } else {
                 let URL = variables.url_prefix + '/api/v1/products/' + product_id;
-                let URL2 = variables.url_prefix + '/api/v1/product_details/colors';
+                let URL3 = variables.url_prefix + '/api/v1/stocks/' + product_id;
                 // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
                 //     URL = 'https://' + ip + '/api/v1/products/' + product_id;
                 // } else {
                 //     URL = 'https://localhost:443/api/v1/products/' + product_id;
                 // }
                 
-                axios.get(URL2)
-                    .then(res =>{
-                        // console.log(res);
-                        setAllColors(res.data)
-                    })
-                    .catch(err => {
-                        throw err
-                    })
-
+                axios.get(URL3)
+                .then(res => {
+                    console.log('Stocks' , res);
+                    setStocks(res.data);
+                    let colorsAux = []
+                    for (let stock of res.data) {
+                        if (stock.Color) {
+                            colorsAux.push(stock.Color)
+                        } else {
+                            setColorStock(stock)
+                        }
+                    }
+                    if (colorsAux.length > 0) {
+                        setSelectedColors(colorsAux)
+                    }
+                })
+                .catch(err => {
+                    throw err
+                })
+                
                 axios.get(URL)
-                    .then(res => {
-                        // console.log(res)
-                        setProduct(res.data);
+                .then(res => {
+                    console.log('Product' , res);
+                    //We must respect the data renderization order
+                    setImages();
+                    getLikes();
+                    setStars(res.data.rating);
+                    setMaterials(res.data);
+                    setMainCategory(res.data.Main_category);
+                    setSubCategories(res.data);
+                    getCart();
+                    setProduct(res.data);
                     })
                     .catch(err => {
                         throw err
                     })
-            }
            
-        } , [product , allColors]
+        } , []
     )
 
-    if (!selectedImage) {
+    if (!product) {
         return (
             <div className="skeletonHeight flex px-4 w-full flex-col gap-4">
                 <div className="skeleton h-3/4 w-full"></div>
@@ -343,13 +367,19 @@ function ProductPage () {
                 <div className="productPageCont bg-white overscroll-contain overflow-scroll carousel carousel-vertical w-full">
                     <section className="productHero1 flex flex-col relative carousel-item">
                         <div className="productHero2 relative">
-                            <div className="w-full h-5/6">
-                                <img src={`data:image/jpeg;base64,${selectedImage.data}`} alt={selectedImage.id} className="w-full h-full object-contain"/>
-                            </div>
+                            {selectedImage?
+                                <div className="w-full h-5/6">
+                                    <img src={`data:image/jpeg;base64,${selectedImage?.data}`} alt={selectedImage?.id} className="w-full h-full object-contain"/>
+                                </div>
+                            :
+                                <div className="w-full h-5/6 skeleton">
+
+                                </div>
+                            }
                             <div className="h-1/4 flex absolute bottom-0 right-0">
                                 <div className="carousel carousel-center rounded-box h-full w-44">
                                 
-                                    {selectedImages.map(
+                                    {selectedImages?.map(
                                         (image) => 
                                             <div onClick={() => setSelectedImage(image)} key={image.id} className="carousel-item carouselImageWidth bg-black h-full justify-center items-center">
                                                 <img className={selectedImage !== image? 'w-full h-full' : 'w-10/12 h-5/6'}
@@ -361,18 +391,22 @@ function ProductPage () {
                                 
                                 </div>
                             </div>
-                            <div className="w-1/2 ml-4 h-1/6 flex items-center justify-center">
-                                <div className="carousel carousel-center rounded-box gap-4">
-                                    <div onClick={() => setColouredImage('all')} className="carousel-item overflow-hidden justify-center items-center h-20 w-20 rounded-full">
-                                        <FontAwesomeIcon size="5x" icon={faBan} />     
-                                    </div>
-                                    {selectedColors?.map(selectedColor => 
-                                        <div key={selectedColor.id} onClick={() => setColouredImage(selectedColor.name)} className="carousel-item overflow-hidden h-20 w-20 rounded-full" style={{'backgroundColor':`${selectedColor.code}`}}>
-                                            
+                            {selectedColors?
+                                <div className="w-1/2 ml-4 h-1/6 flex items-center justify-center">
+                                    <div className="carousel carousel-center rounded-box gap-4">
+                                        <div onClick={() => setColouredImage('all')} className="carousel-item overflow-hidden justify-center items-center h-20 w-20 rounded-full">
+                                            <FontAwesomeIcon size="5x" icon={faBan} />     
                                         </div>
-                                    )}
+                                        {selectedColors?.map(selectedColor => 
+                                            <div key={selectedColor.id} onClick={() => setColouredImage(selectedColor.name , selectedColor)} className="carousel-item overflow-hidden h-20 w-20 rounded-full" style={{'backgroundColor':`${selectedColor.code}`}}>
+                                                
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
+                            :
+                                <></>
+                            }
                         </div>
                         <div className="productHero3 flex flex-col w-full px-4 gap-3 py-6">
                             <div className="flex flex-row justify-between">
@@ -448,7 +482,15 @@ function ProductPage () {
                         <div className="flex flex-row justify-between items-center px-4">
                             <div className="flex flex-row gap-3 items-center">
                                 <label className="text-sm/6 font-medium text-gray-900">Stock:</label>
-                                <span className="text-lg font-medium text-gray-400">{product.stock}</span>
+                                {selectedColors?
+                                    selectedColor?
+                                        <span className="text-lg font-medium text-gray-400">{colorStock?.ammount}</span>
+                                        :
+                                        <span className="text-lg font-medium text-gray-400">Select a Color</span>
+                                    
+                                    :
+                                    <span className="text-lg font-medium text-gray-400">{colorStock?.ammount}</span>
+                                }
                             </div>
                             {cartN?
                                 <div className="flex flex-row gap-5 items-center">
@@ -464,11 +506,14 @@ function ProductPage () {
                                 <></>
                             }
                             {cartN?
-                                <button onClick={deleteFromCart} className="btn btn-circle btn-md btn-error">
-                                    <FontAwesomeIcon icon={faTrashCan} size="lg"/>
+                                <button onClick={deleteFromCart} disabled={deletingCart} className="btn btn-circle btn-md btn-error">
+                                    {deletingCart?
+                                        <div className="skeleton"></div>
+                                    :
+                                        <FontAwesomeIcon icon={faTrashCan} size="lg"/>}
                                 </button>
                             :
-                                <button onClick={addToCart} className="btn btn-circle btn-md btn-ghost">
+                                <button onClick={addToCart} disabled={selectedColors? selectedColor?false: true : false} className="btn btn-circle btn-md btn-ghost">
                                     <FontAwesomeIcon icon={faCartPlus} style={{color: "#74C0FC",}} size="2xl" />
                                 </button>
                             }

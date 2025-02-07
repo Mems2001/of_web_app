@@ -10,13 +10,15 @@ function AddImages ({image_type , setLoading , setCard , common , setCommon , co
     const [uploading , setUploading] = useState(false);
 
     const handleImages = (data) => {
-        // console.log(data);
+        console.log(data);
         setUploading(true)
 
         if (image_type == 'common') {
-            console.log('set common');
+            console.log('set common' , data);
             let aux = common;
-            aux.push(data.common_image[0]);
+            for (let image of data.common_image) {
+                aux.push(image);
+            }
             setCommon(aux);
             setUploading(false);
             setLoading(false);
@@ -31,7 +33,9 @@ function AddImages ({image_type , setLoading , setCard , common , setCommon , co
             //If the file is none of the above then we proceed with color related images
             console.log(`set ${image_type}`);
             let aux = coloured;
-            aux[image_type].push(data[`${image_type}_image`][0])
+            for (let image of data[`${image_type}_image`]) {
+                aux[image_type].push(data[`${image_type}_image`]);
+            }
             setColoured(aux);
             setUploading(false);
             setLoading(false);
@@ -63,20 +67,9 @@ function AddImages ({image_type , setLoading , setCard , common , setCommon , co
                             transition
                             className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95"
                         >
-                            <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                                <div className="sm:flex sm:items-start">
-                                   
-                                    <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                                        <DialogTitle as="h3" className="text-base font-semibold text-gray-900">
-                                            {`Add a ${image_type} image`}
-                                        </DialogTitle>
-                                    
-                                    </div>
-                                </div>
-                            </div>
                             <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-y-4">
                                                
-                                <input {...register(`${image_type}_image` , {required:true})} id={`${image_type}_image`} name={`${image_type}_image`} type='file'/>
+                                <input {...register(`${image_type}_image` , {required:true})} id={`${image_type}_image`} name={`${image_type}_image`} multiple={image_type==='card'? false : true} type='file'/>
                                     
                             </div>
                             <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">

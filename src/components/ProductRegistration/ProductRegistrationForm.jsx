@@ -130,12 +130,20 @@ function ProductRegistrationForm () {
             newData['other_details'] = otherDetailsData
         }
 
-        //Setting colors_ids
-        let colors_ids = [];
-        for (let color of selectedColors) {
-            colors_ids.push(color.id)
+        //Setting stocks
+        let stocks = {};
+        for (let key of keys) {
+            if (selectedColors.length > 0) {
+                if (key.includes('stock') && !key.includes('general')) {
+                    stocks[key] = data[key]
+                }
+            } else {
+                if (key.includes('general')) {
+                    stocks[key] = data[key]
+                }
+            }
         };
-        newData['colors_ids'] = colors_ids;
+        newData['stocks'] = stocks;
 
         //Setting images
         if (cardImage) {
@@ -166,7 +174,7 @@ function ProductRegistrationForm () {
             .then(res => {
                 console.log(res);
                 setReady(false);
-                navigate('/admin/my_orders')
+                // navigate('/admin/my_orders')
             })
             .catch(err => {
                 setReady(false)
@@ -366,14 +374,8 @@ function ProductRegistrationForm () {
                     <input {...register('model')} id="model" type="text" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                 </div>
             </div>
-            <div>
-                <div className="productInputCont">
-                    <label htmlFor="colors_ids" className="text-sm/6 font-medium text-gray-900">Colors:</label>
-                    <SelectColorModal allColors={colors} selectedColors={selectedColors} setLoading={setLoading} setSelectedColors={setSelectedColors} setColoured={setColouredImages}/>
-
-                    <AddColor setLoading={setLoading}/>
-                </div>
-            </div>
+            
+            
             <div className="rowForProduct3">
                 <div className="productInputContV">
                     <label htmlFor="height" className="text-sm/6 font-medium text-gray-900">Height (cm):</label>
@@ -394,7 +396,20 @@ function ProductRegistrationForm () {
                     <textarea rows={3} {...register('description' , {required:true})} className="textarea textarea-bordered text-sm self-stretch" id="description" type="text"/>
                 </div>
             </div>
+            
             <div>
+                <div className="productInputCont w-full">
+                    <label htmlFor="materials_ids" className="text-sm/6 font-medium text-gray-900">Materials:</label>
+                    <select {...register('materials_ids')} id="materials_ids" multiple={true} className="select select-bordered select-sm w-52 max-w-xs">
+                        {/* <option value={null}>Elige los materiales</option> */}
+                        {materials?.map(
+                            material => <option key={material.id} value={material.id}>{material.name}</option>
+                        )}
+                    </select>
+                    <AddMaterial setLoading={setLoading}/>
+                </div>
+            </div>
+
                 <div className="productInputContV gap-3">
                     <div className="productInputCont">
                         <label htmlFor="other_details" className="text-sm/6 font-medium text-gray-900">Other details:</label>
@@ -415,21 +430,37 @@ function ProductRegistrationForm () {
                         )}
                     </div>
                 </div>
+
+            <div className="productInputCont">
+                <label htmlFor="colors_ids" className="text-sm/6 font-medium text-gray-900">Colors:</label>
+                <SelectColorModal allColors={colors} selectedColors={selectedColors} setLoading={setLoading} setSelectedColors={setSelectedColors} setColoured={setColouredImages}/>
+
+                <AddColor setLoading={setLoading}/>
             </div>
+
             <div>
-                <div className="productInputCont w-full">
-                    <label htmlFor="materials_ids" className="text-sm/6 font-medium text-gray-900">Materials:</label>
-                    <select {...register('materials_ids')} id="materials_ids" multiple={true} className="select select-bordered select-sm w-52 max-w-xs">
-                        {/* <option value={null}>Elige los materiales</option> */}
-                        {materials?.map(
-                            material => <option key={material.id} value={material.id}>{material.name}</option>
-                        )}
-                    </select>
-                    <AddMaterial setLoading={setLoading}/>
-                </div>
+                {selectedColors.length > 0?
+                    <div className="flex flex-col gap-2">
+                        <label className="text-sm/6 font-medium text-gray-900">Stock:</label>
+                        <div className="flex flex-col gap-2 items-center">
+                            {selectedColors.map(
+                                color => 
+                                    <div key={color.id} className="flex flex-row justify-between w-1/2">
+                                        <label htmlFor={`${color.id}_stock`} className="text-sm/6 font-medium text-gray-900">{color.name}:</label>
+                                        <input id={`${color.id}_stock`} name={`${color.id}_stock`} {...register(`${color.id}_stock` , {valueAsNumber:true})} className="block w-1/2 rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" type="number"/>
+                                    </div>
+                            )}
+                        </div>
+                    </div>
+                :
+                    <div className="flex flex-row w-1/2 justify-between justify-self-center">
+                        <label htmlFor="general_stock" className="text-sm/6 font-medium text-gray-900">Stock:</label>
+                        <input {...register('general_stock' , {valueAsNumber:true})} id="general_stock" name="general_stock" className="block w-1/2 rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" type="number"/>
+                    </div>
+                }
             </div>
            
-           <div className="flex flex-col border border-gray-300 rounded-md px-3 py-2">
+           <div className="flex flex-col border border-gray-300 rounded-md px-3 py-2 gap-2">
                 <div>
                     <label className="text-sm/6 font-medium text-gray-900">Card Image:</label>
                     {cardImage?
@@ -497,7 +528,7 @@ function ProductRegistrationForm () {
                         )
                     
                         :
-                    <>No colors</>
+                    <span className="text-sm/6 font-medium text-gray-900">No selected colors</span>
                 }
                 
            </div>
@@ -570,7 +601,7 @@ function ProductRegistrationForm () {
                     <input {...register('price' , {valueAsNumber:true , required:true})} id="price" className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
                 </div> 
             </div>
-            <button type="submit" onClick={handleSubmit(submit)} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            <button type="submit" onClick={handleSubmit(submit)} disabled={ready} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 {ready? <span className="loading loading-infinity loading-md"></span> : 'Registrar'}
             </button>
         </form>
