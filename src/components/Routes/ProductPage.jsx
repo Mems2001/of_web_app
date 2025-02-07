@@ -221,16 +221,18 @@ function ProductPage () {
     }
 
     function addToCart () {
-        if (cartN < product.stock) {
+        if (cartN < colorStock?.ammount) {
             if (cart) {
     
             } else {
                 let URL = variables.url_prefix + '/api/v1/shopping_carts';
     
-                let aux = [product.id]
+                let aux = [product_id]
     
                 axios.post(URL , {
-                    products_ids: aux
+                    product_id: aux,
+                    ammount : cartN,
+                    color_id: selectedColor?.id
                 })
                     .then(res => {
                         setCartP(res.data)
