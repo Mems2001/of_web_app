@@ -34,7 +34,7 @@ function AddImages ({image_type , setLoading , setCard , common , setCommon , co
             console.log(`set ${image_type}`);
             let aux = coloured;
             for (let image of data[`${image_type}_image`]) {
-                aux[image_type].push(data[`${image_type}_image`]);
+                aux[image_type].push(image);
             }
             setColoured(aux);
             setUploading(false);

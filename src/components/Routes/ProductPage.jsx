@@ -31,7 +31,7 @@ function ProductPage () {
     const [selectedImage , setSelectedImage] = useState();
     const [selectedImages , setSelectedImages] = useState();
     const [selectedColors , setSelectedColors] = useState();
-    const [selectedColor , setSelectedColor] = useState();
+    const [selectedColorM , setSelectedColor] = useState();
     const [commonImages , setCommonImages] = useState();
     const [colouredImages , setColouredImages] = useState();
     const [materials , setMaterialsP] = useState();
@@ -82,7 +82,7 @@ function ProductPage () {
                 
         axios.get(URL)
             .then(res => {
-                console.log(res);
+                console.log('Images' , res);
                 let aux = [];
                 let coloredAux = [];
                 for (let image of res.data) {
@@ -93,7 +93,8 @@ function ProductPage () {
                         coloredAux.push(image)
                     }
                 };
-                console.log(aux);
+                console.log('Common Images' , aux);
+                console.log('Coloured Images' , coloredAux);
                 setCommonImages(aux);
                 setColouredImages(coloredAux);
                 setSelectedImages(aux);
@@ -172,6 +173,7 @@ function ProductPage () {
                                 }
                             }
                             if (!coloured) {
+                                console.log('Selected stock' , res.data[0]);
                                 setSelectedCartStock(res2.data[0]);
                                 setCartN(res2.data[0].ammount)
                             }
@@ -187,6 +189,8 @@ function ProductPage () {
     };
     
     function setColouredImage (name , color) {
+    //This function must allow us to set a selected color, stock, and cart stock if posible
+        console.log('Selected color' , name);
         let aux = []
         if (name === 'all') {
             aux = commonImages;
@@ -194,11 +198,16 @@ function ProductPage () {
             setSelectedStock();
             setCartN(0)
         } else {
-            aux = colouredImages;
+            for (let image of colouredImages) {
+                if (image.colorId === color.id) {
+                aux.push(image)
+                }
+            };
             setSelectedColor(color);
             for (let stock of stocks) {
                 if (stock.colorId == color.id) {
-                    setSelectedStock(stock)
+                    setSelectedStock(stock);
+                    console.log('Selected stock' , stock)
                 }
             }
             if (cartStocks) {
@@ -211,10 +220,10 @@ function ProductPage () {
             }
         }
         if (aux?.length > 0) {
+            console.log('Selected images' , aux);
             setSelectedImages(aux);
             setSelectedImage(aux[0])
         }
-        console.log('Coloured images' , aux , selectedStock , cartN)
     }
 
     function getLikes () {
@@ -324,13 +333,13 @@ function ProductPage () {
                         throw err
                     })
            
-        } , [cartOperation]
+        } , []
     )
 
     useEffect(
         () => {
 
-        } , [selectedCartStock]
+        } , []
     )
 
     if (!product) {
@@ -349,6 +358,8 @@ function ProductPage () {
                     <button onClick={navBack} className="btn btn-circle btn-md">
                         <FontAwesomeIcon icon={faArrowLeft} size="2xl"/>
                     </button>
+
+                    {/* Depeding of the user being admin or not we show the fav button or the admin button. Admins can not hav favourite articles */}
                     {isAdmin?
                         <button className="btn btn-circle btn-md">
                             <FontAwesomeIcon icon={faUserTie} size="lg"/>
@@ -392,14 +403,15 @@ function ProductPage () {
                                 
                                 </div>
                             </div>
+                            {/* Each color div must allow us to change the selected images and stock */}
                             {selectedColors?
                                 <div className="w-1/2 ml-4 h-1/6 flex items-center justify-center">
                                     <div className="carousel carousel-center rounded-box gap-4">
-                                        <div onClick={() => setColouredImage('all')} className="carousel-item overflow-hidden justify-center items-center h-20 w-20 rounded-full">
+                                        <div onClick={() => setColouredImage('all')} className={!selectedColorM? "carousel-item overflow-hidden justify-center items-center h-20 w-20 rounded-full border-black border-8" : "carousel-item overflow-hidden justify-center items-center h-20 w-20 rounded-full"}>
                                             <FontAwesomeIcon size="5x" icon={faBan} />     
                                         </div>
                                         {selectedColors?.map(selectedColor => 
-                                            <div key={selectedColor.id} onClick={() => setColouredImage(selectedColor.name , selectedColor)} className="carousel-item overflow-hidden h-20 w-20 rounded-full" style={{'backgroundColor':`${selectedColor.code}`}}>
+                                            <div key={selectedColor.id} onClick={() => setColouredImage(selectedColor.name , selectedColor)} className={selectedColor.id === selectedColorM?.id ? "carousel-item overflow-hidden h-20 w-20 rounded-full border-8 border-black" : "carousel-item overflow-hidden h-20 w-20 rounded-full"} style={{'backgroundColor':`${selectedColor.code}`}}>
                                                 
                                             </div>
                                         )}
@@ -484,7 +496,7 @@ function ProductPage () {
                             <div className="flex flex-row gap-3 items-center">
                                 <label className="text-sm/6 font-medium text-gray-900">Stock:</label>
                                 {selectedColors?
-                                    selectedColor?
+                                    selectedColorM?
                                         <span className="text-lg font-medium text-gray-400">{selectedStock?.ammount}</span>
                                         :
                                         <span className="text-lg font-medium text-gray-400">Select a Color</span>
@@ -514,7 +526,7 @@ function ProductPage () {
                                         <FontAwesomeIcon icon={faTrashCan} size="lg"/>}
                                 </button>
                             :
-                                <button onClick={addToCart} disabled={selectedColors? selectedColor && !cartOperation?false: true : false} className="btn btn-circle btn-md btn-ghost">
+                                <button onClick={addToCart} disabled={selectedColors? selectedColorM && !cartOperation?false: true : false} className="btn btn-circle btn-md btn-ghost">
                                     <FontAwesomeIcon icon={faCartPlus} style={{color: "#74C0FC",}} size="2xl" />
                                 </button>
                             }

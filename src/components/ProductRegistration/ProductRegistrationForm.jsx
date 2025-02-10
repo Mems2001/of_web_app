@@ -510,7 +510,7 @@ function ProductRegistrationForm () {
                                  <div className="flex flex-col items-center gap-2">
                                     {colouredImages[selectedColor.id]?.map(coloured_image =>
                                         <div key={coloured_image.lastModified} className="flex flex-row justify-between items-center w-2/3">
-                                            <img className="h-20 object-contain" src={URL.createObjectURL(coloured_image)}/>
+                                            <img className="h-20 object-contain" src={URL.createObjectURL(new Blob([coloured_image] , {type: 'Content-Type: image/jpeg'}))}/>
                                             <span onClick={() => {deleteImage(colouredImages[selectedColor.id] , coloured_image)}} className="btn-circle btn btn-sm btn-error">
                                                 <FontAwesomeIcon icon={faTrashCan}/>
                                             </span>
