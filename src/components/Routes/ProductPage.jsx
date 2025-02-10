@@ -356,9 +356,9 @@ function ProductPage () {
         try {
             await axios.patch(URL , {
                 product_id,
-                    color_id: selectedColorM?.id,
-                    ammount: cartN - 1,
-                    operation: 'substract'
+                color_id: selectedColorM?.id,
+                ammount: cartN - 1,
+                operation: 'substract'
             });
             setCartOperation(false)
         } catch (error) {
@@ -368,7 +368,20 @@ function ProductPage () {
     }
 
     async function deleteFromCart () {
-       
+        setCartOperation(true);
+       let URL = variables.url_prefix + '/api/v1/shopping_carts';
+       try {
+        await axios.patch(URL , {
+            product_id,
+            color_id: selectedColorM?.id,
+            ammount: 0,
+            operation: 'delete'
+        });
+        setCartOperation(false)
+       } catch (error) {
+        setCartOperation(false);
+        throw error
+       }
     }
     
     const navBack = () => {
