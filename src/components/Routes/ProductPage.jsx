@@ -9,18 +9,25 @@ import { faArrowLeft, faBan, faCartPlus, faHeart, faHeartCrack, faMinus, faPlus,
 function ProductPage () {
     const [isAdmin , setIsAdmin] = useState(localStorage.getItem('onlyFancyAdmin'));
     const profile = useSelector(state => state.profileSlice );
-    const [cart , setCartP] = useState();
     const {product_id} = useParams();
 
-    // const [loading , setLoading] = useState(true);
+    //Variables for purchasing
+    const [cart , setCart] = useState();
+    const [cartN , setCartN] = useState(0);
+    const [cartStocks , setCartStocks] = useState();
+    // const [cartStock , setCartStock] = useState();
+    const [stocks , setStocks] = useState();
+    const [selectedStock , setSelectedStock] = useState();
+    const [selectedCartStock , setSelectedCartStock] = useState();
+    const [cartOperation , setCartOperation] = useState(false);
+
+    //Product related variables
     const [product , setProduct] = useState();
     const [starV1 , setStarV1] = useState(0);
     const [starV2 , setStarV2] = useState(0);
     const [starV3 , setStarV3] = useState(0);
     const [starV4 , setStarV4] = useState(0);
     const [starV5 , setStarV5] = useState(0);
-    const [stocks , setStocks] = useState();
-    const [colorStock , setColorStock] = useState(); //Used for any selected stock
     const [selectedImage , setSelectedImage] = useState();
     const [selectedImages , setSelectedImages] = useState();
     const [selectedColors , setSelectedColors] = useState();
@@ -31,8 +38,6 @@ function ProductPage () {
     const [mainCategory , setMainCategory] = useState();
     const [categories , setCategoriesP] = useState();
     const [like , setLike] = useState(false);
-    const [cartN , setCartN] = useState(0);
-    const [deletingCart , setDeletingCart] = useState(false);
     const navigate = useNavigate();
 
     const setStars = (rating) => {
@@ -143,42 +148,73 @@ function ProductPage () {
         }
     }
 
+    //Crutial function for proper purchasing logic
     function getCart () {
-        let URL = variables.url_prefix + '/api/v1/shopping_carts'
-
+        let URL = variables.url_prefix + '/api/v1/shopping_carts';
+        
+        //1. We get the product related cart if there is one
         axios.get(URL) 
-            .then(res => {
-                console.log('Cart' ,res);
-                if(res.data) {
-                    setCartP(res.data);
-                    setCartN(1)
+        .then(res => {
+            console.log('Cart' ,res);
+            //1.1 If there was, we then get the cart related stocks, this are the products stored in the cart and their ammounts 
+            if(res.data) {
+                    let URL2 = variables.url_prefix + '/api/v1/stocks/' + res.data.id + '/' + product_id;
+                    setCart(res.data);
+                    axios.get(URL2)
+                        .then(res2 => {
+                            console.log('Cart stocks' , res2.data)
+                            setCartStocks(res2.data);
+                            //1.2 If there is a non coloured stock, then there are no coloured stocks so we can asume this is the only kind of product we'll find.
+                            let coloured = false;
+                            for (let stock of res2.data) {
+                                if (stock.color_id) {
+                                    coloured = true
+                                }
+                            }
+                            if (!coloured) {
+                                setSelectedCartStock(res2.data[0]);
+                                setCartN(res2.data[0].ammount)
+                            }
+                        })
+                        .catch(err => {
+                            throw err
+                        })
                 }
             })
             .catch(err => {
                 throw err
             })
-    }
+    };
     
     function setColouredImage (name , color) {
         let aux = []
         if (name === 'all') {
             aux = commonImages;
             setSelectedColor();
-            setColorStock();
+            setSelectedStock();
+            setCartN(0)
         } else {
             aux = colouredImages;
             setSelectedColor(color);
             for (let stock of stocks) {
                 if (stock.colorId == color.id) {
-                    setColorStock(stock)
+                    setSelectedStock(stock)
+                }
+            }
+            if (cartStocks) {
+                for (let stock of cartStocks) {
+                    if (stock.colorId == color.id) {
+                        setSelectedCartStock(stock);
+                        setCartN(stock.ammount)
+                    }
                 }
             }
         }
-        if (aux.length > 0) {
+        if (aux?.length > 0) {
             setSelectedImages(aux);
             setSelectedImage(aux[0])
         }
-        console.log(aux)
+        console.log('Coloured images' , aux , selectedStock , cartN)
     }
 
     function getLikes () {
@@ -221,63 +257,15 @@ function ProductPage () {
     }
 
     function addToCart () {
-        if (cartN < colorStock?.ammount) {
-            if (cart) {
-    
-            } else {
-                let URL = variables.url_prefix + '/api/v1/shopping_carts';
-    
-                let aux = [product_id]
-    
-                axios.post(URL , {
-                    product_id: aux,
-                    ammount : cartN,
-                    color_id: selectedColor?.id
-                })
-                    .then(res => {
-                        setCartP(res.data)
-                    })
-                    .catch(err => {
-                        throw err
-                    })
-            }
-            setCartN(cartN + 1)
-        };
-        // console.log(cartN)
+        
     }
 
     function substractFromCart () {
-        if (cartN > 0) {
-            setCartN(cartN - 1)
-        };
-        // console.log(cartN)
+      
     }
 
-    function deleteFromCart () {
-        let URL = variables.url_prefix + '/api/v1/shopping_carts';
-        if (cart.productsIds.length > 1) {
-            let prods = cart.productsIds;
-            let index = prods.indexOf(product.id);
-            prods.splice(index , 1);
-            axios.patch(URL , prods)
-                .then(res => {
-                    setCartP(res.data)
-                    setCartN(0)
-                })
-                .catch(err => {
-                    throw err
-                })
-        } else {
-            setDeletingCart(true)
-            try {
-                axios.delete(URL)
-                setCartP()
-                setCartN(0)
-                setDeletingCart(false)
-            } catch (error) {
-                throw error
-            }
-        }   
+    async function deleteFromCart () {
+       
     }
     
     const navBack = () => {
@@ -287,33 +275,38 @@ function ProductPage () {
     useEffect(
         () => {
                 let URL = variables.url_prefix + '/api/v1/products/' + product_id;
-                let URL3 = variables.url_prefix + '/api/v1/stocks/' + product_id;
+                let URL2 = variables.url_prefix + '/api/v1/stocks/' + product_id;
                 // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
                 //     URL = 'https://' + ip + '/api/v1/products/' + product_id;
                 // } else {
                 //     URL = 'https://localhost:443/api/v1/products/' + product_id;
                 // }
                 
-                axios.get(URL3)
+                //Frist we get the product related stocks to consult the stock availability for purchases
+                axios.get(URL2)
                 .then(res => {
                     console.log('Stocks' , res);
                     setStocks(res.data);
+                    //Now, we set the colors available using the color_id in the stocks
                     let colorsAux = []
                     for (let stock of res.data) {
                         if (stock.Color) {
                             colorsAux.push(stock.Color)
                         } else {
-                            setColorStock(stock)
+                            
                         }
                     }
                     if (colorsAux.length > 0) {
                         setSelectedColors(colorsAux)
+                    } else {
+                        setSelectedStock(res.data[0])
                     }
                 })
                 .catch(err => {
                     throw err
                 })
-                
+
+                //We finally get the product and set the product related variables
                 axios.get(URL)
                 .then(res => {
                     console.log('Product' , res);
@@ -331,7 +324,13 @@ function ProductPage () {
                         throw err
                     })
            
-        } , []
+        } , [cartOperation]
+    )
+
+    useEffect(
+        () => {
+
+        } , [selectedCartStock]
     )
 
     if (!product) {
@@ -486,15 +485,15 @@ function ProductPage () {
                                 <label className="text-sm/6 font-medium text-gray-900">Stock:</label>
                                 {selectedColors?
                                     selectedColor?
-                                        <span className="text-lg font-medium text-gray-400">{colorStock?.ammount}</span>
+                                        <span className="text-lg font-medium text-gray-400">{selectedStock?.ammount}</span>
                                         :
                                         <span className="text-lg font-medium text-gray-400">Select a Color</span>
                                     
                                     :
-                                    <span className="text-lg font-medium text-gray-400">{colorStock?.ammount}</span>
+                                    <span className="text-lg font-medium text-gray-400">{selectedStock?.ammount}</span>
                                 }
                             </div>
-                            {cartN?
+                            {selectedCartStock?
                                 <div className="flex flex-row gap-5 items-center">
                                     <button onClick={substractFromCart} className="btn btn-circle btn-sm">
                                         <FontAwesomeIcon icon={faMinus} />
@@ -507,15 +506,15 @@ function ProductPage () {
                             :
                                 <></>
                             }
-                            {cartN?
-                                <button onClick={deleteFromCart} disabled={deletingCart} className="btn btn-circle btn-md btn-error">
-                                    {deletingCart?
+                            {selectedCartStock?
+                                <button onClick={deleteFromCart} disabled={cartOperation} className="btn btn-circle btn-md btn-error">
+                                    {cartOperation?
                                         <div className="skeleton"></div>
                                     :
                                         <FontAwesomeIcon icon={faTrashCan} size="lg"/>}
                                 </button>
                             :
-                                <button onClick={addToCart} disabled={selectedColors? selectedColor?false: true : false} className="btn btn-circle btn-md btn-ghost">
+                                <button onClick={addToCart} disabled={selectedColors? selectedColor && !cartOperation?false: true : false} className="btn btn-circle btn-md btn-ghost">
                                     <FontAwesomeIcon icon={faCartPlus} style={{color: "#74C0FC",}} size="2xl" />
                                 </button>
                             }
