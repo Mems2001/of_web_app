@@ -172,15 +172,46 @@ function ProductPage () {
                                     coloured = true
                                 }
                             }
-                            if (!coloured) {
-                                console.log('Selected stock' , res.data[0]);
+                            if (!coloured && res2.data.length > 0) {
                                 setSelectedCartStock(res2.data[0]);
                                 setCartN(res2.data[0].ammount)
                             }
+                            //If there is a selected stock (which means this was started by a cart operation) we set the cart stock and cartN
+                            if (selectedStock) {
+                                let cartStockControl = false;
+                                for (let stock of res2.data) {
+                                    // console.log('Stocks review' , stock , selectedStock)
+                                    if (selectedStock.colorId) {
+                                        if (stock.colorId == selectedStock.colorId) {
+                                            cartStockControl = true
+                                            setSelectedCartStock(stock);
+                                            setCartN(stock.ammount);
+                                            console.log('Selected cart stock' , stock)
+                                        }
+                                    } else {
+                                        if (stock.product_id == selectedStock.product_id) {
+                                            cartStockControl = true
+                                            setSelectedCartStock(stock);
+                                            setCartN(stock.ammount);
+                                            console.log('Selected cart stock' , stock)
+                                        }
+                                    }
+                                }
+                                if (!cartStockControl) {
+                                    setSelectedCartStock();
+                                    setCartN(0);
+                                }
+                            }
+                            //If there is a selected stock we search for cart stocks related to it
                         })
                         .catch(err => {
                             throw err
                         })
+                } else {
+                    setCart();
+                    setCartStocks();
+                    setSelectedCartStock();
+                    setCartN(0);
                 }
             })
             .catch(err => {
@@ -196,6 +227,7 @@ function ProductPage () {
             aux = commonImages;
             setSelectedColor();
             setSelectedStock();
+            setSelectedCartStock();
             setCartN(0)
         } else {
             for (let image of colouredImages) {
@@ -210,13 +242,22 @@ function ProductPage () {
                     console.log('Selected stock' , stock)
                 }
             }
+            setSelectedCartStock();
             if (cartStocks) {
+                let cartStockControl = false;
                 for (let stock of cartStocks) {
                     if (stock.colorId == color.id) {
+                        cartStockControl = true;
                         setSelectedCartStock(stock);
-                        setCartN(stock.ammount)
+                        setCartN(stock.ammount);
+                        console.log('Selected cart stock' , stock)
                     }
+                };
+                if (!cartStockControl) {
+                    setCartN(0)
                 }
+            } else {
+                setCartN(0)
             }
         }
         if (aux?.length > 0) {
@@ -265,12 +306,65 @@ function ProductPage () {
         }
     }
 
-    function addToCart () {
-        
+    async function addToCart () {
+    setCartOperation(true);
+    //We check for the stock availability
+    if (cartN === selectedStock.ammount) {
+        return setCartOperation(false)
+    }
+    let URL = variables.url_prefix + '/api/v1/shopping_carts';
+    //1. We search for existing carts
+    if (cart) {
+            console.log('there is a cart' , cart)
+            try {
+                await axios.patch(URL , {
+                    product_id: product_id,
+                    color_id: selectedColorM?.id,
+                    ammount: cartN + 1,
+                    operation: 'add'
+                });
+                setCartOperation(false)
+            } catch (error) {
+                setCartOperation(false);
+                throw error
+            }
+    } else {
+        //2. If there are no carts then we create one
+        console.log('no cart');
+        try {
+            await axios.post(URL , {
+                product_id,
+                color_id: selectedColorM?.id,
+                ammount: cartN + 1
+            });
+            setCartOperation(false)
+
+        } catch (error) {
+            setCartOperation(false);
+            throw error
+        }
+    }
     }
 
-    function substractFromCart () {
-      
+    async function substractFromCart () {
+        setCartOperation(true);
+        //We check for the stock availability
+        if (cartN === 0) {
+            return setCartOperation(false)
+        }
+        let URL = variables.url_prefix + '/api/v1/shopping_carts';
+        try {
+            await axios.patch(URL , {
+                product_id,
+                    color_id: selectedColorM?.id,
+                    ammount: cartN - 1,
+                    operation: 'substract'
+            });
+            setCartOperation(false)
+        } catch (error) {
+            setCartOperation(false);
+            throw error
+        }
     }
 
     async function deleteFromCart () {
@@ -308,7 +402,8 @@ function ProductPage () {
                     if (colorsAux.length > 0) {
                         setSelectedColors(colorsAux)
                     } else {
-                        setSelectedStock(res.data[0])
+                        setSelectedStock(res.data[0]);
+                        console.log('Selected stock' , res.data[0])
                     }
                 })
                 .catch(err => {
@@ -338,8 +433,8 @@ function ProductPage () {
 
     useEffect(
         () => {
-
-        } , []
+            getCart()
+        } , [cartOperation]
     )
 
     if (!product) {
@@ -507,11 +602,11 @@ function ProductPage () {
                             </div>
                             {selectedCartStock?
                                 <div className="flex flex-row gap-5 items-center">
-                                    <button onClick={substractFromCart} className="btn btn-circle btn-sm">
+                                    <button onClick={substractFromCart} disabled={cartOperation || cartN === 0} className="btn btn-circle btn-sm">
                                         <FontAwesomeIcon icon={faMinus} />
                                     </button>
                                     <p className="text-xl">{cartN}</p>
-                                    <button onClick={addToCart} className="btn btn-circle btn-sm">
+                                    <button onClick={addToCart} disabled={cartOperation || cartN >= selectedStock.ammount} className="btn btn-circle btn-sm">
                                         <FontAwesomeIcon icon={faPlus} />
                                     </button>
                                 </div>
