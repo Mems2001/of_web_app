@@ -108,7 +108,7 @@ function NavComp () {
             </div>
             <div className="navbar-end w-auto">
                 {cart?
-                    <NavLink to='/cart' className={location.includes('cart')? 'btn btn-ghost relative flex bg-gray-200' : 'btn btn-ghost relative flex'}>
+                    <NavLink to={`/cart`} className={location?.includes('cart')? 'btn btn-ghost relative flex bg-gray-200' : 'btn btn-ghost relative flex'}>
                         <div className="absolute flex top-1 right-1 rounded-full bg-black h-4 w-4 items-center justify-center">
                             <p className="text-xs text-white">0</p>
                         </div>
