@@ -28,9 +28,9 @@ import OrderPage from './components/Routes/OrderPage'
 import ProductRegistration from './components/Routes/ProductRegistration'
 import ProductPage from './components/Routes/ProductPage';
 import ProductPageAdmin from './components/Routes/ProductPageAdmin';
+import CartPage from './components/Routes/cartPage';
 
 function App() {
-
 
   return (
     <div className='App'> 
@@ -44,6 +44,7 @@ function App() {
 
           <Route element={<ProtectedRoutes />}>
             <Route path='/user' element={<UserInfo />}/>
+            <Route path='/cart' element={<CartPage />} />
           </Route>
           <Route element={<ProtectedRoutesAdmin />}>
             <Route path='/admin' element={<AdminConsole />}/>

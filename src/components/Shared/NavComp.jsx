@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { setProfile } from "../../store/slices/profile.slice";
+import {setCart} from '../../store/slices/cart.slice.js';
 import axios from "axios";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import { faBars, faIdCard, faRightFromBracket, faRightToBracket, faUserPlus, faUserTie } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faCartShopping, faIdCard, faRightFromBracket, faRightToBracket, faUserPlus, faUserTie } from "@fortawesome/free-solid-svg-icons";
 import variables from "../../../utils/variables.js";
 
 function NavComp () {
@@ -13,6 +14,7 @@ function NavComp () {
     const navigate = useNavigate();
     
     const profile = useSelector(state => state.profileSlice);
+    const cart = useSelector(state => state.cartSlice);
     const [isLogged , setIsLogged] = useState(localStorage.getItem('onlyFancyLog'));
     const [isAdmin , setIsAdmin] = useState(localStorage.getItem('onlyFancyAdmin'));
 
@@ -27,7 +29,7 @@ function NavComp () {
         navigate('/')
     };
 
-    const getProfile = () => {
+    const getProfile = async () => {
         let URL = variables.url_prefix + '/api/v1/profiles';
             // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
             //     URL = 'https://' + ip + '/api/v1/profiles';
@@ -35,17 +37,28 @@ function NavComp () {
             //     URL = 'https://localhost:443/api/v1/profiles';
             // }
 
-        axios.get(URL)
+        await axios.get(URL)
             .then(res => {
                 // console.log(res.data.data);
                 return dispatch(setProfile(res.data.data))
             })
             .catch(err => {
-                console.log({
-                    location: 'NavComp.jsx',
-                    err
-                });
+                console.log(err);
                 return logOut()
+            })
+    }
+
+    async function getCart () {
+        let URL = variables.url_prefix + '/api/v1/shopping_carts'
+
+        await axios.get(URL)
+            .then(res => {
+                if(res.data) {
+                    return dispatch(setCart(res.data))
+                }
+            })
+            .catch(err => {
+                throw err
             })
     }
 
@@ -55,8 +68,12 @@ function NavComp () {
             setIsAdmin(localStorage.getItem('onlyFancyAdmin'));
             axios.defaults.headers.common['Authorization'] = `jwt ${localStorage.getItem('token')}`;
 
-          if (isLogged && profile==null) {
+          if (isLogged && !profile) {
             getProfile()
+          }
+
+          if (isLogged && !cart) {
+            getCart()
           }
         } , [ isLogged , profile , isAdmin]
     )
@@ -90,6 +107,16 @@ function NavComp () {
                 </div>
             </div>
             <div className="navbar-end w-auto">
+                {cart?
+                    <NavLink to='/cart' className={location.includes('cart')? 'btn btn-ghost relative flex bg-gray-200' : 'btn btn-ghost relative flex'}>
+                        <div className="absolute flex top-1 right-1 rounded-full bg-black h-4 w-4 items-center justify-center">
+                            <p className="text-xs text-white">0</p>
+                        </div>
+                        <FontAwesomeIcon icon={faCartShopping} size="lg"/>
+                    </NavLink>
+                    :
+                    <></>
+                }
                 {isAdmin?
                     <NavLink to='/admin' className={location?.includes('admin')? 'btn btn-ghost bg-gray-200' : 'btn btn-ghost'}>
                         <FontAwesomeIcon icon={faUserTie} size="lg"/>

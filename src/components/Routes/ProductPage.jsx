@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { setCart as setCart2 } from "../../store/slices/cart.slice";
 import variables from "../../../utils/variables";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faBan, faCartPlus, faHeart, faHeartCrack, faMinus, faPlus, faTrashCan, faUserTie } from "@fortawesome/free-solid-svg-icons";
@@ -10,6 +11,8 @@ function ProductPage () {
     const [isAdmin , setIsAdmin] = useState(localStorage.getItem('onlyFancyAdmin'));
     const profile = useSelector(state => state.profileSlice );
     const {product_id} = useParams();
+
+    const dispatch = useDispatch();
 
     //Variables for purchasing
     const [cart , setCart] = useState();
@@ -150,73 +153,76 @@ function ProductPage () {
     }
 
     //Crutial function for proper purchasing logic
-    function getCart () {
+    async function getCart () {
         let URL = variables.url_prefix + '/api/v1/shopping_carts';
         
         //1. We get the product related cart if there is one
-        axios.get(URL) 
-        .then(res => {
-            console.log('Cart' ,res);
-            //1.1 If there was, we then get the cart related stocks, this are the products stored in the cart and their ammounts 
-            if(res.data) {
-                    let URL2 = variables.url_prefix + '/api/v1/stocks/' + res.data.id + '/' + product_id;
-                    setCart(res.data);
-                    axios.get(URL2)
-                        .then(res2 => {
-                            console.log('Cart stocks' , res2.data)
-                            setCartStocks(res2.data);
-                            //1.2 If there is a non coloured stock, then there are no coloured stocks so we can asume this is the only kind of product we'll find.
-                            let coloured = false;
-                            for (let stock of res2.data) {
-                                if (stock.color_id) {
-                                    coloured = true
+        try {
+            const cart2 = (await axios.get(URL)).data
+            console.log('Cart' , cart2);
+            
+            if (cart2) {
+                //1.1 If there was, we then get the cart related stocks, this are the products stored in the cart and their ammounts 
+                let URL2 = variables.url_prefix + '/api/v1/stocks/' + cart2.id + '/' + product_id;
+                setCart(cart2);
+                dispatch(setCart2(cart2));
+
+                try {
+                    const cartStock2 = (await axios.get(URL2)).data
+                    console.log('Cart stocks' , cartStock2)
+                    setCartStocks(cartStock2);
+                    //1.2 If there is a non coloured stock, then there are no coloured stocks so we can asume this is the only kind of product we'll find.
+                    let coloured = false;
+                    for (let stock of cartStock2) {
+                        if (stock.color_id) {
+                            coloured = true
+                        }
+                    }
+                    if (!coloured && cartStock2.length > 0) {
+                        setSelectedCartStock(cartStock2[0]);
+                        setCartN(cartStock2[0].ammount)
+                    }
+                    //If there is a selected stock (which means this was started by a cart operation) we set the cart stock and cartN
+                    if (selectedStock) {
+                        let cartStockControl = false;
+                        for (let stock of cartStock2) {
+                            // console.log('Stocks review' , stock , selectedStock)
+                            //We search for cart stocks related to the selected stock
+                            if (selectedStock.colorId) {
+                                if (stock.colorId == selectedStock.colorId) {
+                                    cartStockControl = true
+                                    setSelectedCartStock(stock);
+                                    setCartN(stock.ammount);
+                                    console.log('Selected cart stock' , stock)
+                                }
+                            } else {
+                                if (stock.product_id == selectedStock.product_id) {
+                                    cartStockControl = true
+                                    setSelectedCartStock(stock);
+                                    setCartN(stock.ammount);
+                                    console.log('Selected cart stock' , stock)
                                 }
                             }
-                            if (!coloured && res2.data.length > 0) {
-                                setSelectedCartStock(res2.data[0]);
-                                setCartN(res2.data[0].ammount)
-                            }
-                            //If there is a selected stock (which means this was started by a cart operation) we set the cart stock and cartN
-                            if (selectedStock) {
-                                let cartStockControl = false;
-                                for (let stock of res2.data) {
-                                    // console.log('Stocks review' , stock , selectedStock)
-                                    if (selectedStock.colorId) {
-                                        if (stock.colorId == selectedStock.colorId) {
-                                            cartStockControl = true
-                                            setSelectedCartStock(stock);
-                                            setCartN(stock.ammount);
-                                            console.log('Selected cart stock' , stock)
-                                        }
-                                    } else {
-                                        if (stock.product_id == selectedStock.product_id) {
-                                            cartStockControl = true
-                                            setSelectedCartStock(stock);
-                                            setCartN(stock.ammount);
-                                            console.log('Selected cart stock' , stock)
-                                        }
-                                    }
-                                }
-                                if (!cartStockControl) {
-                                    setSelectedCartStock();
-                                    setCartN(0);
-                                }
-                            }
-                            //If there is a selected stock we search for cart stocks related to it
-                        })
-                        .catch(err => {
-                            throw err
-                        })
-                } else {
-                    setCart();
-                    setCartStocks();
-                    setSelectedCartStock();
-                    setCartN(0);
+                        }
+                        if (!cartStockControl) {
+                            setSelectedCartStock();
+                            setCartN(0);
+                        }
+                    }
+
+                } catch(error) {
+                    throw error
                 }
-            })
-            .catch(err => {
-                throw err
-            })
+            } else {
+               setCart();
+               dispatch(setCart2(null));
+               setCartStocks();
+               setSelectedCartStock();
+               setCartN(0);
+           }
+        } catch (error) {
+            throw error
+        }
     };
     
     function setColouredImage (name , color) {
@@ -268,18 +274,20 @@ function ProductPage () {
     }
 
     function getLikes () {
-        let URL = variables.url_prefix + '/api/v1/favourites/' + product_id + '/' + profile?.user_id;
+        if (profile) {
+            let URL = variables.url_prefix + '/api/v1/favourites/' + product_id + '/' + profile.user_id;
 
-        axios.get(URL)
-            .then(res => {
-                console.log('Favourites' , res);
-                if (res.data) {
-                    setLike(true)
-                }
-            })
-            .catch(err => {
-                throw err
-            })
+            axios.get(URL)
+                .then(res => {
+                    console.log('Favourites' , res);
+                    if (res.data) {
+                        setLike(true)
+                    }
+                })
+                .catch(err => {
+                    throw err
+                })
+        }
     }
     
     //Click interactions
@@ -338,7 +346,6 @@ function ProductPage () {
                 ammount: cartN + 1
             });
             setCartOperation(false)
-
         } catch (error) {
             setCartOperation(false);
             throw error
@@ -462,6 +469,7 @@ function ProductPage () {
     } else {
         return (
             <section className="relative flex flex-col">
+                {/* Floating Elements */}
                 <div className="flex w-full absolute z-10 top-5 justify-between px-4 items-center">
                     <button onClick={navBack} className="btn btn-circle btn-md">
                         <FontAwesomeIcon icon={faArrowLeft} size="2xl"/>
@@ -484,6 +492,48 @@ function ProductPage () {
                         
                     }
                 </div>
+                
+                <div className="flex flex-row w-full justify-between items-center px-4 absolute z-10 bottom-3">
+                            <div className="flex flex-row gap-3 items-center">
+                                <label className="text-sm/6 font-medium text-gray-900">Stock:</label>
+                                {selectedColors?
+                                    selectedColorM?
+                                        <span className="text-lg font-medium text-gray-400">{selectedStock?.ammount}</span>
+                                        :
+                                        <span className="text-lg font-medium text-gray-400">Select a Color</span>
+                                    
+                                    :
+                                    <span className="text-lg font-medium text-gray-400">{selectedStock?.ammount}</span>
+                                }
+                            </div>
+                            {selectedCartStock?
+                                <div className="flex flex-row gap-5 items-center">
+                                    <button onClick={substractFromCart} disabled={cartOperation || cartN === 0} className="btn btn-circle btn-sm">
+                                        <FontAwesomeIcon icon={faMinus} />
+                                    </button>
+                                    <p className="text-xl">{cartN}</p>
+                                    <button onClick={addToCart} disabled={cartOperation || cartN >= selectedStock.ammount} className="btn btn-circle btn-sm">
+                                        <FontAwesomeIcon icon={faPlus} />
+                                    </button>
+                                </div>
+                            :
+                                <></>
+                            }
+                            {selectedCartStock?
+                                <button onClick={deleteFromCart} disabled={cartOperation} className="btn btn-circle btn-md btn-error">
+                                    {cartOperation?
+                                        <div className="skeleton"></div>
+                                    :
+                                        <FontAwesomeIcon icon={faTrashCan} size="lg"/>}
+                                </button>
+                            :
+                                <button onClick={addToCart} disabled={selectedColors? selectedColorM && !cartOperation?false: true : false} className="btn btn-circle btn-md btn-ghost">
+                                    <FontAwesomeIcon icon={faCartPlus} style={{color: "#74C0FC",}} size="2xl" />
+                                </button>
+                            }
+                    </div>
+                {/* Floating Elements end */}
+
                 <div className="productPageCont bg-white overscroll-contain overflow-scroll carousel carousel-vertical w-full">
                     <section className="productHero1 flex flex-col relative carousel-item">
                         <div className="productHero2 relative">
@@ -598,46 +648,6 @@ function ProductPage () {
                                     <span className="inline-flex items-center rounded-xl bg-gray-50 px-3 py-2 text-base font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">{category.name}</span>
                                 )}
                             </div>
-                        </div>
-
-                        <div className="flex flex-row justify-between items-center px-4">
-                            <div className="flex flex-row gap-3 items-center">
-                                <label className="text-sm/6 font-medium text-gray-900">Stock:</label>
-                                {selectedColors?
-                                    selectedColorM?
-                                        <span className="text-lg font-medium text-gray-400">{selectedStock?.ammount}</span>
-                                        :
-                                        <span className="text-lg font-medium text-gray-400">Select a Color</span>
-                                    
-                                    :
-                                    <span className="text-lg font-medium text-gray-400">{selectedStock?.ammount}</span>
-                                }
-                            </div>
-                            {selectedCartStock?
-                                <div className="flex flex-row gap-5 items-center">
-                                    <button onClick={substractFromCart} disabled={cartOperation || cartN === 0} className="btn btn-circle btn-sm">
-                                        <FontAwesomeIcon icon={faMinus} />
-                                    </button>
-                                    <p className="text-xl">{cartN}</p>
-                                    <button onClick={addToCart} disabled={cartOperation || cartN >= selectedStock.ammount} className="btn btn-circle btn-sm">
-                                        <FontAwesomeIcon icon={faPlus} />
-                                    </button>
-                                </div>
-                            :
-                                <></>
-                            }
-                            {selectedCartStock?
-                                <button onClick={deleteFromCart} disabled={cartOperation} className="btn btn-circle btn-md btn-error">
-                                    {cartOperation?
-                                        <div className="skeleton"></div>
-                                    :
-                                        <FontAwesomeIcon icon={faTrashCan} size="lg"/>}
-                                </button>
-                            :
-                                <button onClick={addToCart} disabled={selectedColors? selectedColorM && !cartOperation?false: true : false} className="btn btn-circle btn-md btn-ghost">
-                                    <FontAwesomeIcon icon={faCartPlus} style={{color: "#74C0FC",}} size="2xl" />
-                                </button>
-                            }
                         </div>
                     </section>
                 </div>
