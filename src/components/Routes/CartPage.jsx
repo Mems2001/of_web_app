@@ -21,7 +21,7 @@ async function getCartStocks() {
     
         try {
             const stocks2 = (await axios.get(URL)).data;
-            console.log('Stocks' , stocks2);
+            // console.log('Stocks' , stocks2);
             return setStocks(stocks2)
         } catch (error) {
             throw error
@@ -31,7 +31,7 @@ async function getCartStocks() {
 
         try {
             const cart2 = (await axios.get(URL2)).data;
-            console.log('Cart' , cart2);
+            // console.log('Cart' , cart2);
             dispatch(setCart(cart2));
         } catch (error) {
             throw error
@@ -48,18 +48,44 @@ useEffect(
 
     if(stocks) {
         return (
-            <div className="px-4 flex flex-col gap-2">
-                {cart?.id}
-                {stocks?.map(stock => 
-                    <Stock key={stock.id} stock={stock}/>
-                )}
+            <div className="relative loaderCont">
+                <div className="px-4 flex flex-col gap-3 py-4">
+                    {stocks?.map(stock => 
+                        <Stock key={stock.id} stock={stock}/>
+                    )}
+                </div>
+                <section className="flex flex-col justify-between absolute w-full bg-white bottom-0 shadow-2xl p-4 gap-6">
+                    <div className="flex flex-col w-full gap-1 items-start">
+                        <div className="flex flex-row w-3/5 justify-between">
+                            <label className="text-base/6 font-medium text-gray-900">Cantidad:</label>
+                            <p className="text-base/6 font-medium text-gray-400">{cart.ammount}</p>
+                        </div>
+                        <div className="flex flex-row w-3/5 justify-between">
+                            <label className="text-base/6 font-medium text-gray-900">Subtotal:</label>
+                            <p className="text-base/6 font-medium text-gray-400">{cart.semitotal}</p>
+                        </div>
+                        {cart.total < cart.semitotal?
+                            <div className="flex flex-row w-3/5 justify-between">
+                                <label className="text-base/6 font-medium text-gray-900">Ahorro:</label>
+                                <p className="text-base/6 font-medium text-gray-400">{cart.semitotal - cart.total}</p>
+                            </div>
+                        :
+                            <></>
+                        }
+                        <div className="flex flex-row w-3/5 justify-between mt-2">
+                            <label className="text-xl/6 font-medium text-gray-900">Total:</label>
+                            <p className="text-xl/6 font-medium text-gray-400">{cart.total}</p>
+                        </div>
+                    </div>
+                    <button className="btn btn-primary">Comprar</button>
+                </section>
             </div>
         )
     } else {
         return (
-            <div>
-                Empty
-            </div>
+            <section className="flex loaderCont w-full justify-center items-center">
+                <span className="loading loading-ring loading-lg"></span>
+            </section>
         )
     }
 }

@@ -52,7 +52,7 @@ function ProductRegistrationForm () {
         //Parse Data
         let newData = {};
         const keys = Object.keys(data);
-        console.log("data is:" , data);
+        // console.log("data is:" , data);
 
         if (cardImage && commonImages.length > 0) {
             
@@ -161,7 +161,7 @@ function ProductRegistrationForm () {
            }
         }
 
-        console.log("New data is:" , newData);
+        // console.log("New data is:" , newData);
     
         let URL = variables.url_prefix + '/api/v1/admin/products';
             // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
@@ -174,7 +174,7 @@ function ProductRegistrationForm () {
             .then(res => {
                 console.log(res);
                 setReady(false);
-                // navigate('/admin/my_orders')
+                navigate('/admin/my_orders')
             })
             .catch(err => {
                 setReady(false)
@@ -220,7 +220,7 @@ function ProductRegistrationForm () {
             if (deleted) {
                 setDeleted(false)
             }
-            console.log('useEffect triggered' , selectedColors , colouredImages , `ready: ${ready}` , `loading: ${loading}` , `deleted: ${deleted}`);
+            // console.log('useEffect triggered' , selectedColors , colouredImages , `ready: ${ready}` , `loading: ${loading}` , `deleted: ${deleted}`);
             let URL = variables.url_prefix + '/api/v1/orders/my_orders';
             let URL2 = variables.url_prefix + '/api/v1/main_categories';
             let URL3 = variables.url_prefix + '/api/v1/product_details/colors';

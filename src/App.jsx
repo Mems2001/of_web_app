@@ -12,6 +12,7 @@ import './styles/ProductRegistration.css'
 import './styles/Home.css'
 import './styles/ProductPage.css'
 import './styles/ProductPageAdmin.css'
+import './styles/CartPage.css'
 
 import NavComp from './components/Shared/NavComp'
 import Login from './components/Routes/Login'

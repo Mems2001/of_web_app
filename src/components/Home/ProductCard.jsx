@@ -13,7 +13,7 @@ function ProductCard ({product}) {
         const URL = variables.url_prefix + '/api/v1/product_images/card/' + product.id;
         axios.get(URL)
             .then(res => {
-                console.log(res);
+                // console.log(res);
                 setCardImage(`data:image/jpeg;base64,${res.data.data}`)
             })
             .catch(err => {

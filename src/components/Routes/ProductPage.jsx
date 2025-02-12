@@ -6,6 +6,7 @@ import { setCart as setCart2 } from "../../store/slices/cart.slice";
 import variables from "../../../utils/variables";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faBan, faCartPlus, faHeart, faHeartCrack, faMinus, faPlus, faTrashCan, faUserTie } from "@fortawesome/free-solid-svg-icons";
+import { setLocation } from "../../store/slices/location.slice";
 
 function ProductPage () {
     const [isAdmin , setIsAdmin] = useState(localStorage.getItem('onlyFancyAdmin'));
@@ -80,75 +81,124 @@ function ProductPage () {
         }
     }
 
-    const setImages = () => {
+    async function setImages () {
         let URL = variables.url_prefix + '/api/v1/product_images/' + product_id
-                
-        axios.get(URL)
-            .then(res => {
-                console.log('Images' , res);
-                let aux = [];
-                let coloredAux = [];
-                for (let image of res.data) {
-                    if (image.type == 'common') {
-                        aux.push(image)
-                    }
-                    if (image.type == 'color') {
-                        coloredAux.push(image)
-                    }
-                };
-                console.log('Common Images' , aux);
-                console.log('Coloured Images' , coloredAux);
-                setCommonImages(aux);
-                setColouredImages(coloredAux);
-                setSelectedImages(aux);
-                setSelectedImage(aux[0])
-            })
-            .catch(err => {
-                throw err
-            })
+         
+        try {
+            const images = (await axios.get(URL)).data
+            // console.log('Images' , images);
+            let aux = [];
+            let coloredAux = [];
+            for (let image of images) {
+                if (image.type == 'common') {
+                    aux.push(image)
+                }
+                if (image.type == 'color') {
+                    coloredAux.push(image)
+                }
+            };
+            // console.log('Common Images' , aux);
+            // console.log('Coloured Images' , coloredAux);
+            setCommonImages(aux);
+            setColouredImages(coloredAux);
+            setSelectedImages(aux);
+            setSelectedImage(aux[0])
+        } catch (error) {
+            throw error
+        }
     }
 
-    function setMaterials (product) {
+    async function setMaterials (product) {
         let URL = variables.url_prefix + '/api/v1/product_details/materials'
 
-        axios.get(URL)
-            .then(res => {
-                // console.log(res);
-                let aux = []
-                if (res.data) {
-                    for (let material of res.data) {
-                        // console.log(material);
-                        if (product.materialsIds?.includes(material.id)) {
-                            aux.push(material)
-                        }
+        try {
+            const gottenMaterials = (await axios.get(URL)).data
+            // console.log(gottenMaterials);
+            let aux = [];
+            if (gottenMaterials) {
+                for (let material of gottenMaterials) {
+                    // console.log(material);
+                    if (product.materialsIds?.includes(material.id)) {
+                        aux.push(material)
                     }
-                };
-                if (aux) {
-                    setMaterialsP(aux)
                 }
-            })
-            .catch(err => {
-                throw err
-            })
+            };
+            if (aux) {
+                setMaterialsP(aux)
+            }
+        } catch (error) {
+            throw error
+        }
     }
 
-    function setSubCategories (product) {
+    async function setSubCategories (product) {
         if (product.subcategoriesIds) {
             let subCategories = [];
             for (let id of product.subcategoriesIds) {
                 let URL = variables.url_prefix + '/api/v1/main_categories/' + id;
 
-                axios.get(URL)
-                    .then(res => {
-                        subCategories.push(res.data)
-                    })
-                    .catch(err => {
-                        throw err
-                    })
+                try {
+                    const gottenSub = (await axios.get(URL)).data;
+                    subCategories.push(gottenSub);
+                } catch (error) {
+                    throw error
+                }
             }
+
             if (subCategories.length > 0) {
                 setCategoriesP(subCategories)
             }
+        }
+    }
+
+    //Initial get functions
+    async function getInitialData () {
+        let URL = variables.url_prefix + '/api/v1/products/' + product_id;
+        let URL2 = variables.url_prefix + '/api/v1/stocks/product/' + product_id;
+        // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
+        //     URL = 'https://' + ip + '/api/v1/products/' + product_id;
+        // } else {
+        //     URL = 'https://localhost:443/api/v1/products/' + product_id;
+        // }
+        
+        //Frist we get the product related stocks to consult the stock availability for purchases
+        try {
+            const stocks2 = (await axios.get(URL2)).data;
+            // console.log('Stocks' , stocks2);
+            setStocks(stocks2);
+            //Now, we set the colors available using the color_id in the stocks
+            let colorsAux = []
+            for (let stock of stocks2) {
+                if (stock.Color) {
+                    colorsAux.push(stock.Color)
+                } else {
+                    
+                }
+            }
+            if (colorsAux.length > 0) {
+                setSelectedColors(colorsAux)
+            } else {
+                setSelectedStock(stocks2[0]);
+                // console.log('Selected stock' , stocks2[0])
+            }
+        } catch (error) {
+            throw error
+        }
+        //We finally get the product and set the product related variables
+        try {
+            const product = (await axios.get(URL)).data;
+            // console.log('Product' , product);
+            //We must respect the data renderization order
+            getCart();
+            setImages();
+            getLikes();
+            setStars(product.rating);
+            setMaterials(product);
+            setMainCategory(product.Main_category);
+            setSubCategories(product);
+            setProduct(product);
+        } catch (error) {
+            throw error
         }
     }
 
@@ -159,48 +209,43 @@ function ProductPage () {
         //1. We get the product related cart if there is one
         try {
             const cart2 = (await axios.get(URL)).data
-            console.log('Cart' , cart2);
+            // console.log('Cart' , cart2);
             
             if (cart2) {
                 //1.1 If there was, we then get the cart related stocks, this are the products stored in the cart and their ammounts 
-                let URL2 = variables.url_prefix + '/api/v1/stocks/' + cart2.id + '/' + product_id;
+                let URL2 = variables.url_prefix + '/api/v1/stocks/cart_stocks/' + cart2.id + '/' + product_id;
                 setCart(cart2);
                 dispatch(setCart2(cart2));
 
                 try {
                     const cartStock2 = (await axios.get(URL2)).data
-                    console.log('Cart stocks' , cartStock2)
-                    setCartStocks(cartStock2);
+                    // console.log('Cart stocks' , cartStock2 );
+                    setCartStocks(cartStock2.cart_stocks);
                     //1.2 If there is a non coloured stock, then there are no coloured stocks so we can asume this is the only kind of product we'll find.
-                    let coloured = false;
-                    for (let stock of cartStock2) {
-                        if (stock.color_id) {
-                            coloured = true
-                        }
-                    }
-                    if (!coloured && cartStock2.length > 0) {
-                        setSelectedCartStock(cartStock2[0]);
-                        setCartN(cartStock2[0].ammount)
+                    if (!cartStock2.coloured && cartStock2.cart_stocks.length > 0) {
+                        // console.log('There are no coloured cart stocks');
+                        setSelectedCartStock(cartStock2.cart_stocks[0]);
+                        setCartN(cartStock2.cart_stocks[0].ammount)
                     }
                     //If there is a selected stock (which means this was started by a cart operation) we set the cart stock and cartN
                     if (selectedStock) {
                         let cartStockControl = false;
-                        for (let stock of cartStock2) {
-                            // console.log('Stocks review' , stock , selectedStock)
+                        for (let stock of cartStock2.cart_stocks) {
+                            // console.log('Stocks review' , stock , selectedStock);
                             //We search for cart stocks related to the selected stock
                             if (selectedStock.colorId) {
                                 if (stock.colorId == selectedStock.colorId) {
                                     cartStockControl = true
                                     setSelectedCartStock(stock);
                                     setCartN(stock.ammount);
-                                    console.log('Selected cart stock' , stock)
+                                    // console.log('Selected cart stock' , stock)
                                 }
                             } else {
                                 if (stock.product_id == selectedStock.product_id) {
                                     cartStockControl = true
                                     setSelectedCartStock(stock);
                                     setCartN(stock.ammount);
-                                    console.log('Selected cart stock' , stock)
+                                    // console.log('Selected cart stock' , stock)
                                 }
                             }
                         }
@@ -273,20 +318,19 @@ function ProductPage () {
         }
     }
 
-    function getLikes () {
+    async function getLikes () {
         if (profile) {
             let URL = variables.url_prefix + '/api/v1/favourites/' + product_id + '/' + profile.user_id;
 
-            axios.get(URL)
-                .then(res => {
-                    console.log('Favourites' , res);
-                    if (res.data) {
-                        setLike(true)
-                    }
-                })
-                .catch(err => {
-                    throw err
-                })
+            try {
+                const like = (await axios.get(URL)).data
+                // console.log('Favourites' , like);
+                if (like) {
+                    return setLike(true)
+                }
+            } catch (error) {
+                throw error
+            }
         }
     }
     
@@ -297,33 +341,32 @@ function ProductPage () {
         if (like) {
             try {
                 axios.delete(URL);
-                console.log('like deleted');
-                setLike(false)
+                // console.log('like deleted');
+                return setLike(false)
             } catch (error) {
                 throw error
             }
         } else {
-            axios.post(URL)
-                .then(res => {
-                    console.log('like created');
-                    setLike(true)
-                })
-                .catch(err => {
-                    throw err
-                })
+            try {
+                axios.post(URL);
+                // console.log('like created');
+                return setLike(true)
+            } catch (error) {
+                throw error
+            }
         }
     }
 
     async function addToCart () {
     setCartOperation(true);
     //We check for the stock availability
-    if (cartN === selectedStock.ammount) {
+    if (cartN >= selectedStock.ammount) {
         return setCartOperation(false)
     }
     let URL = variables.url_prefix + '/api/v1/shopping_carts';
     //1. We search for existing carts
     if (cart) {
-            console.log('there is a cart' , cart)
+            console.log('there is a cart' , cart);
             try {
                 await axios.patch(URL , {
                     product_id: product_id,
@@ -331,21 +374,21 @@ function ProductPage () {
                     ammount: cartN + 1,
                     operation: 'add'
                 });
-                setCartOperation(false)
+                return setCartOperation(false)
             } catch (error) {
                 setCartOperation(false);
                 throw error
             }
     } else {
         //2. If there are no carts then we create one
-        console.log('no cart');
+        // console.log('no cart');
         try {
             await axios.post(URL , {
                 product_id,
                 color_id: selectedColorM?.id,
                 ammount: cartN + 1
             });
-            setCartOperation(false)
+            return setCartOperation(false)
         } catch (error) {
             setCartOperation(false);
             throw error
@@ -397,57 +440,8 @@ function ProductPage () {
     
     useEffect(
         () => {
-                let URL = variables.url_prefix + '/api/v1/products/' + product_id;
-                let URL2 = variables.url_prefix + '/api/v1/stocks/' + product_id;
-                // if (navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')) {
-                //     URL = 'https://' + ip + '/api/v1/products/' + product_id;
-                // } else {
-                //     URL = 'https://localhost:443/api/v1/products/' + product_id;
-                // }
-                
-                //Frist we get the product related stocks to consult the stock availability for purchases
-                axios.get(URL2)
-                .then(res => {
-                    console.log('Stocks' , res);
-                    setStocks(res.data);
-                    //Now, we set the colors available using the color_id in the stocks
-                    let colorsAux = []
-                    for (let stock of res.data) {
-                        if (stock.Color) {
-                            colorsAux.push(stock.Color)
-                        } else {
-                            
-                        }
-                    }
-                    if (colorsAux.length > 0) {
-                        setSelectedColors(colorsAux)
-                    } else {
-                        setSelectedStock(res.data[0]);
-                        console.log('Selected stock' , res.data[0])
-                    }
-                })
-                .catch(err => {
-                    throw err
-                })
-
-                //We finally get the product and set the product related variables
-                axios.get(URL)
-                .then(res => {
-                    console.log('Product' , res);
-                    //We must respect the data renderization order
-                    setImages();
-                    getLikes();
-                    setStars(res.data.rating);
-                    setMaterials(res.data);
-                    setMainCategory(res.data.Main_category);
-                    setSubCategories(res.data);
-                    getCart();
-                    setProduct(res.data);
-                    })
-                    .catch(err => {
-                        throw err
-                    })
-           
+                dispatch(setLocation(window.location.href.split('#')[1]));
+                getInitialData()
         } , []
     )
 
@@ -562,7 +556,7 @@ function ProductPage () {
                                 </div>
                             </div>
                             {/* Each color div must allow us to change the selected images and stock */}
-                            {selectedColors?
+                            {selectedColors && colouredImages?
                                 <div className="w-1/2 ml-4 h-1/6 flex items-center justify-center">
                                     <div className="carousel carousel-center rounded-box gap-4">
                                         <div onClick={() => setColouredImage('all')} className={!selectedColorM? "carousel-item overflow-hidden justify-center items-center h-20 w-20 rounded-full border-black border-8" : "carousel-item overflow-hidden justify-center items-center h-20 w-20 rounded-full"}>
@@ -638,7 +632,13 @@ function ProductPage () {
                                 </div>
                             </div>
                             {product.otherDetails? 
-                                <div></div>
+                                product.otherDetails.map(
+                                    otherDet => 
+                                       <div key={otherDet[0]} className="flex flex-row gap-4">
+                                            <label className="text-sm/6 font-medium text-gray-900">{otherDet[0]}:</label>
+                                            <p className="text-m text-gray-400">{otherDet[1]}</p>
+                                       </div> 
+                                )
                             :
                                 <></>
                             }
