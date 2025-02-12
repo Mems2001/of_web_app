@@ -19,7 +19,6 @@ import Login from './components/Routes/Login'
 import Home from './components/Routes/Home'
 import SignUp from './components/Routes/SignUp'
 import UserInfo from './components/Routes/UserInfo'
-
 import ProtectedRoutes from './components/Routes/ProtectedRoutes'
 import ProtectedRoutesAdmin from './components/Routes/ProtectedRoutesAdmin'
 import AdminConsole from './components/Routes/AdminConsole'
@@ -29,7 +28,7 @@ import OrderPage from './components/Routes/OrderPage'
 import ProductRegistration from './components/Routes/ProductRegistration'
 import ProductPage from './components/Routes/ProductPage';
 import ProductPageAdmin from './components/Routes/ProductPageAdmin';
-import CartPage from './components/Routes/cartPage';
+import CartPage from './components/Routes/CartPage';
 
 function App() {
 
