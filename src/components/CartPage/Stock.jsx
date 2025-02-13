@@ -134,36 +134,46 @@ function Stock ({stock}) {
         return (
        <article className="flex flex-row card card-bordered shadow p-0 h-32">
             {cardImage?
-                <img onClick={navToProduct} className="h-full w-1/3" src={cardImage} alt={stock.Product.name}/>
+            <div className="relative h-full w-1/3">
+                <img onClick={navToProduct} className="h-full w-full" src={cardImage} alt={stock.Product.name}/>
+                <button onClick={deleteStock} className="btn btn-circle btn-ghost btn-sm absolute top-0 left-0">
+                    <FontAwesomeIcon icon={faTrashCan} size="lg" color="#ff0000"/>
+                </button>
+            </div>
             :
                 <div className="skeleton h-full w-1/3"></div>
             }
-            <div className="flex flex-row w-2/3">
-                {/* Product Info */}
-                <div className="flex flex-col justify-center items-start w-full pl-3">
-                    <label className="text-sm/6 font-medium text-gray-900 mb-2">{stock.Product.name}</label>
-                    <div className="flex flex-row gap-4">
-                        <label className="text-sm/6 font-medium text-gray-900">Precio:</label>
-                        <p className="text-sm/6 font-medium text-gray-400">{stock.Product.price}</p>
-                    </div>
-                    <div className="flex flex-row gap-4">
-                        <label className="text-sm/6 font-medium text-gray-900">Subtotal:</label>
-                        <p className="text-sm/6 font-medium text-gray-400">{stock.semitotal}</p>
+            <div className="flex flex-row w-2/3 pl-3 justify-between">
+                {/* Title and delete button */}
+                <div className="flex flex-col justify-between items-start">
+                    <label className="text-sm/6 font-medium text-gray-900">{stock.Product.name}</label>
+                    <div className="flex flex-col w-full h-fit justify-start items-start">
+                        <div className="flex flex-row gap-4">
+                            <label className="text-sm/6 font-medium text-gray-900">Precio:</label>
+                            <p className="text-sm/6 font-medium text-gray-400">{stock.Product.price}</p>
+                        </div>
+                        <div className="flex flex-row gap-4">
+                            <label className="text-sm/6 font-medium text-gray-900">Subtotal:</label>
+                            <p className="text-sm/6 font-medium text-gray-400">{stock.semitotal}</p>
+                        </div>
+                        <div className="flex flex-row gap-4">
+                            <label className="text-sm/6 font-medium text-gray-900">Ahorro:</label>
+                            <p className="text-sm/6 font-medium text-gray-400">{stock.semitotal - stock.total}</p>
+                        </div>
+                        <div className="flex flex-row gap-4">
+                            <label className="text-sm/6 font-medium text-gray-900">Total:</label>
+                            <p className="text-sm/6 font-medium text-gray-400">{stock.total}</p>
+                        </div>
                     </div>
                 </div>
-                {/* Cart buttons */}
-                <div className="flex flex-col w-full justify-center items-center relative">
-                    <div className="flex flex-row justify-center items-center gap-3">
-                        <button onClick={substractFromCart} disabled={stock.ammount <= 0} className="btn btn-circle btn-sm">
-                            <FontAwesomeIcon icon={faMinus}/>
-                        </button>
-                        <p className="text-lg/6">{stock.ammount}</p>
-                        <button onClick={addToCart} disabled={stock.ammount >= productStock.ammount} className="btn btn-circle btn-sm">
-                            <FontAwesomeIcon icon={faPlus}/>
-                        </button>
-                    </div>
-                    <button onClick={deleteStock} className="btn btn-circle btn-error btn-sm absolute top-0 right-0">
-                        <FontAwesomeIcon icon={faTrashCan} />
+                {/* Product info */}
+                <div className="flex flex-col justify-between w-fit items-center h-full">
+                    <button onClick={substractFromCart} disabled={stock.ammount <= 0} className="btn btn-circle btn-sm">
+                        <FontAwesomeIcon icon={faMinus}/>
+                    </button>
+                    <p className="text-lg/6">{stock.ammount}</p>
+                    <button onClick={addToCart} disabled={stock.ammount >= productStock.ammount} className="btn btn-circle btn-sm">
+                        <FontAwesomeIcon icon={faPlus}/>
                     </button>
                 </div>
             </div>
