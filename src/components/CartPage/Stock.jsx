@@ -132,37 +132,39 @@ function Stock ({stock}) {
 
     if (productStock) {
         return (
-       <article className="flex flex-row card card-bordered shadow p-0 h-32">
+       <article className="flex flex-row card card-bordered shadow p-0 h-36">
             {cardImage?
-            <div className="relative h-full w-1/3">
-                <img onClick={navToProduct} className="h-full w-full" src={cardImage} alt={stock.Product.name}/>
-                <button onClick={deleteStock} className="btn btn-circle btn-ghost btn-sm absolute top-0 left-0">
-                    <FontAwesomeIcon icon={faTrashCan} size="lg" color="#ff0000"/>
-                </button>
-            </div>
+                <img onClick={navToProduct} className="h-full w-1/3" src={cardImage} alt={stock.Product.name}/>
             :
                 <div className="skeleton h-full w-1/3"></div>
             }
             <div className="flex flex-row w-2/3 pl-3 justify-between">
                 {/* Title and delete button */}
-                <div className="flex flex-col justify-between items-start">
-                    <label className="text-sm/6 font-medium text-gray-900">{stock.Product.name}</label>
-                    <div className="flex flex-col w-full h-fit justify-start items-start">
-                        <div className="flex flex-row gap-4">
-                            <label className="text-sm/6 font-medium text-gray-900">Precio:</label>
-                            <p className="text-sm/6 font-medium text-gray-400">{stock.Product.price}</p>
+                <div className="flex flex-col w-full justify-between items-start">
+                    <label className="text-sm/6 font-medium text-gray-900 mt-2">{stock.Product.name}</label>
+                    <div className="flex flex-row w-full mb-2">
+                        <div className="flex flex-col w-full h-fit justify-start items-start">
+                            <div className="flex flex-row w-full justify-between">
+                                <label className="text-sm/6 font-medium text-gray-900">Precio:</label>
+                                <p className="text-sm/6 font-medium text-gray-400">{stock.Product.price}</p>
+                            </div>
+                            <div className="flex flex-row w-full justify-between">
+                                <label className="text-sm/6 font-medium text-gray-900">Subtotal:</label>
+                                <p className="text-sm/6 font-medium text-gray-400">{stock.semitotal}</p>
+                            </div>
+                            <div className="flex flex-row w-full justify-between">
+                                <label className="text-sm/6 font-medium text-gray-900">Ahorro:</label>
+                                <p className="text-sm/6 font-medium text-gray-400">{stock.semitotal - stock.total}</p>
+                            </div>
+                            <div className="flex flex-row w-full justify-between">
+                                <label className="text-sm/6 font-medium text-gray-900">Total:</label>
+                                <p className="text-sm/6 font-medium text-gray-400">{stock.total}</p>
+                            </div>
                         </div>
-                        <div className="flex flex-row gap-4">
-                            <label className="text-sm/6 font-medium text-gray-900">Subtotal:</label>
-                            <p className="text-sm/6 font-medium text-gray-400">{stock.semitotal}</p>
-                        </div>
-                        <div className="flex flex-row gap-4">
-                            <label className="text-sm/6 font-medium text-gray-900">Ahorro:</label>
-                            <p className="text-sm/6 font-medium text-gray-400">{stock.semitotal - stock.total}</p>
-                        </div>
-                        <div className="flex flex-row gap-4">
-                            <label className="text-sm/6 font-medium text-gray-900">Total:</label>
-                            <p className="text-sm/6 font-medium text-gray-400">{stock.total}</p>
+                        <div className="flex justify-center items-center pr-4 pl-12">
+                            <button onClick={deleteStock} className="btn btn-circle btn-ghost btn-sm mb-7">
+                                <FontAwesomeIcon icon={faTrashCan} size="lg" color="#ff0000"/>
+                            </button>
                         </div>
                     </div>
                 </div>
