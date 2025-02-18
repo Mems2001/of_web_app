@@ -17,9 +17,8 @@ function ProductPage () {
 
     //Variables for purchasing
     const [cart , setCart] = useState();
-    const [cartN , setCartN] = useState(0);
+    // const [cartN , setCartN] = useState(0);
     const [cartStocks , setCartStocks] = useState();
-    // const [cartStock , setCartStock] = useState();
     const [stocks , setStocks] = useState();
     const [selectedStock , setSelectedStock] = useState();
     const [selectedCartStock , setSelectedCartStock] = useState();
@@ -225,7 +224,6 @@ function ProductPage () {
                     if (!cartStock2.coloured && cartStock2.cart_stocks.length > 0) {
                         // console.log('There are no coloured cart stocks');
                         setSelectedCartStock(cartStock2.cart_stocks[0]);
-                        setCartN(cartStock2.cart_stocks[0].ammount)
                     }
                     //If there is a selected stock (which means this was started by a cart operation) we set the cart stock and cartN
                     if (selectedStock) {
@@ -237,21 +235,18 @@ function ProductPage () {
                                 if (stock.colorId == selectedStock.colorId) {
                                     cartStockControl = true
                                     setSelectedCartStock(stock);
-                                    setCartN(stock.ammount);
                                     // console.log('Selected cart stock' , stock)
                                 }
                             } else {
                                 if (stock.product_id == selectedStock.product_id) {
                                     cartStockControl = true
                                     setSelectedCartStock(stock);
-                                    setCartN(stock.ammount);
                                     // console.log('Selected cart stock' , stock)
                                 }
                             }
                         }
                         if (!cartStockControl) {
                             setSelectedCartStock();
-                            setCartN(0);
                         }
                     }
 
@@ -263,7 +258,6 @@ function ProductPage () {
                dispatch(setCart2(null));
                setCartStocks();
                setSelectedCartStock();
-               setCartN(0);
            }
         } catch (error) {
             throw error
@@ -279,7 +273,6 @@ function ProductPage () {
             setSelectedColor();
             setSelectedStock();
             setSelectedCartStock();
-            setCartN(0)
         } else {
             for (let image of colouredImages) {
                 if (image.colorId === color.id) {
@@ -300,16 +293,11 @@ function ProductPage () {
                     if (stock.colorId == color.id) {
                         cartStockControl = true;
                         setSelectedCartStock(stock);
-                        setCartN(stock.ammount);
                         console.log('Selected cart stock' , stock)
                     }
                 };
-                if (!cartStockControl) {
-                    setCartN(0)
-                }
-            } else {
-                setCartN(0)
-            }
+               
+            } 
         }
         if (aux?.length > 0) {
             console.log('Selected images' , aux);
@@ -360,8 +348,9 @@ function ProductPage () {
     async function addToCart () {
     setCartOperation(true);
     //We check for the stock availability
-    if (cartN >= selectedStock.ammount) {
-        return setCartOperation(false)
+    if ((selectedCartStock?.ammount || 0) >= selectedStock.ammount) {
+        setCartOperation(false);
+        throw new Error('Stock limit reached')
     }
     let URL = variables.url_prefix + '/api/v1/shopping_carts';
     //1. We search for existing carts
@@ -371,7 +360,6 @@ function ProductPage () {
                 await axios.patch(URL , {
                     product_id: product_id,
                     color_id: selectedColorM?.id,
-                    ammount: cartN + 1,
                     operation: 'add'
                 });
                 return setCartOperation(false)
@@ -386,7 +374,6 @@ function ProductPage () {
             await axios.post(URL , {
                 product_id,
                 color_id: selectedColorM?.id,
-                ammount: cartN + 1
             });
             return setCartOperation(false)
         } catch (error) {
@@ -399,7 +386,7 @@ function ProductPage () {
     async function substractFromCart () {
         setCartOperation(true);
         //We check for the stock availability
-        if (cartN === 0) {
+        if (selectedCartStock.ammount === 0) {
             return setCartOperation(false)
         }
         let URL = variables.url_prefix + '/api/v1/shopping_carts';
@@ -407,7 +394,6 @@ function ProductPage () {
             await axios.patch(URL , {
                 product_id,
                 color_id: selectedColorM?.id,
-                ammount: cartN - 1,
                 operation: 'substract'
             });
             setCartOperation(false)
@@ -424,7 +410,6 @@ function ProductPage () {
         await axios.patch(URL , {
             product_id,
             color_id: selectedColorM?.id,
-            ammount: 0,
             operation: 'delete'
         });
         setCartOperation(false)
@@ -502,11 +487,11 @@ function ProductPage () {
                             </div>
                             {selectedCartStock?
                                 <div className="flex flex-row gap-5 items-center">
-                                    <button onClick={substractFromCart} disabled={cartOperation || cartN === 0} className="btn btn-circle btn-sm">
+                                    <button onClick={substractFromCart} disabled={cartOperation || !selectedCartStock} className="btn btn-circle btn-sm">
                                         <FontAwesomeIcon icon={faMinus} />
                                     </button>
-                                    <p className="text-xl">{cartN}</p>
-                                    <button onClick={addToCart} disabled={cartOperation || cartN >= selectedStock.ammount} className="btn btn-circle btn-sm">
+                                    <p className="text-xl">{selectedCartStock.ammount || 0}</p>
+                                    <button onClick={addToCart} disabled={cartOperation || selectedCartStock.ammount >= selectedStock.ammount} className="btn btn-circle btn-sm">
                                         <FontAwesomeIcon icon={faPlus} />
                                     </button>
                                 </div>

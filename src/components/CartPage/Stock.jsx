@@ -84,7 +84,6 @@ function Stock ({stock}) {
             const newCart = (await axios.patch(URL , {
                 product_id: stock.productId,
                 colorId: stock.colorId || null,
-                ammount: stock.ammount - 1,
                 operation: 'substract'
             })).data
 
@@ -110,7 +109,6 @@ function Stock ({stock}) {
             const newCart = (await axios.patch(URL , {
                 product_id: stock.productId,
                 colorId: stock.colorId || null,
-                ammount: stock.ammount + 1,
                 operation: 'add'
             })).data;
 

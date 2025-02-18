@@ -46,7 +46,7 @@ useEffect(
     } , [cart]
 )
 
-    if(stocks) {
+    if(stocks && cart) {
         return (
             <div className="relative loaderCont">
                 <div className="px-4 flex flex-col gap-3 py-4">

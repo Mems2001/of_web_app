@@ -22,6 +22,7 @@ function NavComp () {
         setIsLogged(false);
         setIsAdmin(false);
         dispatch(setProfile(null));
+        dispatch(setCart(null));
         delete axios.defaults.headers.common['Authorization'];
         localStorage.removeItem('token');
         localStorage.removeItem('onlyFancyLog');
