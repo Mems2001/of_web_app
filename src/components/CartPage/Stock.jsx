@@ -160,7 +160,7 @@ function Stock ({stock}) {
                             </div>
                         </div>
                         <div className="flex justify-center items-center pr-4 pl-12">
-                            <button onClick={deleteStock} className="btn btn-circle btn-ghost btn-sm mb-7">
+                            <button onClick={deleteStock} disabled={cartOperation} className="btn btn-circle btn-ghost btn-sm mb-7">
                                 <FontAwesomeIcon icon={faTrashCan} size="lg" color="#ff0000"/>
                             </button>
                         </div>
@@ -168,11 +168,11 @@ function Stock ({stock}) {
                 </div>
                 {/* Product info */}
                 <div className="flex flex-col justify-between w-fit items-center h-full">
-                    <button onClick={substractFromCart} disabled={stock.ammount <= 0} className="btn btn-circle btn-sm">
+                    <button onClick={substractFromCart} disabled={stock.ammount <= 0 || cartOperation} className="btn btn-circle btn-sm">
                         <FontAwesomeIcon icon={faMinus}/>
                     </button>
                     <p className="text-lg/6">{stock.ammount}</p>
-                    <button onClick={addToCart} disabled={stock.ammount >= productStock.ammount} className="btn btn-circle btn-sm">
+                    <button onClick={addToCart} disabled={stock.ammount >= productStock.ammount || cartOperation} className="btn btn-circle btn-sm">
                         <FontAwesomeIcon icon={faPlus}/>
                     </button>
                 </div>
